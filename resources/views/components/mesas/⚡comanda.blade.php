@@ -5,7 +5,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductCategory;
-use App\Models\Terminal;
+use App\Models\Table;
 use App\Services\SaleService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
@@ -13,13 +13,19 @@ use Livewire\Component;
 
 new #[Layout('layouts.app')] class extends Component
 {
+    public Table $table;
+
+    public ?int $orderId = null;
+
+    public int $peopleCount = 2;
+
     public ?int $activeCategoryId = null;
 
     public string $search = '';
 
-    public array $cart = [];
+    public array $stagedItems = [];
 
-    public int $nextCartLineId = 1;
+    public int $nextStagedId = 1;
 
     public ?int $modifierProductId = null;
 
@@ -30,8 +36,6 @@ new #[Layout('layouts.app')] class extends Component
     public ?string $modifierError = null;
 
     public bool $showCheckout = false;
-
-    public string $orderType = 'mostrador';
 
     public ?int $customerId = null;
 
@@ -47,10 +51,10 @@ new #[Layout('layouts.app')] class extends Component
 
     public ?string $completedFolio = null;
 
-    public ?int $completedOrderId = null;
-
-    public function mount(): void
+    public function mount(Table $table): void
     {
+        abort_unless($table->business_id === Auth::user()->businessId(), 404);
+
         if (! session('terminal_id')) {
             $this->redirectRoute('pos.terminal', navigate: true);
 
@@ -59,7 +63,12 @@ new #[Layout('layouts.app')] class extends Component
 
         if (! session('cash_register_session_id')) {
             $this->redirectRoute('caja.apertura', navigate: true);
+
+            return;
         }
+
+        $this->table = $table;
+        $this->orderId = $table->currentOrder?->id;
     }
 
     public function selectCategory(?int $categoryId): void
@@ -75,7 +84,7 @@ new #[Layout('layouts.app')] class extends Component
             ->findOrFail($productId);
 
         if ($product->modifierGroups->isEmpty()) {
-            $this->pushCartLine($product, [], null);
+            $this->pushStagedItem($product, [], null);
 
             return;
         }
@@ -117,7 +126,7 @@ new #[Layout('layouts.app')] class extends Component
             }
         }
 
-        $this->pushCartLine($product, $modifiers, $this->modifierNotes !== '' ? $this->modifierNotes : null);
+        $this->pushStagedItem($product, $modifiers, $this->modifierNotes !== '' ? $this->modifierNotes : null);
 
         $this->modifierProductId = null;
         $this->modifierSelections = [];
@@ -133,20 +142,10 @@ new #[Layout('layouts.app')] class extends Component
         $this->modifierError = null;
     }
 
-    private function pushCartLine(Product $product, array $modifiers, ?string $notes): void
+    private function pushStagedItem(Product $product, array $modifiers, ?string $notes): void
     {
-        if (empty($modifiers)) {
-            foreach ($this->cart as $index => $line) {
-                if ($line['product_id'] === $product->id && empty($line['modifiers']) && $line['notes'] === $notes) {
-                    $this->cart[$index]['quantity']++;
-
-                    return;
-                }
-            }
-        }
-
-        $this->cart[] = [
-            'id' => $this->nextCartLineId++,
+        $this->stagedItems[] = [
+            'id' => $this->nextStagedId++,
             'product_id' => $product->id,
             'name' => $product->name,
             'unit_price' => (float) $product->price,
@@ -157,91 +156,111 @@ new #[Layout('layouts.app')] class extends Component
         ];
     }
 
-    public function incrementQty(int $lineId): void
+    public function removeStagedItem(int $id): void
     {
-        foreach ($this->cart as $index => $line) {
-            if ($line['id'] === $lineId) {
-                $this->cart[$index]['quantity']++;
+        $this->stagedItems = array_values(array_filter($this->stagedItems, fn ($item) => $item['id'] !== $id));
+    }
+
+    public function incrementStaged(int $id): void
+    {
+        foreach ($this->stagedItems as $index => $item) {
+            if ($item['id'] === $id) {
+                $this->stagedItems[$index]['quantity']++;
             }
         }
     }
 
-    public function decrementQty(int $lineId): void
+    public function decrementStaged(int $id): void
     {
-        foreach ($this->cart as $index => $line) {
-            if ($line['id'] === $lineId) {
-                if ($line['quantity'] <= 1) {
-                    unset($this->cart[$index]);
-                    $this->cart = array_values($this->cart);
+        foreach ($this->stagedItems as $index => $item) {
+            if ($item['id'] === $id) {
+                if ($item['quantity'] <= 1) {
+                    $this->removeStagedItem($id);
                 } else {
-                    $this->cart[$index]['quantity']--;
+                    $this->stagedItems[$index]['quantity']--;
                 }
             }
         }
     }
 
-    public function removeLine(int $lineId): void
+    public function removeSentItem(int $orderItemId, SaleService $sales): void
     {
-        $this->cart = array_values(array_filter($this->cart, fn ($line) => $line['id'] !== $lineId));
+        $order = Order::findOrFail($this->orderId);
+        $sales->removeOrderItem($order, $orderItemId);
     }
 
-    public function clearCart(): void
+    public function sendComanda(SaleService $sales): void
     {
-        $this->cart = [];
-        $this->discountType = '';
-        $this->discountValue = '';
-        $this->tipAmount = '0';
-    }
-
-    private function lineTotal(array $line): float
-    {
-        $modifiersTotal = array_sum(array_column($line['modifiers'], 'price_delta'));
-
-        return round(($line['unit_price'] + $modifiersTotal) * $line['quantity'], 2);
-    }
-
-    public function subtotal(): float
-    {
-        return round(array_sum(array_map(fn ($line) => $this->lineTotal($line), $this->cart)), 2);
-    }
-
-    public function taxAmount(): float
-    {
-        $tax = 0.0;
-
-        foreach ($this->cart as $line) {
-            $tax += round($this->lineTotal($line) * ($line['tax_rate'] / 100), 2);
-        }
-
-        return round($tax, 2);
-    }
-
-    public function discountAmount(): float
-    {
-        if ($this->discountType === '' || $this->discountValue === '' || ! is_numeric($this->discountValue)) {
-            return 0.0;
-        }
-
-        $subtotal = $this->subtotal();
-        $value = (float) $this->discountValue;
-
-        return round($this->discountType === 'percentage' ? $subtotal * ($value / 100) : min($value, $subtotal), 2);
-    }
-
-    public function total(): float
-    {
-        return round($this->subtotal() - $this->discountAmount() + $this->taxAmount() + (float) ($this->tipAmount ?: 0), 2);
-    }
-
-    public function openCheckout(): void
-    {
-        if (empty($this->cart)) {
+        if (empty($this->stagedItems)) {
             return;
         }
 
+        $user = Auth::user();
+
+        if (! $this->orderId) {
+            $order = $sales->createDraftOrder([
+                'business_id' => $user->businessId(),
+                'branch_id' => $user->branch_id,
+                'terminal_id' => session('terminal_id'),
+                'cash_register_session_id' => session('cash_register_session_id'),
+                'user_id' => $user->id,
+                'table_id' => $this->table->id,
+                'people_count' => $this->peopleCount,
+                'order_type' => 'mesa',
+            ]);
+            $this->orderId = $order->id;
+        } else {
+            $order = Order::findOrFail($this->orderId);
+        }
+
+        $items = array_map(fn ($item) => [
+            'product_id' => $item['product_id'],
+            'name' => $item['name'],
+            'quantity' => $item['quantity'],
+            'unit_price' => $item['unit_price'],
+            'tax_rate' => $item['tax_rate'],
+            'notes' => $item['notes'],
+            'modifiers' => $item['modifiers'],
+        ], $this->stagedItems);
+
+        $sales->addItemsToOrder($order, $items);
+
+        $this->stagedItems = [];
+    }
+
+    public function requestBill(SaleService $sales): void
+    {
+        if (! $this->orderId) {
+            return;
+        }
+
+        $sales->requestBill(Order::findOrFail($this->orderId));
+    }
+
+    public function voidTable(SaleService $sales): void
+    {
+        if ($this->orderId) {
+            $sales->voidDraftOrder(Order::findOrFail($this->orderId), Auth::id(), 'Mesa vaciada por el mesero');
+        }
+
+        $this->redirectRoute('mesas.mapa', navigate: true);
+    }
+
+    public function openCheckout(SaleService $sales): void
+    {
+        if (! empty($this->stagedItems)) {
+            $this->sendComanda($sales);
+        }
+
+        if (! $this->orderId) {
+            return;
+        }
+
+        $order = Order::findOrFail($this->orderId);
+
         $this->checkoutError = null;
         $this->paymentRows = [
-            ['method' => 'efectivo', 'amount' => number_format($this->total(), 2, '.', ''), 'received_amount' => ''],
+            ['method' => 'efectivo', 'amount' => number_format((float) $order->total, 2, '.', ''), 'received_amount' => ''],
         ];
         $this->showCheckout = true;
     }
@@ -271,29 +290,8 @@ new #[Layout('layouts.app')] class extends Component
     {
         $this->checkoutError = null;
 
-        if (empty($this->cart)) {
-            $this->checkoutError = 'El carrito está vacío.';
-
-            return;
-        }
-
-        if ($this->paymentsTotal() + 0.005 < $this->total()) {
-            $this->checkoutError = 'El monto pagado no cubre el total de la venta.';
-
-            return;
-        }
-
+        $order = Order::findOrFail($this->orderId);
         $user = Auth::user();
-
-        $items = array_map(fn ($line) => [
-            'product_id' => $line['product_id'],
-            'name' => $line['name'],
-            'quantity' => $line['quantity'],
-            'unit_price' => $line['unit_price'],
-            'tax_rate' => $line['tax_rate'],
-            'notes' => $line['notes'],
-            'modifiers' => $line['modifiers'],
-        ], $this->cart);
 
         $payments = array_map(fn ($row) => [
             'method' => $row['method'],
@@ -302,19 +300,13 @@ new #[Layout('layouts.app')] class extends Component
         ], $this->paymentRows);
 
         try {
-            $order = $sales->complete([
-                'business_id' => $user->businessId(),
-                'branch_id' => $user->branch_id,
-                'terminal_id' => session('terminal_id'),
-                'cash_register_session_id' => session('cash_register_session_id'),
-                'user_id' => $user->id,
-                'customer_id' => $this->customerId,
-                'order_type' => $this->orderType,
-                'items' => $items,
+            $order = $sales->payOrder($order, [
+                'payments' => $payments,
                 'discount_type' => $this->discountType !== '' ? $this->discountType : null,
                 'discount_value' => $this->discountValue !== '' ? (float) $this->discountValue : null,
                 'tip_amount' => (float) ($this->tipAmount ?: 0),
-                'payments' => $payments,
+                'user_id' => $user->id,
+                'customer_id' => $this->customerId,
             ]);
         } catch (\InvalidArgumentException $e) {
             $this->checkoutError = $e->getMessage();
@@ -323,15 +315,7 @@ new #[Layout('layouts.app')] class extends Component
         }
 
         $this->completedFolio = $order->folio;
-        $this->completedOrderId = $order->id;
         $this->showCheckout = false;
-        $this->clearCart();
-    }
-
-    public function startNewSale(): void
-    {
-        $this->completedFolio = null;
-        $this->completedOrderId = null;
     }
 
     public function with(): array
@@ -347,34 +331,37 @@ new #[Layout('layouts.app')] class extends Component
             ->orderBy('name')
             ->get();
 
+        $order = $this->orderId ? Order::with('items.modifiers')->find($this->orderId) : null;
+
         return [
             'categories' => ProductCategory::query()->where('business_id', $businessId)->where('is_active', true)->orderBy('sort_order')->orderBy('name')->get(),
             'products' => $products,
             'customers' => Customer::query()->where('business_id', $businessId)->orderBy('name')->get(),
-            'terminal' => Terminal::find(session('terminal_id')),
             'modifierProduct' => $this->modifierProductId
                 ? Product::with('modifierGroups.options')->find($this->modifierProductId)
                 : null,
             'paymentMethods' => PaymentMethod::cases(),
+            'order' => $order,
+            'stagedSubtotal' => round(array_sum(array_map(
+                fn ($item) => ($item['unit_price'] + array_sum(array_column($item['modifiers'], 'price_delta'))) * $item['quantity'],
+                $this->stagedItems,
+            )), 2),
         ];
     }
 };
 ?>
 
-<div class="flex min-h-screen bg-slate-950 text-white" x-data>
+<div class="flex min-h-screen bg-slate-950 text-white">
     <div class="flex w-56 flex-col border-r border-slate-800 bg-slate-900/50 p-4">
-        <a href="{{ route('dashboard') }}" wire:navigate class="mb-4 text-sm text-slate-400 hover:text-white">&larr; Salir del POS</a>
-        <div class="mb-2 text-xs text-slate-500">Terminal: {{ $terminal?->name ?? '—' }}</div>
+        <a href="{{ route('mesas.mapa') }}" wire:navigate class="mb-4 text-sm text-slate-400 hover:text-white">&larr; Mapa de mesas</a>
+        <div class="mb-4 text-lg font-semibold">{{ $table->name }}</div>
 
-        <div class="mb-4 flex flex-wrap gap-2 text-xs">
-            <a href="{{ route('mesas.mapa') }}" wire:navigate class="rounded-lg border border-slate-800 px-2 py-1 text-slate-300 hover:bg-slate-800">Mesas</a>
-            @can('caja.ver_movimientos')
-                <a href="{{ route('caja.movimientos') }}" wire:navigate class="rounded-lg border border-slate-800 px-2 py-1 text-slate-300 hover:bg-slate-800">Movimientos</a>
-            @endcan
-            @can('caja.cerrar')
-                <a href="{{ route('caja.cierre') }}" wire:navigate class="rounded-lg border border-slate-800 px-2 py-1 text-slate-300 hover:bg-slate-800">Cerrar caja</a>
-            @endcan
-        </div>
+        @if (! $order)
+            <div class="mb-4">
+                <label class="mb-1 block text-xs text-slate-400">Personas</label>
+                <input type="number" min="1" wire:model="peopleCount" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-2 py-1 text-sm text-white">
+            </div>
+        @endif
 
         <button wire:click="selectCategory(null)" class="mb-1 rounded-lg px-3 py-2 text-left text-sm {{ $activeCategoryId === null ? 'bg-indigo-600' : 'hover:bg-slate-800' }}">
             Todas
@@ -384,6 +371,13 @@ new #[Layout('layouts.app')] class extends Component
                 {{ $category->name }}
             </button>
         @endforeach
+
+        <div class="mt-auto space-y-2 pt-4">
+            @if ($order)
+                <button wire:click="requestBill" class="w-full rounded-lg border border-slate-700 py-2 text-xs text-slate-300 hover:bg-slate-800">Solicitar cuenta</button>
+            @endif
+            <button wire:click="voidTable" wire:confirm="¿Vaciar esta mesa? Se perderá la comanda si no se ha cobrado." class="w-full rounded-lg border border-red-800 py-2 text-xs text-red-400 hover:bg-red-950/30">Vaciar mesa</button>
+        </div>
     </div>
 
     <div class="flex-1 overflow-y-auto p-4">
@@ -400,69 +394,82 @@ new #[Layout('layouts.app')] class extends Component
     </div>
 
     <div class="flex w-96 flex-col border-l border-slate-800 bg-slate-900/50 p-4">
-        <h2 class="mb-3 text-lg font-semibold">Ticket</h2>
+        <h2 class="mb-3 text-lg font-semibold">Comanda</h2>
 
         <div class="flex-1 space-y-2 overflow-y-auto">
-            @forelse ($cart as $line)
+            @if ($order)
+                @foreach ($order->items as $item)
+                    <div class="rounded-lg border border-emerald-900 bg-emerald-950/20 p-3 text-sm">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <div class="font-medium">{{ $item->quantity }} &times; {{ $item->name }}</div>
+                                @foreach ($item->modifiers as $modifier)
+                                    <div class="text-xs text-slate-500">+ {{ $modifier->name }}</div>
+                                @endforeach
+                                @if ($item->notes)
+                                    <div class="text-xs italic text-amber-400">{{ $item->notes }}</div>
+                                @endif
+                                <div class="text-xs text-emerald-500">Enviado</div>
+                            </div>
+                            @if ($order->status->value === 'pending')
+                                <button wire:click="removeSentItem({{ $item->id }})" wire:confirm="¿Quitar este producto de la comanda?" class="text-red-400 hover:text-red-300">&times;</button>
+                            @endif
+                        </div>
+                        <div class="mt-1 text-right font-medium">${{ number_format((float) $item->subtotal, 2) }}</div>
+                    </div>
+                @endforeach
+            @endif
+
+            @foreach ($stagedItems as $item)
                 <div class="rounded-lg border border-slate-800 bg-slate-900 p-3 text-sm">
                     <div class="flex items-start justify-between">
                         <div>
-                            <div class="font-medium">{{ $line['name'] }}</div>
-                            @foreach ($line['modifiers'] as $modifier)
+                            <div class="font-medium">{{ $item['name'] }}</div>
+                            @foreach ($item['modifiers'] as $modifier)
                                 <div class="text-xs text-slate-500">+ {{ $modifier['name'] }}</div>
                             @endforeach
-                            @if ($line['notes'])
-                                <div class="text-xs italic text-amber-400">{{ $line['notes'] }}</div>
+                            @if ($item['notes'])
+                                <div class="text-xs italic text-amber-400">{{ $item['notes'] }}</div>
                             @endif
+                            <div class="text-xs text-amber-400">Sin enviar</div>
                         </div>
-                        <button wire:click="removeLine({{ $line['id'] }})" class="text-red-400 hover:text-red-300">&times;</button>
+                        <button wire:click="removeStagedItem({{ $item['id'] }})" class="text-red-400 hover:text-red-300">&times;</button>
                     </div>
                     <div class="mt-2 flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <button wire:click="decrementQty({{ $line['id'] }})" class="h-6 w-6 rounded bg-slate-800 hover:bg-slate-700">-</button>
-                            <span>{{ $line['quantity'] }}</span>
-                            <button wire:click="incrementQty({{ $line['id'] }})" class="h-6 w-6 rounded bg-slate-800 hover:bg-slate-700">+</button>
+                            <button wire:click="decrementStaged({{ $item['id'] }})" class="h-6 w-6 rounded bg-slate-800 hover:bg-slate-700">-</button>
+                            <span>{{ $item['quantity'] }}</span>
+                            <button wire:click="incrementStaged({{ $item['id'] }})" class="h-6 w-6 rounded bg-slate-800 hover:bg-slate-700">+</button>
                         </div>
                         <span class="font-medium">
-                            ${{ number_format(($line['unit_price'] + array_sum(array_column($line['modifiers'], 'price_delta'))) * $line['quantity'], 2) }}
+                            ${{ number_format(($item['unit_price'] + array_sum(array_column($item['modifiers'], 'price_delta'))) * $item['quantity'], 2) }}
                         </span>
                     </div>
                 </div>
-            @empty
-                <p class="text-center text-sm text-slate-500">Agrega productos al ticket.</p>
-            @endforelse
+            @endforeach
+
+            @if (! $order && empty($stagedItems))
+                <p class="text-center text-sm text-slate-500">Agrega productos a la comanda.</p>
+            @endif
         </div>
 
-        <div class="mt-4 space-y-1 border-t border-slate-800 pt-3 text-sm">
-            <div class="flex justify-between text-slate-400"><span>Subtotal</span><span>${{ number_format($this->subtotal(), 2) }}</span></div>
-            @if ($this->discountAmount() > 0)
-                <div class="flex justify-between text-slate-400"><span>Descuento</span><span>-${{ number_format($this->discountAmount(), 2) }}</span></div>
-            @endif
-            <div class="flex justify-between text-slate-400"><span>IVA</span><span>${{ number_format($this->taxAmount(), 2) }}</span></div>
-            @if ((float) ($tipAmount ?: 0) > 0)
-                <div class="flex justify-between text-slate-400"><span>Propina</span><span>${{ number_format((float) $tipAmount, 2) }}</span></div>
-            @endif
-            <div class="flex justify-between text-base font-semibold text-white"><span>Total</span><span>${{ number_format($this->total(), 2) }}</span></div>
-        </div>
+        @if (! empty($stagedItems))
+            <button wire:click="sendComanda" class="mt-3 w-full rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold hover:bg-amber-500">
+                Enviar comanda (${{ number_format($stagedSubtotal, 2) }})
+            </button>
+        @endif
 
-        @can('ventas.aplicar_descuento')
-            <div class="mt-3 grid grid-cols-2 gap-2">
-                <select wire:model="discountType" class="rounded-lg border border-slate-700 bg-slate-800 px-2 py-1.5 text-xs text-white">
-                    <option value="">Sin descuento</option>
-                    <option value="percentage">%</option>
-                    <option value="amount">$</option>
-                </select>
-                <input type="number" step="0.01" wire:model="discountValue" placeholder="Valor" class="rounded-lg border border-slate-700 bg-slate-800 px-2 py-1.5 text-xs text-white">
+        @if ($order)
+            <div class="mt-4 space-y-1 border-t border-slate-800 pt-3 text-sm">
+                <div class="flex justify-between text-slate-400"><span>Subtotal</span><span>${{ number_format((float) $order->subtotal, 2) }}</span></div>
+                <div class="flex justify-between text-slate-400"><span>IVA</span><span>${{ number_format((float) $order->tax_amount, 2) }}</span></div>
+                <div class="flex justify-between text-base font-semibold text-white"><span>Total</span><span>${{ number_format((float) $order->total, 2) }}</span></div>
             </div>
-        @endcan
 
-        <button
-            wire:click="openCheckout"
-            @if (empty($cart)) disabled @endif
-            class="mt-4 w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
-        >
-            Cobrar
-        </button>
+            <button wire:click="openCheckout" class="mt-4 w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold hover:bg-indigo-500">
+                Cobrar mesa
+            </button>
+        @endif
     </div>
 
     {{-- Modal de modificadores --}}
@@ -510,10 +517,10 @@ new #[Layout('layouts.app')] class extends Component
     @endif
 
     {{-- Modal de cobro --}}
-    @if ($showCheckout)
+    @if ($showCheckout && $order)
         <div class="fixed inset-0 z-40 flex items-center justify-center bg-black/70 p-4">
             <div class="w-full max-w-md rounded-xl border border-slate-800 bg-slate-900 p-6">
-                <h3 class="mb-4 text-lg font-semibold">Cobrar ${{ number_format($this->total(), 2) }}</h3>
+                <h3 class="mb-4 text-lg font-semibold">Cobrar {{ $table->name }}</h3>
 
                 @if ($checkoutError)
                     <p class="mb-3 text-sm text-red-400">{{ $checkoutError }}</p>
@@ -527,6 +534,22 @@ new #[Layout('layouts.app')] class extends Component
                             <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                         @endforeach
                     </select>
+                </div>
+
+                @can('ventas.aplicar_descuento')
+                    <div class="mb-3 grid grid-cols-2 gap-2">
+                        <select wire:model="discountType" class="rounded-lg border border-slate-700 bg-slate-800 px-2 py-1.5 text-xs text-white">
+                            <option value="">Sin descuento</option>
+                            <option value="percentage">%</option>
+                            <option value="amount">$</option>
+                        </select>
+                        <input type="number" step="0.01" wire:model="discountValue" placeholder="Valor" class="rounded-lg border border-slate-700 bg-slate-800 px-2 py-1.5 text-xs text-white">
+                    </div>
+                @endcan
+
+                <div class="mb-3">
+                    <label class="mb-1 block text-sm text-slate-300">Propina</label>
+                    <input type="number" step="0.01" wire:model="tipAmount" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white">
                 </div>
 
                 <div class="mb-3 space-y-2">
@@ -567,15 +590,15 @@ new #[Layout('layouts.app')] class extends Component
     @if ($completedFolio)
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
             <div class="w-full max-w-sm rounded-xl border border-emerald-800 bg-slate-900 p-6 text-center">
-                <h3 class="mb-2 text-xl font-semibold text-emerald-400">Venta completada</h3>
+                <h3 class="mb-2 text-xl font-semibold text-emerald-400">Mesa cobrada</h3>
                 <p class="mb-4 text-slate-300">Folio {{ $completedFolio }}</p>
                 <div class="flex flex-col gap-2">
-                    <a href="{{ route('ventas.ticket', $completedOrderId) }}" target="_blank" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">
+                    <a href="{{ route('ventas.ticket', $order->id) }}" target="_blank" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">
                         Ver / imprimir ticket
                     </a>
-                    <button wire:click="startNewSale" class="rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">
-                        Nueva venta
-                    </button>
+                    <a href="{{ route('mesas.mapa') }}" wire:navigate class="rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">
+                        Volver al mapa
+                    </a>
                 </div>
             </div>
         </div>

@@ -35,11 +35,22 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::livewire('/cajas', 'admin.cajas.index')
         ->middleware('permission:configuracion.editar')
         ->name('cajas');
+
+    Route::livewire('/salones', 'admin.salones.index')
+        ->middleware('permission:configuracion.editar')
+        ->name('salones');
+
+    Route::livewire('/mesas', 'admin.mesas.index')
+        ->middleware('permission:configuracion.editar')
+        ->name('mesas');
 });
 
 Route::middleware(['auth', 'permission:ventas.crear'])->group(function () {
     Route::livewire('/pos/terminal', 'pos.seleccionar-terminal')->name('pos.terminal');
     Route::livewire('/pos', 'pos.index')->name('pos');
+
+    Route::livewire('/mesas', 'mesas.mapa')->name('mesas.mapa');
+    Route::livewire('/mesas/{table}/comanda', 'mesas.comanda')->name('mesas.comanda');
 });
 
 Route::middleware(['auth'])->prefix('caja')->name('caja.')->group(function () {

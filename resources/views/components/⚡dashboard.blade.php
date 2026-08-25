@@ -43,6 +43,9 @@ new #[Layout('layouts.app')] class extends Component
                 <a href="{{ route('pos') }}" wire:navigate class="rounded-xl border border-indigo-700 bg-indigo-600/20 p-4 text-center hover:border-indigo-500">
                     <span class="block text-sm font-medium">Punto de venta</span>
                 </a>
+                <a href="{{ route('mesas.mapa') }}" wire:navigate class="rounded-xl border border-indigo-700 bg-indigo-600/20 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Mapa de mesas</span>
+                </a>
             @endcan
             @can('productos.ver')
                 <a href="{{ route('admin.categorias') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
@@ -66,6 +69,12 @@ new #[Layout('layouts.app')] class extends Component
                 </a>
                 <a href="{{ route('admin.cajas') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
                     <span class="block text-sm font-medium">Cajas</span>
+                </a>
+                <a href="{{ route('admin.salones') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Salones</span>
+                </a>
+                <a href="{{ route('admin.mesas') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Mesas</span>
                 </a>
             @endcan
         </div>

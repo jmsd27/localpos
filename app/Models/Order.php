@@ -21,7 +21,10 @@ class Order extends Model
         'cash_register_session_id',
         'user_id',
         'customer_id',
+        'table_id',
+        'people_count',
         'folio',
+        'comanda_folio',
         'order_type',
         'status',
         'subtotal',
@@ -79,6 +82,11 @@ class Order extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function table(): BelongsTo
+    {
+        return $this->belongsTo(Table::class);
     }
 
     public function items(): HasMany
