@@ -18,6 +18,7 @@ class PermissionSeeder extends Seeder
         'caja.abrir', 'caja.cerrar', 'caja.ver_movimientos', 'caja.registrar_movimiento',
         'inventario.ver', 'inventario.ajustar', 'inventario.ver_kardex',
         'productos.crear', 'productos.editar', 'productos.eliminar', 'productos.ver',
+        'clientes.crear', 'clientes.editar', 'clientes.eliminar', 'clientes.ver',
         'compras.crear', 'compras.aprobar', 'compras.ver',
         'reportes.ver', 'reportes.exportar',
         'usuarios.crear', 'usuarios.editar', 'usuarios.eliminar', 'usuarios.asignar_rol',

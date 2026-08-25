@@ -17,6 +17,7 @@ class RoleSeeder extends Seeder
                 'caja.abrir', 'caja.cerrar', 'caja.ver_movimientos', 'caja.registrar_movimiento',
                 'inventario.ver', 'inventario.ajustar', 'inventario.ver_kardex',
                 'productos.crear', 'productos.editar', 'productos.eliminar', 'productos.ver',
+                'clientes.crear', 'clientes.editar', 'clientes.eliminar', 'clientes.ver',
                 'compras.crear', 'compras.aprobar', 'compras.ver',
                 'reportes.ver', 'reportes.exportar',
                 'usuarios.crear', 'usuarios.editar', 'usuarios.eliminar', 'usuarios.asignar_rol',
@@ -25,14 +26,16 @@ class RoleSeeder extends Seeder
             RoleName::Encargado->value => [
                 'ventas.ver', 'ventas.editar', 'ventas.anular', 'ventas.aplicar_descuento',
                 'caja.ver_movimientos', 'inventario.ver', 'inventario.ajustar', 'inventario.ver_kardex',
-                'productos.ver', 'compras.ver', 'reportes.ver',
+                'productos.ver', 'clientes.crear', 'clientes.editar', 'clientes.ver',
+                'compras.ver', 'reportes.ver',
             ],
             RoleName::Cajero->value => [
                 'ventas.crear', 'ventas.ver', 'ventas.aplicar_descuento',
                 'caja.abrir', 'caja.cerrar', 'caja.registrar_movimiento',
+                'clientes.crear', 'clientes.ver',
             ],
             RoleName::Mesero->value => [
-                'ventas.crear', 'ventas.ver',
+                'ventas.crear', 'ventas.ver', 'clientes.crear', 'clientes.ver',
             ],
             RoleName::Cocina->value => [],
             RoleName::Barra->value => [],

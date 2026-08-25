@@ -37,5 +37,24 @@ new #[Layout('layouts.app')] class extends Component
                 Roles: {{ Auth::user()->getRoleNames()->join(', ') ?: 'sin rol asignado' }}
             </p>
         </div>
+
+        <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            @can('productos.ver')
+                <a href="{{ route('admin.categorias') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Categorías</span>
+                </a>
+                <a href="{{ route('admin.productos') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Productos</span>
+                </a>
+                <a href="{{ route('admin.modificadores') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Modificadores</span>
+                </a>
+            @endcan
+            @can('clientes.ver')
+                <a href="{{ route('admin.clientes') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Clientes</span>
+                </a>
+            @endcan
+        </div>
     </div>
 </div>

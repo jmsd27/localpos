@@ -60,4 +60,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Branch::class);
     }
+
+    public function businessId(): ?int
+    {
+        return $this->branch?->business_id;
+    }
 }
