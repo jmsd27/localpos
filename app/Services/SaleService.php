@@ -2,7 +2,11 @@
 
 namespace App\Services;
 
+use App\Enums\CashMovementType;
+use App\Enums\CashRegisterSessionStatus;
 use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
+use App\Models\CashRegisterSession;
 use App\Models\Order;
 use App\Models\OrderCancellation;
 use Illuminate\Support\Facades\DB;
@@ -13,13 +17,14 @@ class SaleService
     public function __construct(
         private readonly FolioGenerator $folios,
         private readonly AuditLogger $auditLogger,
+        private readonly CashRegisterService $cashRegisters,
     ) {}
 
     /**
      * Crea y cierra una venta en una sola transacción: líneas, modificadores y pagos.
      *
      * @param  array{
-     *     business_id: int, branch_id: int, terminal_id: ?int, user_id: int, customer_id: ?int,
+     *     business_id: int, branch_id: int, terminal_id: ?int, cash_register_session_id: ?int, user_id: int, customer_id: ?int,
      *     order_type: string,
      *     items: list<array{product_id: int, name: string, quantity: float, unit_price: float, tax_rate: float, notes: ?string, modifiers: list<array{modifier_option_id: ?int, name: string, price_delta: float}>}>,
      *     discount_type: ?string, discount_value: ?float,
@@ -70,6 +75,7 @@ class SaleService
                 'business_id' => $data['business_id'],
                 'branch_id' => $data['branch_id'],
                 'terminal_id' => $data['terminal_id'],
+                'cash_register_session_id' => $data['cash_register_session_id'] ?? null,
                 'user_id' => $data['user_id'],
                 'customer_id' => $data['customer_id'],
                 'folio' => $this->folios->next($data['business_id'], 'venta'),
@@ -102,6 +108,10 @@ class SaleService
                 }
             }
 
+            $session = ($data['cash_register_session_id'] ?? null)
+                ? CashRegisterSession::find($data['cash_register_session_id'])
+                : null;
+
             foreach ($data['payments'] as $payment) {
                 $isCash = $payment['method'] === 'efectivo';
                 $received = $payment['received_amount'] ?? null;
@@ -114,6 +124,17 @@ class SaleService
                         ? max(0, round($received - $payment['amount'], 2))
                         : null,
                 ]);
+
+                if ($session && $session->status === CashRegisterSessionStatus::Open) {
+                    $this->cashRegisters->addMovement(
+                        $session,
+                        CashMovementType::Venta,
+                        $payment['amount'],
+                        $data['user_id'],
+                        orderId: $order->id,
+                        paymentMethod: PaymentMethod::from($payment['method']),
+                    );
+                }
             }
 
             $this->auditLogger->log('venta.crear', $order, null, $order->only([
@@ -138,6 +159,22 @@ class SaleService
                 'amount' => $order->total,
                 'created_at' => now(),
             ]);
+
+            $session = $order->cash_register_session_id ? CashRegisterSession::find($order->cash_register_session_id) : null;
+
+            if ($session && $session->status === CashRegisterSessionStatus::Open) {
+                foreach ($order->payments as $payment) {
+                    $this->cashRegisters->addMovement(
+                        $session,
+                        CashMovementType::Cancelacion,
+                        -$payment->amount,
+                        $userId,
+                        reason: $reason,
+                        orderId: $order->id,
+                        paymentMethod: $payment->method,
+                    );
+                }
+            }
 
             $this->auditLogger->log('venta.anular', $order, $before, ['status' => OrderStatus::Cancelled->value, 'reason' => $reason]);
 

@@ -5,27 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Terminal extends Model
+class CashRegister extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'business_id',
         'branch_id',
-        'cash_register_id',
         'name',
         'code',
-        'ip_address',
         'is_active',
-        'last_seen_at',
     ];
 
     protected function casts(): array
     {
         return [
             'is_active' => 'boolean',
-            'last_seen_at' => 'datetime',
         ];
     }
 
@@ -39,8 +36,8 @@ class Terminal extends Model
         return $this->belongsTo(Branch::class);
     }
 
-    public function cashRegister(): BelongsTo
+    public function sessions(): HasMany
     {
-        return $this->belongsTo(CashRegister::class);
+        return $this->hasMany(CashRegisterSession::class);
     }
 }

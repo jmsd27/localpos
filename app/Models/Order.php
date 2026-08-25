@@ -18,6 +18,7 @@ class Order extends Model
         'business_id',
         'branch_id',
         'terminal_id',
+        'cash_register_session_id',
         'user_id',
         'customer_id',
         'folio',
@@ -63,6 +64,11 @@ class Order extends Model
     public function terminal(): BelongsTo
     {
         return $this->belongsTo(Terminal::class);
+    }
+
+    public function cashRegisterSession(): BelongsTo
+    {
+        return $this->belongsTo(CashRegisterSession::class);
     }
 
     public function user(): BelongsTo

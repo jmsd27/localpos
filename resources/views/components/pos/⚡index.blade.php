@@ -53,6 +53,12 @@ new #[Layout('layouts.app')] class extends Component
     {
         if (! session('terminal_id')) {
             $this->redirectRoute('pos.terminal', navigate: true);
+
+            return;
+        }
+
+        if (! session('cash_register_session_id')) {
+            $this->redirectRoute('caja.apertura', navigate: true);
         }
     }
 
@@ -300,6 +306,7 @@ new #[Layout('layouts.app')] class extends Component
                 'business_id' => $user->businessId(),
                 'branch_id' => $user->branch_id,
                 'terminal_id' => session('terminal_id'),
+                'cash_register_session_id' => session('cash_register_session_id'),
                 'user_id' => $user->id,
                 'customer_id' => $this->customerId,
                 'order_type' => $this->orderType,
@@ -357,7 +364,16 @@ new #[Layout('layouts.app')] class extends Component
 <div class="flex min-h-screen bg-slate-950 text-white" x-data>
     <div class="flex w-56 flex-col border-r border-slate-800 bg-slate-900/50 p-4">
         <a href="{{ route('dashboard') }}" wire:navigate class="mb-4 text-sm text-slate-400 hover:text-white">&larr; Salir del POS</a>
-        <div class="mb-4 text-xs text-slate-500">Terminal: {{ $terminal?->name ?? '—' }}</div>
+        <div class="mb-2 text-xs text-slate-500">Terminal: {{ $terminal?->name ?? '—' }}</div>
+
+        <div class="mb-4 flex gap-2 text-xs">
+            @can('caja.ver_movimientos')
+                <a href="{{ route('caja.movimientos') }}" wire:navigate class="rounded-lg border border-slate-800 px-2 py-1 text-slate-300 hover:bg-slate-800">Movimientos</a>
+            @endcan
+            @can('caja.cerrar')
+                <a href="{{ route('caja.cierre') }}" wire:navigate class="rounded-lg border border-slate-800 px-2 py-1 text-slate-300 hover:bg-slate-800">Cerrar caja</a>
+            @endcan
+        </div>
 
         <button wire:click="selectCategory(null)" class="mb-1 rounded-lg px-3 py-2 text-left text-sm {{ $activeCategoryId === null ? 'bg-indigo-600' : 'hover:bg-slate-800' }}">
             Todas

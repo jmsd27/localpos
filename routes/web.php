@@ -31,11 +31,29 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::livewire('/terminales', 'admin.terminales.index')
         ->middleware('permission:configuracion.editar')
         ->name('terminales');
+
+    Route::livewire('/cajas', 'admin.cajas.index')
+        ->middleware('permission:configuracion.editar')
+        ->name('cajas');
 });
 
 Route::middleware(['auth', 'permission:ventas.crear'])->group(function () {
     Route::livewire('/pos/terminal', 'pos.seleccionar-terminal')->name('pos.terminal');
     Route::livewire('/pos', 'pos.index')->name('pos');
+});
+
+Route::middleware(['auth'])->prefix('caja')->name('caja.')->group(function () {
+    Route::livewire('/apertura', 'caja.apertura')
+        ->middleware('permission:caja.abrir')
+        ->name('apertura');
+
+    Route::livewire('/movimientos', 'caja.movimientos')
+        ->middleware('permission:caja.ver_movimientos')
+        ->name('movimientos');
+
+    Route::livewire('/cierre', 'caja.cierre')
+        ->middleware('permission:caja.cerrar')
+        ->name('cierre');
 });
 
 Route::get('/ventas/{order}/ticket', TicketController::class)

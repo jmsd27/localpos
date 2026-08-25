@@ -1,23 +1,33 @@
 <?php
 
 use App\Enums\RoleName;
+use App\Models\CashRegister;
 use App\Models\ModifierGroup;
 use App\Models\ModifierOption;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Terminal;
+use App\Services\CashRegisterService;
 use Livewire\Livewire;
 
 function posContext(string $role = 'cajero'): array
 {
     $user = loginAsRole($role);
-    $terminal = Terminal::factory()->create([
+    $cashRegister = CashRegister::factory()->create([
         'business_id' => $user->businessId(),
         'branch_id' => $user->branch_id,
     ]);
-    session(['terminal_id' => $terminal->id]);
+    $terminal = Terminal::factory()->create([
+        'business_id' => $user->businessId(),
+        'branch_id' => $user->branch_id,
+        'cash_register_id' => $cashRegister->id,
+    ]);
+    $session = app(CashRegisterService::class)->open($cashRegister->id, $terminal->id, $user->id, 500);
 
-    return [$user, $terminal];
+    session(['terminal_id' => $terminal->id]);
+    session(['cash_register_session_id' => $session->id]);
+
+    return [$user, $terminal, $session];
 }
 
 test('sin terminal seleccionada el pos redirige al selector', function () {

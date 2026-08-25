@@ -17,8 +17,9 @@ new #[Layout('layouts.app')] class extends Component
         $terminal->update(['last_seen_at' => now()]);
 
         session(['terminal_id' => $terminal->id]);
+        session()->forget('cash_register_session_id');
 
-        $this->redirectRoute('pos', navigate: true);
+        $this->redirectRoute('caja.apertura', navigate: true);
     }
 
     public function with(): array
