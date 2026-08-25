@@ -20,6 +20,7 @@ class PermissionSeeder extends Seeder
         'productos.crear', 'productos.editar', 'productos.eliminar', 'productos.ver',
         'clientes.crear', 'clientes.editar', 'clientes.eliminar', 'clientes.ver',
         'compras.crear', 'compras.aprobar', 'compras.ver',
+        'cocina.ver', 'cocina.gestionar',
         'reportes.ver', 'reportes.exportar',
         'usuarios.crear', 'usuarios.editar', 'usuarios.eliminar', 'usuarios.asignar_rol',
         'configuracion.editar', 'configuracion.ver',

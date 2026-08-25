@@ -147,6 +147,7 @@ new #[Layout('layouts.app')] class extends Component
         $this->stagedItems[] = [
             'id' => $this->nextStagedId++,
             'product_id' => $product->id,
+            'kitchen_station_id' => $product->kitchen_station_id,
             'name' => $product->name,
             'unit_price' => (float) $product->price,
             'tax_rate' => (float) $product->tax_rate,
@@ -215,6 +216,7 @@ new #[Layout('layouts.app')] class extends Component
 
         $items = array_map(fn ($item) => [
             'product_id' => $item['product_id'],
+            'kitchen_station_id' => $item['kitchen_station_id'],
             'name' => $item['name'],
             'quantity' => $item['quantity'],
             'unit_price' => $item['unit_price'],

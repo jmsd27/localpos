@@ -16,6 +16,7 @@ class Product extends Model
     protected $fillable = [
         'business_id',
         'product_category_id',
+        'kitchen_station_id',
         'sku',
         'barcode',
         'name',
@@ -55,6 +56,11 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class, 'product_category_id');
+    }
+
+    public function kitchenStation(): BelongsTo
+    {
+        return $this->belongsTo(KitchenStation::class);
     }
 
     public function modifierGroups(): BelongsToMany

@@ -47,6 +47,11 @@ new #[Layout('layouts.app')] class extends Component
                     <span class="block text-sm font-medium">Mapa de mesas</span>
                 </a>
             @endcan
+            @can('cocina.ver')
+                <a href="{{ route('kds') }}" wire:navigate class="rounded-xl border border-indigo-700 bg-indigo-600/20 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Cocina (KDS)</span>
+                </a>
+            @endcan
             @can('productos.ver')
                 <a href="{{ route('admin.categorias') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
                     <span class="block text-sm font-medium">Categorías</span>
@@ -75,6 +80,9 @@ new #[Layout('layouts.app')] class extends Component
                 </a>
                 <a href="{{ route('admin.mesas') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
                     <span class="block text-sm font-medium">Mesas</span>
+                </a>
+                <a href="{{ route('admin.estaciones') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Estaciones</span>
                 </a>
             @endcan
         </div>

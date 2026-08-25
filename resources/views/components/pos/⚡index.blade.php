@@ -148,6 +148,7 @@ new #[Layout('layouts.app')] class extends Component
         $this->cart[] = [
             'id' => $this->nextCartLineId++,
             'product_id' => $product->id,
+            'kitchen_station_id' => $product->kitchen_station_id,
             'name' => $product->name,
             'unit_price' => (float) $product->price,
             'tax_rate' => (float) $product->tax_rate,
@@ -287,6 +288,7 @@ new #[Layout('layouts.app')] class extends Component
 
         $items = array_map(fn ($line) => [
             'product_id' => $line['product_id'],
+            'kitchen_station_id' => $line['kitchen_station_id'],
             'name' => $line['name'],
             'quantity' => $line['quantity'],
             'unit_price' => $line['unit_price'],

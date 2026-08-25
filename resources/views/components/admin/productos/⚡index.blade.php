@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\ProductUnit;
+use App\Models\KitchenStation;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,8 @@ new #[Layout('layouts.app')] class extends Component
     public string $tax_rate = '0';
 
     public ?int $product_category_id = null;
+
+    public ?int $kitchen_station_id = null;
 
     public string $unit = 'pieza';
 
@@ -74,6 +77,7 @@ new #[Layout('layouts.app')] class extends Component
         $this->cost_price = (string) $product->cost_price;
         $this->tax_rate = (string) $product->tax_rate;
         $this->product_category_id = $product->product_category_id;
+        $this->kitchen_station_id = $product->kitchen_station_id;
         $this->unit = $product->unit->value;
         $this->is_inventoried = $product->is_inventoried;
         $this->is_sellable = $product->is_sellable;
@@ -96,6 +100,7 @@ new #[Layout('layouts.app')] class extends Component
             'cost_price' => 'nullable|numeric|min:0',
             'tax_rate' => 'required|numeric|min:0|max:100',
             'product_category_id' => 'nullable|exists:product_categories,id',
+            'kitchen_station_id' => 'nullable|exists:kitchen_stations,id',
             'unit' => 'required|string',
             'is_inventoried' => 'boolean',
             'is_sellable' => 'boolean',
@@ -144,7 +149,7 @@ new #[Layout('layouts.app')] class extends Component
     {
         $this->reset([
             'editingId', 'name', 'sku', 'barcode', 'description', 'price', 'cost_price',
-            'product_category_id', 'is_inventoried', 'is_sellable', 'is_active', 'image', 'existingImagePath',
+            'product_category_id', 'kitchen_station_id', 'is_inventoried', 'is_sellable', 'is_active', 'image', 'existingImagePath',
         ]);
         $this->tax_rate = '0';
         $this->unit = 'pieza';
@@ -163,6 +168,7 @@ new #[Layout('layouts.app')] class extends Component
                 ->orderBy('name')
                 ->paginate(15),
             'categories' => ProductCategory::query()->where('business_id', $businessId)->orderBy('name')->get(),
+            'stations' => KitchenStation::query()->where('business_id', $businessId)->where('is_active', true)->orderBy('name')->get(),
             'units' => ProductUnit::cases(),
         ];
     }
@@ -226,6 +232,15 @@ new #[Layout('layouts.app')] class extends Component
                             <select wire:model="unit" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
                                 @foreach ($units as $u)
                                     <option value="{{ $u->value }}">{{ $u->label() }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-sm text-slate-300">Estación</label>
+                            <select wire:model="kitchen_station_id" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
+                                <option value="">Sin estación</option>
+                                @foreach ($stations as $station)
+                                    <option value="{{ $station->id }}">{{ $station->name }}</option>
                                 @endforeach
                             </select>
                         </div>

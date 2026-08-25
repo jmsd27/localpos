@@ -43,7 +43,15 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::livewire('/mesas', 'admin.mesas.index')
         ->middleware('permission:configuracion.editar')
         ->name('mesas');
+
+    Route::livewire('/estaciones', 'admin.estaciones.index')
+        ->middleware('permission:configuracion.editar')
+        ->name('estaciones');
 });
+
+Route::livewire('/kds', 'kds.tablero')
+    ->middleware(['auth', 'permission:cocina.ver'])
+    ->name('kds');
 
 Route::middleware(['auth', 'permission:ventas.crear'])->group(function () {
     Route::livewire('/pos/terminal', 'pos.seleccionar-terminal')->name('pos.terminal');

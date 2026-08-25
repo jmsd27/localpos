@@ -98,6 +98,7 @@ class SaleService
 
                 $orderItem = $order->items()->create([
                     'product_id' => $item['product_id'],
+                    'kitchen_station_id' => $item['kitchen_station_id'] ?? null,
                     'name' => $item['name'],
                     'quantity' => $item['quantity'],
                     'unit_price' => $item['unit_price'],
