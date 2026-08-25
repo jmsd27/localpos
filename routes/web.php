@@ -55,6 +55,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::livewire('/recetas', 'admin.recetas.index')
         ->middleware('permission:inventario.ajustar')
         ->name('recetas');
+
+    Route::livewire('/proveedores', 'admin.proveedores.index')
+        ->middleware('permission:compras.crear')
+        ->name('proveedores');
 });
 
 Route::middleware(['auth'])->prefix('inventario')->name('inventario.')->group(function () {
@@ -77,6 +81,12 @@ Route::middleware(['auth', 'permission:ventas.crear'])->group(function () {
 
     Route::livewire('/mesas', 'mesas.mapa')->name('mesas.mapa');
     Route::livewire('/mesas/{table}/comanda', 'mesas.comanda')->name('mesas.comanda');
+});
+
+Route::middleware(['auth'])->prefix('compras')->name('compras.')->group(function () {
+    Route::livewire('/', 'compras.index')
+        ->middleware('permission:compras.ver')
+        ->name('index');
 });
 
 Route::middleware(['auth'])->prefix('caja')->name('caja.')->group(function () {

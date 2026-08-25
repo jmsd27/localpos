@@ -79,6 +79,16 @@ new #[Layout('layouts.app')] class extends Component
                     <span class="block text-sm font-medium">Inventario</span>
                 </a>
             @endcan
+            @can('compras.ver')
+                <a href="{{ route('compras.index') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Compras</span>
+                </a>
+            @endcan
+            @can('compras.crear')
+                <a href="{{ route('admin.proveedores') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Proveedores</span>
+                </a>
+            @endcan
             @can('configuracion.editar')
                 <a href="{{ route('admin.terminales') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
                     <span class="block text-sm font-medium">Terminales</span>
