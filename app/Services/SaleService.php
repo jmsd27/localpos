@@ -20,6 +20,7 @@ class SaleService
         private readonly AuditLogger $auditLogger,
         private readonly CashRegisterService $cashRegisters,
         private readonly InventoryService $inventory,
+        private readonly PrintService $printer,
     ) {}
 
     /**
@@ -93,6 +94,8 @@ class SaleService
     public function addItemsToOrder(Order $order, array $items): Order
     {
         return DB::transaction(function () use ($order, $items) {
+            $newItems = collect();
+
             foreach ($items as $item) {
                 $modifiersTotal = array_sum(array_column($item['modifiers'], 'price_delta'));
                 $lineSubtotal = round(($item['unit_price'] + $modifiersTotal) * $item['quantity'], 2);
@@ -111,9 +114,13 @@ class SaleService
                 foreach ($item['modifiers'] as $modifier) {
                     $orderItem->modifiers()->create($modifier);
                 }
+
+                $newItems->push($orderItem->load('modifiers'));
             }
 
             $this->recalculateTotals($order);
+
+            $this->printer->enqueueKitchenComandas($order, $newItems);
 
             return $order->fresh(['items.modifiers']);
         });
@@ -258,6 +265,8 @@ class SaleService
             $this->auditLogger->log('venta.crear', $order, null, $order->only([
                 'folio', 'subtotal', 'discount_amount', 'tax_amount', 'tip_amount', 'total',
             ]));
+
+            $this->printer->enqueueSaleTicket($order->fresh(['items.modifiers', 'payments']));
 
             return $order->fresh(['items.modifiers', 'payments']);
         });

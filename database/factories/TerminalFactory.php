@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Branch;
 use App\Models\Terminal;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Terminal>
@@ -25,6 +26,7 @@ class TerminalFactory extends Factory
             'branch_id' => $branch->id,
             'name' => 'Caja '.fake()->numberBetween(1, 20),
             'code' => fake()->unique()->slug(2),
+            'api_token' => Str::random(48),
             'is_active' => true,
         ];
     }

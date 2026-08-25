@@ -105,6 +105,9 @@ new #[Layout('layouts.app')] class extends Component
                 <a href="{{ route('admin.estaciones') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
                     <span class="block text-sm font-medium">Estaciones</span>
                 </a>
+                <a href="{{ route('impresion.cola') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Cola de impresión</span>
+                </a>
             @endcan
         </div>
     </div>

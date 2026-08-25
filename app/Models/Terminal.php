@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Terminal extends Model
 {
@@ -17,6 +18,8 @@ class Terminal extends Model
         'name',
         'code',
         'ip_address',
+        'printer_name',
+        'api_token',
         'is_active',
         'last_seen_at',
     ];
@@ -42,5 +45,10 @@ class Terminal extends Model
     public function cashRegister(): BelongsTo
     {
         return $this->belongsTo(CashRegister::class);
+    }
+
+    public function printJobs(): HasMany
+    {
+        return $this->hasMany(PrintJob::class);
     }
 }

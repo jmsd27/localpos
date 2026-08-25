@@ -17,6 +17,7 @@ class KitchenStation extends Model
         'name',
         'code',
         'color',
+        'printer_terminal_id',
         'is_active',
     ];
 
@@ -35,5 +36,10 @@ class KitchenStation extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function printerTerminal(): BelongsTo
+    {
+        return $this->belongsTo(Terminal::class, 'printer_terminal_id');
     }
 }

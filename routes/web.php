@@ -107,4 +107,8 @@ Route::get('/ventas/{order}/ticket', TicketController::class)
     ->middleware('auth')
     ->name('ventas.ticket');
 
+Route::livewire('/impresion/cola', 'impresion.cola')
+    ->middleware(['auth', 'permission:configuracion.editar'])
+    ->name('impresion.cola');
+
 Route::redirect('/', '/dashboard');

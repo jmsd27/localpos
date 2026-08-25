@@ -3,6 +3,7 @@
 use App\Models\CashRegister;
 use App\Models\Terminal;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -17,6 +18,8 @@ new #[Layout('layouts.app')] class extends Component
     public string $code = '';
 
     public string $ip_address = '';
+
+    public string $printer_name = '';
 
     public ?int $cash_register_id = null;
 
@@ -36,6 +39,7 @@ new #[Layout('layouts.app')] class extends Component
         $this->name = $terminal->name;
         $this->code = $terminal->code;
         $this->ip_address = (string) $terminal->ip_address;
+        $this->printer_name = (string) $terminal->printer_name;
         $this->cash_register_id = $terminal->cash_register_id;
         $this->is_active = $terminal->is_active;
         $this->showForm = true;
@@ -49,17 +53,20 @@ new #[Layout('layouts.app')] class extends Component
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255',
             'ip_address' => 'nullable|ip',
+            'printer_name' => 'nullable|string|max:255',
             'cash_register_id' => 'nullable|exists:cash_registers,id',
             'is_active' => 'boolean',
         ]);
 
         $data['ip_address'] = $data['ip_address'] !== '' ? $data['ip_address'] : null;
+        $data['printer_name'] = $data['printer_name'] !== '' ? $data['printer_name'] : null;
         $data['business_id'] = $businessId;
         $data['branch_id'] = Auth::user()->branch_id;
 
         if ($this->editingId) {
             Terminal::query()->where('business_id', $businessId)->findOrFail($this->editingId)->update($data);
         } else {
+            $data['api_token'] = Str::random(48);
             Terminal::create($data);
         }
 
@@ -72,6 +79,11 @@ new #[Layout('layouts.app')] class extends Component
         Terminal::query()->where('business_id', Auth::user()->businessId())->findOrFail($id)->delete();
     }
 
+    public function regenerateToken(int $id): void
+    {
+        Terminal::query()->where('business_id', Auth::user()->businessId())->findOrFail($id)->update(['api_token' => Str::random(48)]);
+    }
+
     public function cancel(): void
     {
         $this->resetForm();
@@ -80,7 +92,7 @@ new #[Layout('layouts.app')] class extends Component
 
     private function resetForm(): void
     {
-        $this->reset(['editingId', 'name', 'code', 'ip_address', 'cash_register_id']);
+        $this->reset(['editingId', 'name', 'code', 'ip_address', 'printer_name', 'cash_register_id']);
         $this->is_active = true;
     }
 
@@ -141,6 +153,10 @@ new #[Layout('layouts.app')] class extends Component
                             </select>
                             @error('cash_register_id') <span class="mt-1 block text-sm text-red-400">{{ $message }}</span> @enderror
                         </div>
+                        <div>
+                            <label class="mb-1 block text-sm text-slate-300">Impresora (opcional)</label>
+                            <input type="text" wire:model="printer_name" placeholder="Epson TM-T20 USB" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
+                        </div>
                     </div>
 
                     <label class="flex items-center gap-2 text-sm text-slate-300">
@@ -164,6 +180,7 @@ new #[Layout('layouts.app')] class extends Component
                         <th class="px-4 py-3">Código</th>
                         <th class="px-4 py-3">Caja</th>
                         <th class="px-4 py-3">IP</th>
+                        <th class="px-4 py-3">Token del agente</th>
                         <th class="px-4 py-3">Estado</th>
                         <th class="px-4 py-3"></th>
                     </tr>
@@ -175,6 +192,10 @@ new #[Layout('layouts.app')] class extends Component
                             <td class="px-4 py-3 text-slate-400">{{ $terminal->code }}</td>
                             <td class="px-4 py-3 text-slate-400">{{ $terminal->cashRegister?->name ?? '—' }}</td>
                             <td class="px-4 py-3 text-slate-400">{{ $terminal->ip_address ?? '—' }}</td>
+                            <td class="px-4 py-3 font-mono text-xs text-slate-500">
+                                {{ $terminal->api_token ? Str::limit($terminal->api_token, 12, '…') : '—' }}
+                                <button wire:click="regenerateToken({{ $terminal->id }})" wire:confirm="¿Regenerar el token? El agente local deberá actualizarse." class="ml-2 text-indigo-400 hover:text-indigo-300">Regenerar</button>
+                            </td>
                             <td class="px-4 py-3">
                                 <span class="rounded-full px-2 py-0.5 text-xs {{ $terminal->is_active ? 'bg-emerald-900 text-emerald-300' : 'bg-slate-800 text-slate-400' }}">
                                     {{ $terminal->is_active ? 'Activa' : 'Inactiva' }}
@@ -187,7 +208,7 @@ new #[Layout('layouts.app')] class extends Component
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-4 py-6 text-center text-slate-500">Sin terminales todavía.</td>
+                            <td colspan="7" class="px-4 py-6 text-center text-slate-500">Sin terminales todavía.</td>
                         </tr>
                     @endforelse
                 </tbody>
