@@ -35,6 +35,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function create(): void
     {
+        abort_unless(Auth::user()->can('clientes.crear'), 403);
+
         $this->resetForm();
         $this->showForm = true;
     }
@@ -55,6 +57,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function save(): void
     {
+        abort_unless(Auth::user()->can($this->editingId ? 'clientes.editar' : 'clientes.crear'), 403);
+
         $businessId = Auth::user()->businessId();
 
         $data = $this->validate([
@@ -84,6 +88,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function delete(int $id): void
     {
+        abort_unless(Auth::user()->can('clientes.eliminar'), 403);
+
         Customer::query()->where('business_id', Auth::user()->businessId())->findOrFail($id)->delete();
     }
 
@@ -118,9 +124,11 @@ new #[Layout('layouts.app')] class extends Component
                 <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-slate-400 hover:text-white">&larr; Dashboard</a>
                 <h1 class="mt-1 text-2xl font-semibold">Clientes</h1>
             </div>
-            <button wire:click="create" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">
-                Nuevo cliente
-            </button>
+            @can('clientes.crear')
+                <button wire:click="create" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">
+                    Nuevo cliente
+                </button>
+            @endcan
         </div>
 
         @if ($showForm)
@@ -182,8 +190,12 @@ new #[Layout('layouts.app')] class extends Component
                             <td class="px-4 py-3">{{ $customer->phone ?? '—' }}</td>
                             <td class="px-4 py-3">{{ $customer->email ?? '—' }}</td>
                             <td class="px-4 py-3 text-right">
-                                <button wire:click="edit({{ $customer->id }})" class="text-indigo-400 hover:text-indigo-300">Editar</button>
-                                <button wire:click="delete({{ $customer->id }})" wire:confirm="¿Eliminar este cliente?" class="ml-3 text-red-400 hover:text-red-300">Eliminar</button>
+                                @can('clientes.editar')
+                                    <button wire:click="edit({{ $customer->id }})" class="text-indigo-400 hover:text-indigo-300">Editar</button>
+                                @endcan
+                                @can('clientes.eliminar')
+                                    <button wire:click="delete({{ $customer->id }})" wire:confirm="¿Eliminar este cliente?" class="ml-3 text-red-400 hover:text-red-300">Eliminar</button>
+                                @endcan
                             </td>
                         </tr>
                     @empty

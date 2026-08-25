@@ -58,6 +58,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function create(): void
     {
+        abort_unless(Auth::user()->can('productos.crear'), 403);
+
         $this->resetForm();
         $this->showForm = true;
     }
@@ -89,6 +91,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function save(): void
     {
+        abort_unless(Auth::user()->can($this->editingId ? 'productos.editar' : 'productos.crear'), 403);
+
         $businessId = Auth::user()->businessId();
 
         $data = $this->validate([
@@ -133,6 +137,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function delete(int $id): void
     {
+        abort_unless(Auth::user()->can('productos.eliminar'), 403);
+
         Product::query()
             ->where('business_id', Auth::user()->businessId())
             ->findOrFail($id)
@@ -182,9 +188,11 @@ new #[Layout('layouts.app')] class extends Component
                 <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-slate-400 hover:text-white">&larr; Dashboard</a>
                 <h1 class="mt-1 text-2xl font-semibold">Productos</h1>
             </div>
-            <button wire:click="create" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">
-                Nuevo producto
-            </button>
+            @can('productos.crear')
+                <button wire:click="create" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">
+                    Nuevo producto
+                </button>
+            @endcan
         </div>
 
         @if ($showForm)
@@ -322,8 +330,12 @@ new #[Layout('layouts.app')] class extends Component
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-right">
-                                <button wire:click="edit({{ $product->id }})" class="text-indigo-400 hover:text-indigo-300">Editar</button>
-                                <button wire:click="delete({{ $product->id }})" wire:confirm="¿Eliminar este producto?" class="ml-3 text-red-400 hover:text-red-300">Eliminar</button>
+                                @can('productos.editar')
+                                    <button wire:click="edit({{ $product->id }})" class="text-indigo-400 hover:text-indigo-300">Editar</button>
+                                @endcan
+                                @can('productos.eliminar')
+                                    <button wire:click="delete({{ $product->id }})" wire:confirm="¿Eliminar este producto?" class="ml-3 text-red-400 hover:text-red-300">Eliminar</button>
+                                @endcan
                             </td>
                         </tr>
                     @empty

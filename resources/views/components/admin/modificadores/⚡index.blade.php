@@ -36,6 +36,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function createGroup(): void
     {
+        abort_unless(Auth::user()->can('productos.crear'), 403);
+
         $this->resetGroupForm();
         $this->showGroupForm = true;
     }
@@ -54,6 +56,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function saveGroup(): void
     {
+        abort_unless(Auth::user()->can($this->editingGroupId ? 'productos.editar' : 'productos.crear'), 403);
+
         $data = $this->validate([
             'group_name' => 'required|string|max:255',
             'is_required' => 'boolean',
@@ -81,6 +85,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function deleteGroup(int $id): void
     {
+        abort_unless(Auth::user()->can('productos.eliminar'), 403);
+
         ModifierGroup::query()->where('business_id', Auth::user()->businessId())->findOrFail($id)->delete();
 
         if ($this->expandedGroupId === $id) {
@@ -109,6 +115,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function createOption(int $groupId): void
     {
+        abort_unless(Auth::user()->can('productos.crear'), 403);
+
         $this->resetOptionForm();
         $this->optionGroupId = $groupId;
         $this->showOptionForm = true;
@@ -130,6 +138,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function saveOption(): void
     {
+        abort_unless(Auth::user()->can($this->editingOptionId ? 'productos.editar' : 'productos.crear'), 403);
+
         $data = $this->validate([
             'option_name' => 'required|string|max:255',
             'price_delta' => 'required|numeric',
@@ -155,6 +165,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function deleteOption(int $id): void
     {
+        abort_unless(Auth::user()->can('productos.eliminar'), 403);
+
         ModifierOption::query()
             ->whereHas('group', fn ($q) => $q->where('business_id', Auth::user()->businessId()))
             ->findOrFail($id)
@@ -195,9 +207,11 @@ new #[Layout('layouts.app')] class extends Component
                 <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-slate-400 hover:text-white">&larr; Dashboard</a>
                 <h1 class="mt-1 text-2xl font-semibold">Modificadores</h1>
             </div>
-            <button wire:click="createGroup" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">
-                Nuevo grupo
-            </button>
+            @can('productos.crear')
+                <button wire:click="createGroup" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">
+                    Nuevo grupo
+                </button>
+            @endcan
         </div>
 
         @if ($showGroupForm)
@@ -247,9 +261,15 @@ new #[Layout('layouts.app')] class extends Component
                             </span>
                         </button>
                         <div class="flex items-center gap-3 text-sm">
-                            <button wire:click="createOption({{ $group->id }})" class="text-emerald-400 hover:text-emerald-300">+ Opción</button>
-                            <button wire:click="editGroup({{ $group->id }})" class="text-indigo-400 hover:text-indigo-300">Editar</button>
-                            <button wire:click="deleteGroup({{ $group->id }})" wire:confirm="¿Eliminar este grupo y sus opciones?" class="text-red-400 hover:text-red-300">Eliminar</button>
+                            @can('productos.crear')
+                                <button wire:click="createOption({{ $group->id }})" class="text-emerald-400 hover:text-emerald-300">+ Opción</button>
+                            @endcan
+                            @can('productos.editar')
+                                <button wire:click="editGroup({{ $group->id }})" class="text-indigo-400 hover:text-indigo-300">Editar</button>
+                            @endcan
+                            @can('productos.eliminar')
+                                <button wire:click="deleteGroup({{ $group->id }})" wire:confirm="¿Eliminar este grupo y sus opciones?" class="text-red-400 hover:text-red-300">Eliminar</button>
+                            @endcan
                         </div>
                     </div>
 
@@ -279,8 +299,12 @@ new #[Layout('layouts.app')] class extends Component
                                             @endif
                                         </span>
                                         <span class="flex items-center gap-3">
-                                            <button wire:click="editOption({{ $option->id }})" class="text-indigo-400 hover:text-indigo-300">Editar</button>
-                                            <button wire:click="deleteOption({{ $option->id }})" wire:confirm="¿Eliminar esta opción?" class="text-red-400 hover:text-red-300">Eliminar</button>
+                                            @can('productos.editar')
+                                                <button wire:click="editOption({{ $option->id }})" class="text-indigo-400 hover:text-indigo-300">Editar</button>
+                                            @endcan
+                                            @can('productos.eliminar')
+                                                <button wire:click="deleteOption({{ $option->id }})" wire:confirm="¿Eliminar esta opción?" class="text-red-400 hover:text-red-300">Eliminar</button>
+                                            @endcan
                                         </span>
                                     </li>
                                 @empty
