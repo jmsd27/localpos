@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -31,13 +33,23 @@ new #[Layout('layouts.app')] class extends Component
             return;
         }
 
-        if (! Auth::attempt($credentials, $this->remember)) {
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (! $user || ! Hash::check($credentials['password'], $user->password)) {
             RateLimiter::hit($throttleKey, 60);
             $this->addError('email', __('Estas credenciales no coinciden con nuestros registros.'));
 
             return;
         }
 
+        if (! $user->is_active) {
+            RateLimiter::hit($throttleKey, 60);
+            $this->addError('email', 'Esta cuenta está desactivada. Contacta a un administrador.');
+
+            return;
+        }
+
+        Auth::login($user, $this->remember);
         RateLimiter::clear($throttleKey);
 
         Session::regenerate();

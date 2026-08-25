@@ -13,4 +13,19 @@ enum RoleName: string
     case Barra = 'barra';
     case Inventarios = 'inventarios';
     case Reportes = 'reportes';
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::SuperAdmin => 'Super administrador',
+            self::Administrador => 'Administrador',
+            self::Encargado => 'Encargado',
+            self::Cajero => 'Cajero',
+            self::Mesero => 'Mesero',
+            self::Cocina => 'Cocina',
+            self::Barra => 'Barra',
+            self::Inventarios => 'Inventarios',
+            self::Reportes => 'Reportes',
+        };
+    }
 }
