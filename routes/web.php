@@ -47,6 +47,24 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::livewire('/estaciones', 'admin.estaciones.index')
         ->middleware('permission:configuracion.editar')
         ->name('estaciones');
+
+    Route::livewire('/insumos', 'admin.insumos.index')
+        ->middleware('permission:inventario.ajustar')
+        ->name('insumos');
+
+    Route::livewire('/recetas', 'admin.recetas.index')
+        ->middleware('permission:inventario.ajustar')
+        ->name('recetas');
+});
+
+Route::middleware(['auth'])->prefix('inventario')->name('inventario.')->group(function () {
+    Route::livewire('/movimientos', 'inventario.movimientos')
+        ->middleware('permission:inventario.ajustar')
+        ->name('movimientos');
+
+    Route::livewire('/kardex', 'inventario.kardex')
+        ->middleware('permission:inventario.ver_kardex')
+        ->name('kardex');
 });
 
 Route::livewire('/kds', 'kds.tablero')

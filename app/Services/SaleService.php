@@ -19,6 +19,7 @@ class SaleService
         private readonly FolioGenerator $folios,
         private readonly AuditLogger $auditLogger,
         private readonly CashRegisterService $cashRegisters,
+        private readonly InventoryService $inventory,
     ) {}
 
     /**
@@ -252,6 +253,8 @@ class SaleService
                 $order->table->update(['status' => TableStatus::Available]);
             }
 
+            $this->inventory->consumeForOrder($order, $movementUserId);
+
             $this->auditLogger->log('venta.crear', $order, null, $order->only([
                 'folio', 'subtotal', 'discount_amount', 'tax_amount', 'tip_amount', 'total',
             ]));
@@ -274,6 +277,8 @@ class SaleService
                 'amount' => $order->total,
                 'created_at' => now(),
             ]);
+
+            $this->inventory->restockForOrder($order, $userId);
 
             $session = $order->cash_register_session_id ? CashRegisterSession::find($order->cash_register_session_id) : null;
 
