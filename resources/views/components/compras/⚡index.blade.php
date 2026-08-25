@@ -31,6 +31,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function create(): void
     {
+        abort_unless(Auth::user()->can('compras.crear'), 403);
+
         $this->reset(['supplierId', 'notes', 'error']);
         $this->items = [['ingredient_id' => '', 'quantity' => '', 'unit_cost' => '']];
         $this->showForm = true;
@@ -49,6 +51,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function save(): void
     {
+        abort_unless(Auth::user()->can('compras.crear'), 403);
+
         $this->error = null;
 
         $this->validate([
@@ -86,6 +90,8 @@ new #[Layout('layouts.app')] class extends Component
 
     public function receive(int $purchaseId): void
     {
+        abort_unless(Auth::user()->can('compras.aprobar'), 403);
+
         $purchase = Purchase::query()->where('business_id', Auth::user()->businessId())->findOrFail($purchaseId);
 
         app(PurchaseService::class)->receive($purchase, Auth::id());
@@ -93,12 +99,16 @@ new #[Layout('layouts.app')] class extends Component
 
     public function openCancel(int $purchaseId): void
     {
+        abort_unless(Auth::user()->can('compras.aprobar'), 403);
+
         $this->cancelingId = $purchaseId;
         $this->cancelReason = '';
     }
 
     public function confirmCancel(): void
     {
+        abort_unless(Auth::user()->can('compras.aprobar'), 403);
+
         $this->validate(['cancelReason' => 'required|string|min:3']);
 
         $purchase = Purchase::query()->where('business_id', Auth::user()->businessId())->findOrFail($this->cancelingId);
