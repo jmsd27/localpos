@@ -1,5 +1,10 @@
 <?php
 
+use App\Enums\CashRegisterSessionStatus;
+use App\Enums\OrderStatus;
+use App\Models\CashRegisterSession;
+use App\Models\Ingredient;
+use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
@@ -15,6 +20,43 @@ new #[Layout('layouts.app')] class extends Component
         Session::regenerateToken();
 
         $this->redirectRoute('login', navigate: true);
+    }
+
+    public function with(): array
+    {
+        $user = Auth::user();
+        $businessId = $user->businessId();
+        $kpis = [];
+
+        if ($user->can('ventas.ver')) {
+            $today = Order::query()
+                ->where('business_id', $businessId)
+                ->where('status', OrderStatus::Completed)
+                ->whereDate('completed_at', now())
+                ->selectRaw('COUNT(*) as count, COALESCE(SUM(total), 0) as total')
+                ->first();
+
+            $kpis['sales_today_count'] = (int) $today->count;
+            $kpis['sales_today_total'] = (float) $today->total;
+        }
+
+        if ($user->can('caja.ver_movimientos')) {
+            $kpis['open_sessions'] = CashRegisterSession::query()
+                ->whereHas('cashRegister', fn ($q) => $q->where('business_id', $businessId))
+                ->where('status', CashRegisterSessionStatus::Open)
+                ->count();
+        }
+
+        if ($user->can('inventario.ver')) {
+            $kpis['low_stock'] = Ingredient::query()
+                ->where('business_id', $businessId)
+                ->where('is_active', true)
+                ->whereNotNull('min_stock')
+                ->whereColumn('stock', '<', 'min_stock')
+                ->count();
+        }
+
+        return ['kpis' => $kpis];
     }
 };
 ?>
@@ -37,6 +79,29 @@ new #[Layout('layouts.app')] class extends Component
                 Roles: {{ Auth::user()->getRoleNames()->join(', ') ?: 'sin rol asignado' }}
             </p>
         </div>
+
+        @if (! empty($kpis))
+            <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+                @if (isset($kpis['sales_today_count']))
+                    <div class="rounded-xl border border-slate-800 bg-slate-900 p-4">
+                        <p class="text-xs text-slate-400">Ventas de hoy</p>
+                        <p class="mt-1 text-xl font-semibold">{{ $kpis['sales_today_count'] }} &middot; ${{ number_format($kpis['sales_today_total'], 2) }}</p>
+                    </div>
+                @endif
+                @if (isset($kpis['open_sessions']))
+                    <div class="rounded-xl border border-slate-800 bg-slate-900 p-4">
+                        <p class="text-xs text-slate-400">Cajas abiertas</p>
+                        <p class="mt-1 text-xl font-semibold">{{ $kpis['open_sessions'] }}</p>
+                    </div>
+                @endif
+                @if (isset($kpis['low_stock']))
+                    <div class="rounded-xl border {{ $kpis['low_stock'] > 0 ? 'border-amber-700 bg-amber-600/10' : 'border-slate-800 bg-slate-900' }} p-4">
+                        <p class="text-xs text-slate-400">Insumos bajo mínimo</p>
+                        <p class="mt-1 text-xl font-semibold">{{ $kpis['low_stock'] }}</p>
+                    </div>
+                @endif
+            </div>
+        @endif
 
         <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
             @can('ventas.crear')
@@ -89,6 +154,16 @@ new #[Layout('layouts.app')] class extends Component
                     <span class="block text-sm font-medium">Proveedores</span>
                 </a>
             @endcan
+            @can('reportes.ver')
+                <a href="{{ route('reportes.index') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Reportes</span>
+                </a>
+            @endcan
+            @can('configuracion.ver')
+                <a href="{{ route('admin.auditoria') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Auditoría</span>
+                </a>
+            @endcan
             @can('configuracion.editar')
                 <a href="{{ route('admin.terminales') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
                     <span class="block text-sm font-medium">Terminales</span>
@@ -107,6 +182,9 @@ new #[Layout('layouts.app')] class extends Component
                 </a>
                 <a href="{{ route('impresion.cola') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
                     <span class="block text-sm font-medium">Cola de impresión</span>
+                </a>
+                <a href="{{ route('admin.backups') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Respaldos</span>
                 </a>
             @endcan
         </div>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BackupDownloadController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 
@@ -59,6 +60,18 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::livewire('/proveedores', 'admin.proveedores.index')
         ->middleware('permission:compras.crear')
         ->name('proveedores');
+
+    Route::livewire('/auditoria', 'admin.auditoria.index')
+        ->middleware('permission:configuracion.ver')
+        ->name('auditoria');
+
+    Route::livewire('/backups', 'admin.backups.index')
+        ->middleware('permission:configuracion.editar')
+        ->name('backups');
+
+    Route::get('/backups/{filename}/descargar', BackupDownloadController::class)
+        ->middleware('permission:configuracion.editar')
+        ->name('backups.descargar');
 });
 
 Route::middleware(['auth'])->prefix('inventario')->name('inventario.')->group(function () {
@@ -110,5 +123,9 @@ Route::get('/ventas/{order}/ticket', TicketController::class)
 Route::livewire('/impresion/cola', 'impresion.cola')
     ->middleware(['auth', 'permission:configuracion.editar'])
     ->name('impresion.cola');
+
+Route::livewire('/reportes', 'reportes.index')
+    ->middleware(['auth', 'permission:reportes.ver'])
+    ->name('reportes.index');
 
 Route::redirect('/', '/dashboard');
