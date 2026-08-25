@@ -33,6 +33,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         ->middleware('permission:clientes.ver')
         ->name('clientes');
 
+    Route::livewire('/configuracion', 'admin.configuracion.index')
+        ->middleware('permission:configuracion.editar')
+        ->name('configuracion');
+
     Route::livewire('/terminales', 'admin.terminales.index')
         ->middleware('permission:configuracion.editar')
         ->name('terminales');
