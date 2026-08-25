@@ -2,7 +2,11 @@
 
 use App\Http\Controllers\BackupDownloadController;
 use App\Http\Controllers\TicketController;
+use App\Models\Business;
 use Illuminate\Support\Facades\Route;
+
+Route::livewire('/instalacion', 'instalacion.index')
+    ->name('instalacion');
 
 Route::livewire('/login', 'auth.login')
     ->middleware('guest')
@@ -128,4 +132,4 @@ Route::livewire('/reportes', 'reportes.index')
     ->middleware(['auth', 'permission:reportes.ver'])
     ->name('reportes.index');
 
-Route::redirect('/', '/dashboard');
+Route::get('/', fn () => redirect()->route(Business::query()->exists() ? 'dashboard' : 'instalacion'));

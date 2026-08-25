@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -20,11 +22,23 @@ new #[Layout('layouts.app')] class extends Component
     {
         $credentials = $this->validate();
 
+        $throttleKey = Str::lower($this->email).'|'.request()->ip();
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            $this->addError('email', "Demasiados intentos. Intenta de nuevo en {$seconds} segundos.");
+
+            return;
+        }
+
         if (! Auth::attempt($credentials, $this->remember)) {
+            RateLimiter::hit($throttleKey, 60);
             $this->addError('email', __('Estas credenciales no coinciden con nuestros registros.'));
 
             return;
         }
+
+        RateLimiter::clear($throttleKey);
 
         Session::regenerate();
 
