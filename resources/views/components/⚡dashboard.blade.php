@@ -112,6 +112,11 @@ new #[Layout('layouts.app')] class extends Component
                     <span class="block text-sm font-medium">Mapa de mesas</span>
                 </a>
             @endcan
+            @can('ventas.ver')
+                <a href="{{ route('ventas.index') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Ventas</span>
+                </a>
+            @endcan
             @can('cocina.ver')
                 <a href="{{ route('kds') }}" wire:navigate class="rounded-xl border border-indigo-700 bg-indigo-600/20 p-4 text-center hover:border-indigo-500">
                     <span class="block text-sm font-medium">Cocina (KDS)</span>

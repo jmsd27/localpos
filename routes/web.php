@@ -16,6 +16,10 @@ Route::livewire('/dashboard', 'dashboard')
     ->middleware('auth')
     ->name('dashboard');
 
+Route::livewire('/ventas', 'ventas.index')
+    ->middleware(['auth', 'permission:ventas.ver'])
+    ->name('ventas.index');
+
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::livewire('/categorias', 'admin.categorias.index')
         ->middleware('permission:productos.ver')
