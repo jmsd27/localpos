@@ -47,6 +47,11 @@ new #[Layout('layouts.app')] class extends Component
                 <label class="mb-1 block text-sm text-slate-300">Hasta</label>
                 <input type="date" wire:model.live="to" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white">
             </div>
+            @can('reportes.exportar')
+                <a href="{{ route('reportes.exportar', ['from' => $from, 'to' => $to]) }}" class="rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">
+                    Exportar CSV
+                </a>
+            @endcan
         </div>
 
         <div class="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
