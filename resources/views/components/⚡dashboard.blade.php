@@ -39,6 +39,11 @@ new #[Layout('layouts.app')] class extends Component
         </div>
 
         <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            @can('ventas.crear')
+                <a href="{{ route('pos') }}" wire:navigate class="rounded-xl border border-indigo-700 bg-indigo-600/20 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Punto de venta</span>
+                </a>
+            @endcan
             @can('productos.ver')
                 <a href="{{ route('admin.categorias') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
                     <span class="block text-sm font-medium">Categorías</span>
@@ -53,6 +58,11 @@ new #[Layout('layouts.app')] class extends Component
             @can('clientes.ver')
                 <a href="{{ route('admin.clientes') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
                     <span class="block text-sm font-medium">Clientes</span>
+                </a>
+            @endcan
+            @can('configuracion.editar')
+                <a href="{{ route('admin.terminales') }}" wire:navigate class="rounded-xl border border-slate-800 bg-slate-900 p-4 text-center hover:border-indigo-500">
+                    <span class="block text-sm font-medium">Terminales</span>
                 </a>
             @endcan
         </div>

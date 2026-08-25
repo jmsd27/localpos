@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 
 Route::livewire('/login', 'auth.login')
@@ -26,6 +27,19 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::livewire('/clientes', 'admin.clientes.index')
         ->middleware('permission:clientes.ver')
         ->name('clientes');
+
+    Route::livewire('/terminales', 'admin.terminales.index')
+        ->middleware('permission:configuracion.editar')
+        ->name('terminales');
 });
+
+Route::middleware(['auth', 'permission:ventas.crear'])->group(function () {
+    Route::livewire('/pos/terminal', 'pos.seleccionar-terminal')->name('pos.terminal');
+    Route::livewire('/pos', 'pos.index')->name('pos');
+});
+
+Route::get('/ventas/{order}/ticket', TicketController::class)
+    ->middleware('auth')
+    ->name('ventas.ticket');
 
 Route::redirect('/', '/dashboard');

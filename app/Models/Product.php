@@ -59,6 +59,6 @@ class Product extends Model
 
     public function modifierGroups(): BelongsToMany
     {
-        return $this->belongsToMany(ModifierGroup::class);
+        return $this->belongsToMany(ModifierGroup::class, 'product_modifier_group');
     }
 }
