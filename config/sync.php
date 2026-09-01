@@ -9,14 +9,23 @@ return [
     'role' => env('SYNC_ROLE', 'source'),
 
     /*
-     * URL base de la instancia "mirror" en la nube (sin slash final). Vacía
-     * mientras no exista el VPS: en ese caso SyncPushService no hace nada.
+     * URL base de la instancia "mirror" en la nube (sin slash final), ej.
+     * https://mi-espejo.vercel.app — vacía mientras no exista el espejo: en
+     * ese caso SyncPushService no hace nada.
      */
     'cloud_url' => env('SYNC_CLOUD_URL'),
 
     'push_batch_size' => (int) env('SYNC_PUSH_BATCH_SIZE', 200),
     'push_timeout' => (int) env('SYNC_PUSH_TIMEOUT', 15),
-    'schedule_frequency_minutes' => (int) env('SYNC_SCHEDULE_MINUTES', 5),
+
+    /*
+     * Cada cuántos minutos corre sync:push como red de seguridad. El envío
+     * casi inmediato lo hace PushSyncBatchJob tras cada escritura (si el
+     * worker de cola está activo); este valor es el peor caso de atraso del
+     * espejo cuando el worker está apagado. routes/console.php lo traduce a
+     * la frecuencia soportada más cercana (1, 5, 10, 15, 30, 60).
+     */
+    'schedule_frequency_minutes' => (int) env('SYNC_SCHEDULE_MINUTES', 15),
     'outbox_retention_days' => (int) env('SYNC_OUTBOX_RETENTION_DAYS', 30),
 
     /*

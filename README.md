@@ -1,59 +1,52 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# LOCALPOS
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Punto de venta para restaurantes/bares que opera **100 % local** en cada
+sucursal (Laravel 12 + Livewire 4 + Tailwind v4, sobre Laragon: Apache +
+PHP 8.2+ + MySQL 8). No necesita Internet para vender.
 
-## About Laravel
+Incluye un **espejo de solo lectura en la nube** (desplegable en Vercel) que
+recibe una copia de los datos de todas las sucursales para consulta remota y
+una PWA instalable.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Módulos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Catálogo · POS y ventas · Caja (apertura/movimientos/cierre) · Mesas y mapa ·
+Cocina/barra (KDS) · Inventario, recetas y kardex · Compras y proveedores ·
+Impresión ESC/POS y cajón de dinero · Reportes, dashboard y auditoría ·
+Respaldos · Menú QR público · Sincronización con la nube.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Puesta en marcha (local)
 
-## Learning Laravel
+```bash
+composer install
+npm ci && npm run build
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Abre la app y completa el asistente en `/instalacion`. Guía detallada:
+[`docs/02-implementacion-local.md`](docs/02-implementacion-local.md).
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Documentación
 
-## Laravel Sponsors
+Todos los manuales de implementación y operación están en **[`docs/`](docs/README.md)**:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+| Documento | Tema |
+|-----------|------|
+| [01 · Arquitectura](docs/01-arquitectura.md) | Cómo encajan el local y el espejo; qué se sincroniza. |
+| [02 · Implementación local](docs/02-implementacion-local.md) | Montar LOCALPOS en una sucursal. |
+| [03 · Despliegue en Vercel](docs/03-despliegue-vercel.md) | Crear el espejo en la nube. |
+| [04 · Alta de sucursales](docs/04-alta-de-sucursales.md) | Conectar cada sucursal al espejo. |
+| [05 · Operación y diagnóstico](docs/05-operacion-y-diagnostico.md) | Día a día, salud del sync, respaldos. |
+| [06 · Checklist de lanzamiento](docs/06-checklist-lanzamiento.md) | Antes de dar por vivo. |
 
-### Premium Partners
+## Pruebas
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+php artisan test
+```
 
-## Contributing
+## Licencia
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT (framework Laravel). Código de la aplicación: propiedad del negocio.

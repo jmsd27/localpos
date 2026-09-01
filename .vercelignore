@@ -1,0 +1,21 @@
+# Lo que NO se sube al deploy de Vercel (el espejo de solo lectura).
+# vendor/ y node_modules/ ya los ignora .gitignore; vercel-php reinstala
+# vendor/ en el build y buildCommand reinstala node_modules/.
+
+/tests
+/phpunit.xml
+/scripts/print-agent
+/scripts/sync-vps
+/docs
+/storage/logs
+/storage/framework/cache
+/storage/framework/sessions
+/storage/framework/views
+/storage/*.key
+/database/database.sqlite
+/.env
+/.env.*
+/.git
+/.github
+/.editorconfig
+/README.md

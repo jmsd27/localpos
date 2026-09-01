@@ -5,6 +5,8 @@ use App\Http\Controllers\PublicMenuController;
 use App\Http\Controllers\ReportExportController;
 use App\Http\Controllers\TicketController;
 use App\Models\Business;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::livewire('/instalacion', 'instalacion.index')
@@ -159,5 +161,41 @@ Route::get('/reportes/exportar', ReportExportController::class)
     ->name('reportes.exportar');
 
 Route::get('/menu', PublicMenuController::class)->name('menu.show');
+
+/*
+|--------------------------------------------------------------------------
+| Hooks de operación para el espejo en la nube (Vercel)
+|--------------------------------------------------------------------------
+| Se autentican con su propio secreto, no con sesión. En la instalación
+| local quedan inertes salvo que definas CRON_SECRET / DEPLOY_KEY.
+*/
+
+// Lo llama el Cron de Vercel (envía "Authorization: Bearer <CRON_SECRET>").
+Route::get('/cron/housekeeping', function (Request $request) {
+    $secret = env('CRON_SECRET');
+
+    abort_unless(
+        is_string($secret) && $secret !== '' && hash_equals($secret, (string) $request->bearerToken()),
+        403
+    );
+
+    Artisan::call('localpos:housekeeping');
+
+    return response(Artisan::output(), 200)->header('Content-Type', 'text/plain');
+})->name('cron.housekeeping');
+
+// Dispara migraciones sin abrir una shell:  curl -XPOST -H "Authorization: Bearer <DEPLOY_KEY>" .../deploy/migrate
+Route::post('/deploy/migrate', function (Request $request) {
+    $key = env('DEPLOY_KEY');
+
+    abort_unless(
+        is_string($key) && $key !== '' && hash_equals($key, (string) $request->bearerToken()),
+        403
+    );
+
+    Artisan::call('migrate', ['--force' => true]);
+
+    return response(Artisan::output(), 200)->header('Content-Type', 'text/plain');
+})->name('deploy.migrate');
 
 Route::get('/', fn () => redirect()->route(Business::query()->exists() ? 'dashboard' : 'instalacion'));
