@@ -39,23 +39,23 @@ new #[Layout('layouts.app')] class extends Component
 };
 ?>
 
-<div class="min-h-screen bg-slate-950 p-8 text-white">
+<div >
     <div class="mx-auto max-w-5xl">
         <div class="mb-6">
-            <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-slate-400 hover:text-white">&larr; Dashboard</a>
+            <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">&larr; Dashboard</a>
             <h1 class="mt-1 text-2xl font-semibold">Auditoría</h1>
-            <p class="mt-1 text-sm text-slate-400">Registro inmutable de acciones sensibles: quién, qué, cuándo y desde dónde.</p>
+            <p class="mt-1 text-sm text-gray-500">Registro inmutable de acciones sensibles: quién, qué, cuándo y desde dónde.</p>
         </div>
 
         <div class="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <input type="text" wire:model.live.debounce.300ms="action" placeholder="Filtrar por acción (p. ej. venta.crear)" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white">
-            <input type="date" wire:model.live="from" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white">
-            <input type="date" wire:model.live="to" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white">
+            <input type="text" wire:model.live.debounce.300ms="action" placeholder="Filtrar por acción (p. ej. venta.crear)" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+            <input type="date" wire:model.live="from" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+            <input type="date" wire:model.live="to" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
         </div>
 
-        <div class="overflow-hidden rounded-xl border border-slate-800">
+        <div class="overflow-x-auto rounded-xl border border-gray-200">
             <table class="w-full text-left text-sm">
-                <thead class="bg-slate-900 text-slate-400">
+                <thead class="bg-white text-gray-500">
                     <tr>
                         <th class="px-4 py-3">Fecha</th>
                         <th class="px-4 py-3">Usuario</th>
@@ -64,24 +64,24 @@ new #[Layout('layouts.app')] class extends Component
                         <th class="px-4 py-3">IP</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-800 bg-slate-950">
+                <tbody class="divide-y divide-gray-100">
                     @forelse ($logs as $log)
                         <tr>
-                            <td class="px-4 py-3 text-slate-400">{{ $log->created_at->format('d/m/Y H:i:s') }}</td>
+                            <td class="px-4 py-3 text-gray-500">{{ $log->created_at->format('d/m/Y H:i:s') }}</td>
                             <td class="px-4 py-3">{{ $log->user?->name ?? 'Sistema' }}</td>
                             <td class="px-4 py-3 font-mono text-xs">{{ $log->action }}</td>
-                            <td class="px-4 py-3 text-slate-400">
+                            <td class="px-4 py-3 text-gray-500">
                                 @if ($log->auditable_type)
                                     {{ class_basename($log->auditable_type) }} #{{ $log->auditable_id }}
                                 @else
                                     —
                                 @endif
                             </td>
-                            <td class="px-4 py-3 text-slate-500">{{ $log->ip_address ?? '—' }}</td>
+                            <td class="px-4 py-3 text-gray-400">{{ $log->ip_address ?? '—' }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-4 py-6 text-center text-slate-500">Sin registros de auditoría todavía.</td>
+                            <td colspan="5" class="px-4 py-6 text-center text-gray-400">Sin registros de auditoría todavía.</td>
                         </tr>
                     @endforelse
                 </tbody>

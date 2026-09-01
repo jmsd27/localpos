@@ -20,6 +20,7 @@ class CashRegisterSession extends Model
         'closed_at',
         'expected_cash',
         'counted_cash',
+        'denominations',
         'difference',
         'notes',
     ];
@@ -31,6 +32,7 @@ class CashRegisterSession extends Model
             'opening_amount' => 'decimal:2',
             'expected_cash' => 'decimal:2',
             'counted_cash' => 'decimal:2',
+            'denominations' => 'array',
             'difference' => 'decimal:2',
             'opened_at' => 'datetime',
             'closed_at' => 'datetime',

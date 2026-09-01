@@ -20,8 +20,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             RoleSeeder::class,
             SuperAdminSeeder::class,
-            // Fase 2+: sembrar datos demo del restaurante ("Casa Norte") aquí,
-            // una vez existan productos, categorías y mesas.
+            DemoDataSeeder::class,
         ]);
     }
 }

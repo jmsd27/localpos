@@ -79,57 +79,57 @@ new #[Layout('layouts.app')] class extends Component
 };
 ?>
 
-<div class="min-h-screen bg-slate-950 p-8 text-white">
+<div >
     <div class="mx-auto max-w-3xl">
         <div class="mb-6 flex items-center justify-between">
             <div>
-                <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-slate-400 hover:text-white">&larr; Dashboard</a>
+                <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">&larr; Dashboard</a>
                 <h1 class="mt-1 text-2xl font-semibold">Salones</h1>
             </div>
-            <button wire:click="create" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">
+            <button wire:click="create" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-700 text-white">
                 Nuevo salón
             </button>
         </div>
 
         @if ($showForm)
-            <div class="mb-6 rounded-xl border border-slate-800 bg-slate-900 p-6">
+            <div class="mb-6 rounded-xl border border-gray-200 bg-white p-6">
                 <form wire:submit="save" class="space-y-4">
                     <div>
-                        <label class="mb-1 block text-sm text-slate-300">Nombre</label>
-                        <input type="text" wire:model="name" placeholder="Salón Principal" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
-                        @error('name') <span class="mt-1 block text-sm text-red-400">{{ $message }}</span> @enderror
+                        <label class="mb-1 block text-sm text-gray-600">Nombre</label>
+                        <input type="text" wire:model="name" placeholder="Salón Principal" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                        @error('name') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="flex gap-2">
-                        <button type="submit" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">Guardar</button>
-                        <button type="button" wire:click="cancel" class="rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Cancelar</button>
+                        <button type="submit" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-700 text-white">Guardar</button>
+                        <button type="button" wire:click="cancel" class="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-white">Cancelar</button>
                     </div>
                 </form>
             </div>
         @endif
 
-        <div class="overflow-hidden rounded-xl border border-slate-800">
+        <div class="overflow-x-auto rounded-xl border border-gray-200">
             <table class="w-full text-left text-sm">
-                <thead class="bg-slate-900 text-slate-400">
+                <thead class="bg-white text-gray-500">
                     <tr>
                         <th class="px-4 py-3">Nombre</th>
                         <th class="px-4 py-3">Mesas</th>
                         <th class="px-4 py-3"></th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-800 bg-slate-950">
+                <tbody class="divide-y divide-gray-100">
                     @forelse ($areas as $area)
                         <tr>
                             <td class="px-4 py-3">{{ $area->name }}</td>
-                            <td class="px-4 py-3 text-slate-400">{{ $area->tables_count }}</td>
+                            <td class="px-4 py-3 text-gray-500">{{ $area->tables_count }}</td>
                             <td class="px-4 py-3 text-right">
-                                <button wire:click="edit({{ $area->id }})" class="text-indigo-400 hover:text-indigo-300">Editar</button>
-                                <button wire:click="delete({{ $area->id }})" wire:confirm="¿Eliminar este salón?" class="ml-3 text-red-400 hover:text-red-300">Eliminar</button>
+                                <button wire:click="edit({{ $area->id }})" class="text-violet-600 hover:text-violet-600">Editar</button>
+                                <button wire:click="delete({{ $area->id }})" wire:confirm="¿Eliminar este salón?" class="ml-3 text-red-600 hover:text-red-700">Eliminar</button>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" class="px-4 py-6 text-center text-slate-500">Sin salones todavía.</td>
+                            <td colspan="3" class="px-4 py-6 text-center text-gray-400">Sin salones todavía.</td>
                         </tr>
                     @endforelse
                 </tbody>

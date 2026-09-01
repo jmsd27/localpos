@@ -200,49 +200,49 @@ new #[Layout('layouts.app')] class extends Component
 };
 ?>
 
-<div class="min-h-screen bg-slate-950 p-8 text-white">
+<div >
     <div class="mx-auto max-w-4xl">
         <div class="mb-6 flex items-center justify-between">
             <div>
-                <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-slate-400 hover:text-white">&larr; Dashboard</a>
+                <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">&larr; Dashboard</a>
                 <h1 class="mt-1 text-2xl font-semibold">Modificadores</h1>
             </div>
             @can('productos.crear')
-                <button wire:click="createGroup" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">
+                <button wire:click="createGroup" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-700 text-white">
                     Nuevo grupo
                 </button>
             @endcan
         </div>
 
         @if ($showGroupForm)
-            <div class="mb-6 rounded-xl border border-slate-800 bg-slate-900 p-6">
+            <div class="mb-6 rounded-xl border border-gray-200 bg-white p-6">
                 <form wire:submit="saveGroup" class="space-y-4">
                     <div>
-                        <label class="mb-1 block text-sm text-slate-300">Nombre del grupo</label>
-                        <input type="text" wire:model="group_name" placeholder="p. ej. Tipo de carne" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
-                        @error('group_name') <span class="mt-1 block text-sm text-red-400">{{ $message }}</span> @enderror
+                        <label class="mb-1 block text-sm text-gray-600">Nombre del grupo</label>
+                        <input type="text" wire:model="group_name" placeholder="p. ej. Tipo de carne" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                        @error('group_name') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="mb-1 block text-sm text-slate-300">Mínimo de selecciones</label>
-                            <input type="number" min="0" wire:model="min_selections" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
+                            <label class="mb-1 block text-sm text-gray-600">Mínimo de selecciones</label>
+                            <input type="number" min="0" wire:model="min_selections" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
                         </div>
                         <div>
-                            <label class="mb-1 block text-sm text-slate-300">Máximo de selecciones</label>
-                            <input type="number" min="1" wire:model="max_selections" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
-                            @error('max_selections') <span class="mt-1 block text-sm text-red-400">{{ $message }}</span> @enderror
+                            <label class="mb-1 block text-sm text-gray-600">Máximo de selecciones</label>
+                            <input type="number" min="1" wire:model="max_selections" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                            @error('max_selections') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                         </div>
                     </div>
 
-                    <label class="flex items-center gap-2 text-sm text-slate-300">
-                        <input type="checkbox" wire:model="is_required" class="rounded border-slate-700 bg-slate-800">
+                    <label class="flex items-center gap-2 text-sm text-gray-600">
+                        <input type="checkbox" wire:model="is_required" class="rounded border-gray-300 bg-white">
                         Obligatorio
                     </label>
 
                     <div class="flex gap-2">
-                        <button type="submit" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">Guardar</button>
-                        <button type="button" wire:click="cancelGroup" class="rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Cancelar</button>
+                        <button type="submit" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-700 text-white">Guardar</button>
+                        <button type="button" wire:click="cancelGroup" class="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-white">Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -250,11 +250,11 @@ new #[Layout('layouts.app')] class extends Component
 
         <div class="space-y-3">
             @forelse ($groups as $group)
-                <div class="rounded-xl border border-slate-800 bg-slate-900">
+                <div class="rounded-xl border border-gray-200 bg-white">
                     <div class="flex items-center justify-between p-4">
                         <button wire:click="toggleOptions({{ $group->id }})" class="flex items-center gap-2 text-left">
                             <span class="font-medium">{{ $group->name }}</span>
-                            <span class="text-xs text-slate-500">
+                            <span class="text-xs text-gray-400">
                                 {{ $group->options_count }} {{ Str::plural('opción', $group->options_count) }}
                                 · {{ $group->is_required ? 'obligatorio' : 'opcional' }}
                                 · min {{ $group->min_selections }} / max {{ $group->max_selections }}
@@ -262,60 +262,60 @@ new #[Layout('layouts.app')] class extends Component
                         </button>
                         <div class="flex items-center gap-3 text-sm">
                             @can('productos.crear')
-                                <button wire:click="createOption({{ $group->id }})" class="text-emerald-400 hover:text-emerald-300">+ Opción</button>
+                                <button wire:click="createOption({{ $group->id }})" class="text-emerald-600 hover:text-emerald-700">+ Opción</button>
                             @endcan
                             @can('productos.editar')
-                                <button wire:click="editGroup({{ $group->id }})" class="text-indigo-400 hover:text-indigo-300">Editar</button>
+                                <button wire:click="editGroup({{ $group->id }})" class="text-violet-600 hover:text-violet-600">Editar</button>
                             @endcan
                             @can('productos.eliminar')
-                                <button wire:click="deleteGroup({{ $group->id }})" wire:confirm="¿Eliminar este grupo y sus opciones?" class="text-red-400 hover:text-red-300">Eliminar</button>
+                                <button wire:click="deleteGroup({{ $group->id }})" wire:confirm="¿Eliminar este grupo y sus opciones?" class="text-red-600 hover:text-red-700">Eliminar</button>
                             @endcan
                         </div>
                     </div>
 
                     @if ($expandedGroupId === $group->id)
-                        <div class="border-t border-slate-800 p-4">
+                        <div class="border-t border-gray-200 p-4">
                             @if ($showOptionForm && $optionGroupId === $group->id)
-                                <form wire:submit="saveOption" class="mb-4 grid grid-cols-1 gap-3 rounded-lg bg-slate-800/50 p-3 sm:grid-cols-[1fr_auto_auto_auto]">
-                                    <input type="text" wire:model="option_name" placeholder="Nombre" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none">
-                                    <input type="number" step="0.01" wire:model="price_delta" placeholder="Precio adicional" class="w-32 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none">
-                                    <button type="submit" class="rounded-lg bg-indigo-600 px-3 py-2 text-sm hover:bg-indigo-500">Guardar</button>
-                                    <button type="button" wire:click="cancelOption" class="rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800">Cancelar</button>
+                                <form wire:submit="saveOption" class="mb-4 grid grid-cols-1 gap-3 rounded-lg bg-white/50 p-3 sm:grid-cols-[1fr_auto_auto_auto]">
+                                    <input type="text" wire:model="option_name" placeholder="Nombre" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-violet-500 focus:outline-none">
+                                    <input type="number" step="0.01" wire:model="price_delta" placeholder="Precio adicional" class="w-32 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-violet-500 focus:outline-none">
+                                    <button type="submit" class="rounded-lg bg-violet-600 px-3 py-2 text-sm hover:bg-violet-700 text-white">Guardar</button>
+                                    <button type="button" wire:click="cancelOption" class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-600 hover:bg-white">Cancelar</button>
                                 </form>
-                                @error('option_name') <span class="mb-2 block text-sm text-red-400">{{ $message }}</span> @enderror
+                                @error('option_name') <span class="mb-2 block text-sm text-red-600">{{ $message }}</span> @enderror
                             @endif
 
-                            <ul class="divide-y divide-slate-800">
+                            <ul class="divide-y divide-gray-100">
                                 @forelse ($group->options as $option)
                                     <li class="flex items-center justify-between py-2 text-sm">
                                         <span>
                                             {{ $option->name }}
                                             @if ((float) $option->price_delta > 0)
-                                                <span class="text-slate-500">+${{ number_format((float) $option->price_delta, 2) }}</span>
+                                                <span class="text-gray-400">+${{ number_format((float) $option->price_delta, 2) }}</span>
                                             @elseif ((float) $option->price_delta < 0)
-                                                <span class="text-slate-500">-${{ number_format(abs((float) $option->price_delta), 2) }}</span>
+                                                <span class="text-gray-400">-${{ number_format(abs((float) $option->price_delta), 2) }}</span>
                                             @else
-                                                <span class="text-slate-500">gratis</span>
+                                                <span class="text-gray-400">gratis</span>
                                             @endif
                                         </span>
                                         <span class="flex items-center gap-3">
                                             @can('productos.editar')
-                                                <button wire:click="editOption({{ $option->id }})" class="text-indigo-400 hover:text-indigo-300">Editar</button>
+                                                <button wire:click="editOption({{ $option->id }})" class="text-violet-600 hover:text-violet-600">Editar</button>
                                             @endcan
                                             @can('productos.eliminar')
-                                                <button wire:click="deleteOption({{ $option->id }})" wire:confirm="¿Eliminar esta opción?" class="text-red-400 hover:text-red-300">Eliminar</button>
+                                                <button wire:click="deleteOption({{ $option->id }})" wire:confirm="¿Eliminar esta opción?" class="text-red-600 hover:text-red-700">Eliminar</button>
                                             @endcan
                                         </span>
                                     </li>
                                 @empty
-                                    <li class="py-2 text-sm text-slate-500">Sin opciones todavía.</li>
+                                    <li class="py-2 text-sm text-gray-400">Sin opciones todavía.</li>
                                 @endforelse
                             </ul>
                         </div>
                     @endif
                 </div>
             @empty
-                <div class="rounded-xl border border-slate-800 bg-slate-900 p-6 text-center text-slate-500">
+                <div class="rounded-xl border border-gray-200 bg-white p-6 text-center text-gray-400">
                     Sin grupos de modificadores todavía.
                 </div>
             @endforelse

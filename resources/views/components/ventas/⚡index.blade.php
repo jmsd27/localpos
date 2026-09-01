@@ -82,37 +82,37 @@ new #[Layout('layouts.app')] class extends Component
 };
 ?>
 
-<div class="min-h-screen bg-slate-950 p-8 text-white">
+<div >
     <div class="mx-auto max-w-5xl">
         <div class="mb-6">
-            <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-slate-400 hover:text-white">&larr; Dashboard</a>
+            <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">&larr; Dashboard</a>
             <h1 class="mt-1 text-2xl font-semibold">Ventas</h1>
         </div>
 
         <div class="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <input type="text" wire:model.live.debounce.300ms="folio" placeholder="Buscar por folio..." class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white">
-            <input type="date" wire:model.live="from" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white">
-            <input type="date" wire:model.live="to" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white">
+            <input type="text" wire:model.live.debounce.300ms="folio" placeholder="Buscar por folio..." class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+            <input type="date" wire:model.live="from" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+            <input type="date" wire:model.live="to" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
         </div>
 
         @if ($cancelingOrderId)
-            <div class="mb-4 rounded-xl border border-red-900 bg-red-950/40 p-6">
-                <p class="mb-3 text-sm text-slate-200">Motivo de la anulación:</p>
-                <input type="text" wire:model="cancelReason" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white">
-                @error('cancelReason') <span class="mt-1 block text-sm text-red-400">{{ $message }}</span> @enderror
+            <div class="mb-4 rounded-xl border border-red-200 bg-red-50 p-6">
+                <p class="mb-3 text-sm text-gray-700">Motivo de la anulación:</p>
+                <input type="text" wire:model="cancelReason" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900">
+                @error('cancelReason') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                 @if ($error)
-                    <p class="mt-2 text-sm text-red-400">{{ $error }}</p>
+                    <p class="mt-2 text-sm text-red-600">{{ $error }}</p>
                 @endif
                 <div class="mt-3 flex gap-2">
-                    <button wire:click="confirmCancel" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium hover:bg-red-500">Confirmar anulación</button>
-                    <button wire:click="$set('cancelingOrderId', null)" class="rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">Volver</button>
+                    <button wire:click="confirmCancel" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium hover:bg-red-500 text-white">Confirmar anulación</button>
+                    <button wire:click="$set('cancelingOrderId', null)" class="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-white">Volver</button>
                 </div>
             </div>
         @endif
 
-        <div class="overflow-hidden rounded-xl border border-slate-800">
+        <div class="overflow-x-auto rounded-xl border border-gray-200">
             <table class="w-full text-left text-sm">
-                <thead class="bg-slate-900 text-slate-400">
+                <thead class="bg-white text-gray-500">
                     <tr>
                         <th class="px-4 py-3">Folio</th>
                         <th class="px-4 py-3">Fecha</th>
@@ -123,35 +123,35 @@ new #[Layout('layouts.app')] class extends Component
                         <th class="px-4 py-3"></th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-800 bg-slate-950">
+                <tbody class="divide-y divide-gray-100">
                     @forelse ($orders as $order)
                         <tr>
                             <td class="px-4 py-3 font-mono">{{ $order->folio }}</td>
-                            <td class="px-4 py-3 text-slate-400">{{ $order->completed_at?->format('d/m/Y H:i') }}</td>
-                            <td class="px-4 py-3 text-slate-400">{{ $order->user->name }}</td>
-                            <td class="px-4 py-3 text-slate-400">{{ $order->customer?->name ?? '—' }}</td>
+                            <td class="px-4 py-3 text-gray-500">{{ $order->completed_at?->format('d/m/Y H:i') }}</td>
+                            <td class="px-4 py-3 text-gray-500">{{ $order->user->name }}</td>
+                            <td class="px-4 py-3 text-gray-500">{{ $order->customer?->name ?? '—' }}</td>
                             <td class="px-4 py-3">${{ number_format((float) $order->total, 2) }}</td>
                             <td class="px-4 py-3">
                                 <span @class([
                                     'rounded-full px-2 py-0.5 text-xs',
-                                    'bg-emerald-900 text-emerald-300' => $order->status->value === 'completed',
-                                    'bg-slate-800 text-slate-400' => $order->status->value === 'cancelled',
+                                    'bg-emerald-50 text-emerald-700' => $order->status->value === 'completed',
+                                    'bg-white text-gray-500' => $order->status->value === 'cancelled',
                                 ])>
                                     {{ $order->status->label() }}
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-right">
-                                <a href="{{ route('ventas.ticket', $order->id) }}" target="_blank" class="text-indigo-400 hover:text-indigo-300">Ticket</a>
+                                <a href="{{ route('ventas.ticket', $order->id) }}" target="_blank" class="text-violet-600 hover:text-violet-600">Ticket</a>
                                 @can('ventas.anular')
                                     @if ($order->status->value === 'completed')
-                                        <button wire:click="openCancel({{ $order->id }})" class="ml-3 text-red-400 hover:text-red-300">Anular</button>
+                                        <button wire:click="openCancel({{ $order->id }})" class="ml-3 text-red-600 hover:text-red-700">Anular</button>
                                     @endif
                                 @endcan
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-4 py-6 text-center text-slate-500">Sin ventas en este rango.</td>
+                            <td colspan="7" class="px-4 py-6 text-center text-gray-400">Sin ventas en este rango.</td>
                         </tr>
                     @endforelse
                 </tbody>

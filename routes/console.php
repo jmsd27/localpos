@@ -9,3 +9,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('localpos:backup')->dailyAt('03:00');
+Schedule::command('sync:push')->everyFiveMinutes()->withoutOverlapping();

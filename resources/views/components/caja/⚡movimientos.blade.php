@@ -69,35 +69,35 @@ new #[Layout('layouts.app')] class extends Component
 };
 ?>
 
-<div class="min-h-screen bg-slate-950 p-8 text-white">
+<div >
     <div class="mx-auto max-w-3xl">
         <div class="mb-6 flex items-center justify-between">
             <div>
-                <a href="{{ route('pos') }}" wire:navigate class="text-sm text-slate-400 hover:text-white">&larr; Volver al POS</a>
+                <a href="{{ route('pos') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">&larr; Volver al POS</a>
                 <h1 class="mt-1 text-2xl font-semibold">Movimientos de caja</h1>
             </div>
         </div>
 
         @can('caja.registrar_movimiento')
-            <div class="mb-6 rounded-xl border border-slate-800 bg-slate-900 p-6">
+            <div class="mb-6 rounded-xl border border-gray-200 bg-white p-6">
                 <form wire:submit="register" class="grid grid-cols-1 gap-4 sm:grid-cols-[auto_auto_1fr_auto]">
-                    <select wire:model="type" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white">
+                    <select wire:model="type" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
                         <option value="ingreso">Ingreso</option>
                         <option value="retiro">Retiro</option>
                         <option value="ajuste">Ajuste</option>
                     </select>
-                    <input type="number" step="0.01" wire:model="amount" placeholder="Monto" class="w-32 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white">
-                    <input type="text" wire:model="reason" placeholder="Motivo" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white">
-                    <button type="submit" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">Registrar</button>
+                    <input type="number" step="0.01" wire:model="amount" placeholder="Monto" class="w-32 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+                    <input type="text" wire:model="reason" placeholder="Motivo" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+                    <button type="submit" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-700 text-white">Registrar</button>
                 </form>
-                @error('amount') <span class="mt-2 block text-sm text-red-400">{{ $message }}</span> @enderror
-                @error('reason') <span class="mt-2 block text-sm text-red-400">{{ $message }}</span> @enderror
+                @error('amount') <span class="mt-2 block text-sm text-red-600">{{ $message }}</span> @enderror
+                @error('reason') <span class="mt-2 block text-sm text-red-600">{{ $message }}</span> @enderror
             </div>
         @endcan
 
-        <div class="overflow-hidden rounded-xl border border-slate-800">
+        <div class="overflow-x-auto rounded-xl border border-gray-200">
             <table class="w-full text-left text-sm">
-                <thead class="bg-slate-900 text-slate-400">
+                <thead class="bg-white text-gray-500">
                     <tr>
                         <th class="px-4 py-3">Fecha</th>
                         <th class="px-4 py-3">Tipo</th>
@@ -107,21 +107,21 @@ new #[Layout('layouts.app')] class extends Component
                         <th class="px-4 py-3 text-right">Monto</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-800 bg-slate-950">
+                <tbody class="divide-y divide-gray-100">
                     @forelse ($movements as $movement)
                         <tr>
-                            <td class="px-4 py-3 text-slate-400">{{ $movement->created_at->format('H:i') }}</td>
+                            <td class="px-4 py-3 text-gray-500">{{ $movement->created_at->format('H:i') }}</td>
                             <td class="px-4 py-3">{{ $movement->type->label() }}</td>
-                            <td class="px-4 py-3 text-slate-400">{{ $movement->payment_method->label() }}</td>
-                            <td class="px-4 py-3 text-slate-400">{{ $movement->user->name }}</td>
-                            <td class="px-4 py-3 text-slate-400">{{ $movement->reason ?? '—' }}</td>
-                            <td class="px-4 py-3 text-right {{ (float) $movement->amount < 0 ? 'text-red-400' : 'text-emerald-400' }}">
+                            <td class="px-4 py-3 text-gray-500">{{ $movement->payment_method->label() }}</td>
+                            <td class="px-4 py-3 text-gray-500">{{ $movement->user->name }}</td>
+                            <td class="px-4 py-3 text-gray-500">{{ $movement->reason ?? '—' }}</td>
+                            <td class="px-4 py-3 text-right {{ (float) $movement->amount < 0 ? 'text-red-600' : 'text-emerald-600' }}">
                                 ${{ number_format((float) $movement->amount, 2) }}
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-4 py-6 text-center text-slate-500">Sin movimientos todavía.</td>
+                            <td colspan="6" class="px-4 py-6 text-center text-gray-400">Sin movimientos todavía.</td>
                         </tr>
                     @endforelse
                 </tbody>

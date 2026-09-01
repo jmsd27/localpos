@@ -69,31 +69,31 @@ new #[Layout('layouts.app')] class extends Component
 };
 ?>
 
-<div class="flex min-h-screen flex-col items-center justify-center bg-slate-950 px-4 text-white">
-    <div class="w-full max-w-sm rounded-xl border border-slate-800 bg-slate-900 p-8">
+<div class="flex min-h-[70vh] flex-col items-center justify-center px-4 text-gray-900">
+    <div class="w-full max-w-sm rounded-xl border border-gray-200 bg-white p-8">
         <h1 class="mb-1 text-center text-xl font-semibold">Apertura de caja</h1>
-        <p class="mb-6 text-center text-sm text-slate-400">
+        <p class="mb-6 text-center text-sm text-gray-500">
             {{ $terminal?->name }} &middot; {{ $terminal?->cashRegister?->name }}
         </p>
 
         @if ($error)
-            <p class="mb-4 text-center text-sm text-red-400">{{ $error }}</p>
+            <p class="mb-4 text-center text-sm text-red-600">{{ $error }}</p>
         @endif
 
         @if ($terminal?->cash_register_id)
             <form wire:submit="open" class="space-y-4">
                 <div>
-                    <label class="mb-1 block text-sm text-slate-300">Fondo inicial</label>
-                    <input type="number" step="0.01" wire:model="opening_amount" autofocus class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
-                    @error('opening_amount') <span class="mt-1 block text-sm text-red-400">{{ $message }}</span> @enderror
+                    <label class="mb-1 block text-sm text-gray-600">Fondo inicial</label>
+                    <input type="number" step="0.01" wire:model="opening_amount" autofocus class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                    @error('opening_amount') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                 </div>
 
-                <button type="submit" class="w-full rounded-lg bg-indigo-600 px-4 py-2 font-medium hover:bg-indigo-500">
+                <button type="submit" class="w-full rounded-lg bg-violet-600 px-4 py-2 font-medium hover:bg-violet-700 text-white">
                     Abrir caja
                 </button>
             </form>
         @endif
 
-        <a href="{{ route('dashboard') }}" wire:navigate class="mt-6 block text-center text-sm text-slate-400 hover:text-white">&larr; Volver al dashboard</a>
+        <a href="{{ route('dashboard') }}" wire:navigate class="mt-6 block text-center text-sm text-gray-500 hover:text-gray-900">&larr; Volver al dashboard</a>
     </div>
 </div>

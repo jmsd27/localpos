@@ -75,59 +75,59 @@ new #[Layout('layouts.app')] class extends Component
 };
 ?>
 
-<div class="min-h-screen bg-slate-950 p-8 text-white">
+<div >
     <div class="mx-auto max-w-3xl">
         <div class="mb-6">
-            <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-slate-400 hover:text-white">&larr; Dashboard</a>
+            <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">&larr; Dashboard</a>
             <h1 class="mt-1 text-2xl font-semibold">Recetas</h1>
-            <p class="mt-1 text-sm text-slate-400">Solo se muestran productos marcados como "Inventariable".</p>
+            <p class="mt-1 text-sm text-gray-500">Solo se muestran productos marcados como "Inventariable".</p>
         </div>
 
         <div class="space-y-3">
             @forelse ($products as $product)
-                <div class="rounded-xl border border-slate-800 bg-slate-900">
+                <div class="rounded-xl border border-gray-200 bg-white">
                     <button wire:click="selectProduct({{ $product->id }})" class="flex w-full items-center justify-between p-4 text-left">
                         <span class="font-medium">{{ $product->name }}</span>
-                        <span class="text-xs text-slate-500">{{ $product->recipe_items_count }} {{ Str::plural('insumo', $product->recipe_items_count) }}</span>
+                        <span class="text-xs text-gray-400">{{ $product->recipe_items_count }} {{ Str::plural('insumo', $product->recipe_items_count) }}</span>
                     </button>
 
                     @if ($activeProductId === $product->id)
-                        <div class="border-t border-slate-800 p-4">
+                        <div class="border-t border-gray-200 p-4">
                             <form wire:submit="addItem" class="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto_auto]">
-                                <select wire:model="ingredientId" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white">
+                                <select wire:model="ingredientId" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
                                     <option value="">Selecciona un insumo...</option>
                                     @foreach ($ingredients as $ingredient)
                                         <option value="{{ $ingredient->id }}">{{ $ingredient->name }} ({{ $ingredient->unit->label() }})</option>
                                     @endforeach
                                 </select>
-                                <input type="number" step="0.001" wire:model="quantity" placeholder="Cantidad" class="w-32 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-white">
-                                <button type="submit" class="rounded-lg bg-indigo-600 px-3 py-2 text-sm hover:bg-indigo-500">Agregar</button>
+                                <input type="number" step="0.001" wire:model="quantity" placeholder="Cantidad" class="w-32 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+                                <button type="submit" class="rounded-lg bg-violet-600 px-3 py-2 text-sm hover:bg-violet-700 text-white">Agregar</button>
                             </form>
 
                             @if ($error)
-                                <p class="mb-3 text-sm text-red-400">{{ $error }}</p>
+                                <p class="mb-3 text-sm text-red-600">{{ $error }}</p>
                             @endif
-                            @error('ingredientId') <p class="mb-3 text-sm text-red-400">{{ $message }}</p> @enderror
-                            @error('quantity') <p class="mb-3 text-sm text-red-400">{{ $message }}</p> @enderror
+                            @error('ingredientId') <p class="mb-3 text-sm text-red-600">{{ $message }}</p> @enderror
+                            @error('quantity') <p class="mb-3 text-sm text-red-600">{{ $message }}</p> @enderror
 
-                            <ul class="divide-y divide-slate-800">
+                            <ul class="divide-y divide-gray-100">
                                 @forelse ($product->recipeItems as $item)
                                     <li class="flex items-center justify-between py-2 text-sm">
                                         <span>{{ $item->ingredient->name }}</span>
-                                        <span class="flex items-center gap-3 text-slate-400">
+                                        <span class="flex items-center gap-3 text-gray-500">
                                             {{ number_format((float) $item->quantity, 3) }} {{ $item->ingredient->unit->label() }}
-                                            <button wire:click="removeItem({{ $item->id }})" wire:confirm="¿Quitar este insumo de la receta?" class="text-red-400 hover:text-red-300">Quitar</button>
+                                            <button wire:click="removeItem({{ $item->id }})" wire:confirm="¿Quitar este insumo de la receta?" class="text-red-600 hover:text-red-700">Quitar</button>
                                         </span>
                                     </li>
                                 @empty
-                                    <li class="py-2 text-sm text-slate-500">Sin insumos en esta receta.</li>
+                                    <li class="py-2 text-sm text-gray-400">Sin insumos en esta receta.</li>
                                 @endforelse
                             </ul>
                         </div>
                     @endif
                 </div>
             @empty
-                <div class="rounded-xl border border-slate-800 bg-slate-900 p-6 text-center text-slate-500">
+                <div class="rounded-xl border border-gray-200 bg-white p-6 text-center text-gray-400">
                     No hay productos marcados como inventariables. Márcalos en Productos &rarr; Inventariable.
                 </div>
             @endforelse

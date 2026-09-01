@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BackupDownloadController;
+use App\Http\Controllers\PublicMenuController;
 use App\Http\Controllers\ReportExportController;
 use App\Http\Controllers\TicketController;
 use App\Models\Business;
@@ -89,6 +90,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/backups/{filename}/descargar', BackupDownloadController::class)
         ->middleware('permission:configuracion.editar')
         ->name('backups.descargar');
+
+    Route::livewire('/menus-qr', 'admin.menus-qr.index')
+        ->middleware('permission:productos.ver')
+        ->name('menus-qr');
 });
 
 Route::middleware(['auth'])->prefix('inventario')->name('inventario.')->group(function () {
@@ -131,6 +136,10 @@ Route::middleware(['auth'])->prefix('caja')->name('caja.')->group(function () {
     Route::livewire('/cierre', 'caja.cierre')
         ->middleware('permission:caja.cerrar')
         ->name('cierre');
+
+    Route::livewire('/historial', 'caja.historial')
+        ->middleware('permission:caja.ver_movimientos')
+        ->name('historial');
 });
 
 Route::get('/ventas/{order}/ticket', TicketController::class)
@@ -148,5 +157,7 @@ Route::livewire('/reportes', 'reportes.index')
 Route::get('/reportes/exportar', ReportExportController::class)
     ->middleware(['auth', 'permission:reportes.exportar'])
     ->name('reportes.exportar');
+
+Route::get('/menu', PublicMenuController::class)->name('menu.show');
 
 Route::get('/', fn () => redirect()->route(Business::query()->exists() ? 'dashboard' : 'instalacion'));

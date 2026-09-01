@@ -69,17 +69,17 @@ new #[Layout('layouts.app')] class extends Component
 };
 ?>
 
-<div wire:poll.3s class="min-h-screen bg-slate-950 p-6 text-white">
+<div wire:poll.3s >
     <div class="mb-6 flex items-center justify-between">
         <div>
-            <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-slate-400 hover:text-white">&larr; Dashboard</a>
+            <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">&larr; Dashboard</a>
             <h1 class="mt-1 text-2xl font-semibold">Cocina</h1>
         </div>
         <div class="flex gap-2">
             @foreach ($stations as $station)
                 <button
                     wire:click="selectStation({{ $station->id }})"
-                    class="rounded-lg border px-3 py-1.5 text-sm {{ $activeStationId === $station->id ? 'border-indigo-500 bg-indigo-600' : 'border-slate-800 bg-slate-900 hover:bg-slate-800' }}"
+                    class="rounded-lg border px-3 py-1.5 text-sm {{ $activeStationId === $station->id ? 'border-violet-500 bg-violet-600 text-white' : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50' }}"
                     style="{{ $activeStationId === $station->id ? '' : 'border-left: 3px solid '.$station->color }}"
                 >
                     {{ $station->name }}
@@ -89,7 +89,7 @@ new #[Layout('layouts.app')] class extends Component
     </div>
 
     @if ($stations->isEmpty())
-        <div class="rounded-xl border border-slate-800 bg-slate-900 p-6 text-center text-slate-500">
+        <div class="rounded-xl border border-gray-200 bg-white p-6 text-center text-gray-400">
             Sin estaciones configuradas. Ve a Configuración &rarr; Estaciones para crear una.
         </div>
     @else
@@ -98,43 +98,43 @@ new #[Layout('layouts.app')] class extends Component
                 $columns = [
                     ['title' => 'Nuevas', 'items' => $nuevos, 'action' => 'preparando', 'actionLabel' => 'Iniciar', 'actionColor' => 'bg-amber-600 hover:bg-amber-500'],
                     ['title' => 'En preparación', 'items' => $preparando, 'action' => 'listo', 'actionLabel' => 'Marcar listo', 'actionColor' => 'bg-emerald-600 hover:bg-emerald-500'],
-                    ['title' => 'Listas', 'items' => $listos, 'action' => 'entregado', 'actionLabel' => 'Entregar', 'actionColor' => 'bg-indigo-600 hover:bg-indigo-500'],
+                    ['title' => 'Listas', 'items' => $listos, 'action' => 'entregado', 'actionLabel' => 'Entregar', 'actionColor' => 'bg-violet-600 hover:bg-violet-700'],
                     ['title' => 'Entregadas', 'items' => $entregados, 'action' => null, 'actionLabel' => null, 'actionColor' => null],
                 ];
             @endphp
 
             @foreach ($columns as $column)
                 <div>
-                    <h2 class="mb-3 flex items-center justify-between text-sm font-semibold text-slate-400">
+                    <h2 class="mb-3 flex items-center justify-between text-sm font-semibold text-gray-500">
                         {{ $column['title'] }}
-                        <span class="rounded-full bg-slate-800 px-2 py-0.5 text-xs">{{ $column['items']->count() }}</span>
+                        <span class="rounded-full bg-white px-2 py-0.5 text-xs">{{ $column['items']->count() }}</span>
                     </h2>
 
                     <div class="space-y-3">
                         @foreach ($column['items'] as $item)
                             @php
                                 $minutes = (int) floor($item->created_at->diffInSeconds(now()) / 60);
-                                $priority = $minutes >= 20 ? 'border-red-600 bg-red-950/30' : ($minutes >= 10 ? 'border-amber-600 bg-amber-950/20' : 'border-slate-800 bg-slate-900');
+                                $priority = $minutes >= 20 ? 'border-red-600 bg-red-50' : ($minutes >= 10 ? 'border-amber-600 bg-amber-50' : 'border-gray-200 bg-white');
                             @endphp
                             <div class="rounded-xl border {{ $priority }} p-3 text-sm">
-                                <div class="mb-1 flex items-center justify-between text-xs text-slate-400">
+                                <div class="mb-1 flex items-center justify-between text-xs text-gray-500">
                                     <span>{{ $item->order->table?->name ?? $item->order->order_type->label() }}</span>
                                     <span>{{ $item->created_at->format('H:i') }} &middot; {{ $minutes }} min</span>
                                 </div>
                                 <div class="font-medium">{{ $item->quantity }} &times; {{ $item->name }}</div>
                                 @foreach ($item->modifiers as $modifier)
-                                    <div class="text-xs text-slate-400">+ {{ $modifier->name }}</div>
+                                    <div class="text-xs text-gray-500">+ {{ $modifier->name }}</div>
                                 @endforeach
                                 @if ($item->notes)
-                                    <div class="text-xs italic text-amber-400">{{ $item->notes }}</div>
+                                    <div class="text-xs italic text-amber-600">{{ $item->notes }}</div>
                                 @endif
-                                <div class="mt-1 text-xs text-slate-500">Mesero: {{ $item->order->user->name }}</div>
+                                <div class="mt-1 text-xs text-gray-400">Mesero: {{ $item->order->user->name }}</div>
 
                                 @can('cocina.gestionar')
                                     @if ($column['action'])
                                         <button
                                             wire:click="advance({{ $item->id }}, '{{ $column['action'] }}')"
-                                            class="mt-2 w-full rounded-lg {{ $column['actionColor'] }} py-1.5 text-xs font-semibold"
+                                            class="mt-2 w-full rounded-lg {{ $column['actionColor'] }} py-1.5 text-xs font-semibold text-white"
                                         >
                                             {{ $column['actionLabel'] }}
                                         </button>
@@ -144,7 +144,7 @@ new #[Layout('layouts.app')] class extends Component
                         @endforeach
 
                         @if ($column['items']->isEmpty())
-                            <p class="text-center text-xs text-slate-600">Sin pendientes.</p>
+                            <p class="text-center text-xs text-gray-400">Sin pendientes.</p>
                         @endif
                     </div>
                 </div>

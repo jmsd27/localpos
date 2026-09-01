@@ -18,12 +18,15 @@ class Branch extends Model
         'address',
         'phone',
         'is_main',
+        'sync_token',
+        'last_synced_at',
     ];
 
     protected function casts(): array
     {
         return [
             'is_main' => 'boolean',
+            'last_synced_at' => 'datetime',
         ];
     }
 

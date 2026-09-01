@@ -65,13 +65,16 @@ class CashRegisterService
         return round((float) $session->opening_amount + (float) $movementsCash, 2);
     }
 
-    public function close(CashRegisterSession $session, float $countedCash, int $userId, ?string $notes = null): CashRegisterSession
+    /**
+     * @param  list<array{value: float, label: string, quantity: int, subtotal: float}>|null  $denominations
+     */
+    public function close(CashRegisterSession $session, float $countedCash, int $userId, ?string $notes = null, ?array $denominations = null): CashRegisterSession
     {
         if ($session->status === CashRegisterSessionStatus::Closed) {
             throw new InvalidArgumentException('Esta sesión de caja ya está cerrada.');
         }
 
-        return DB::transaction(function () use ($session, $countedCash, $userId, $notes) {
+        return DB::transaction(function () use ($session, $countedCash, $userId, $notes, $denominations) {
             $expected = $this->expectedCash($session);
             $difference = round($countedCash - $expected, 2);
 
@@ -81,6 +84,7 @@ class CashRegisterService
                 'closed_at' => now(),
                 'expected_cash' => $expected,
                 'counted_cash' => $countedCash,
+                'denominations' => $denominations,
                 'difference' => $difference,
                 'notes' => $notes,
             ]);

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-new #[Layout('layouts.app')] class extends Component
+new #[Layout('layouts.guest', ['title' => 'Instalación'])] class extends Component
 {
     public string $business_name = '';
 
@@ -85,60 +85,60 @@ new #[Layout('layouts.app')] class extends Component
 ?>
 
 <div class="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-10">
-    <div class="w-full max-w-lg rounded-xl border border-slate-800 bg-slate-900 p-8 shadow-xl">
-        <h1 class="mb-1 text-center text-2xl font-semibold text-white">LOCALPOS</h1>
-        <p class="mb-6 text-center text-sm text-slate-400">Configuración inicial &mdash; solo se hace una vez.</p>
+    <div class="w-full max-w-lg rounded-xl border border-gray-200 bg-white p-8 shadow-xl">
+        <h1 class="mb-1 text-center text-2xl font-semibold text-gray-900">LOCALPOS</h1>
+        <p class="mb-6 text-center text-sm text-gray-500">Configuración inicial &mdash; solo se hace una vez.</p>
 
         <form wire:submit="install" class="space-y-4">
             <div>
-                <h2 class="mb-2 text-sm font-semibold text-slate-300">Negocio</h2>
+                <h2 class="mb-2 text-sm font-semibold text-gray-600">Negocio</h2>
                 <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
                     <div class="sm:col-span-3">
-                        <label class="mb-1 block text-sm text-slate-300">Nombre del negocio</label>
-                        <input type="text" wire:model="business_name" placeholder="Mi Restaurante" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
-                        @error('business_name') <span class="mt-1 block text-sm text-red-400">{{ $message }}</span> @enderror
+                        <label class="mb-1 block text-sm text-gray-600">Nombre del negocio</label>
+                        <input type="text" wire:model="business_name" placeholder="Mi Restaurante" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                        @error('business_name') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                     </div>
                     <div>
-                        <label class="mb-1 block text-sm text-slate-300">Moneda</label>
-                        <input type="text" wire:model="currency" maxlength="3" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
-                        @error('currency') <span class="mt-1 block text-sm text-red-400">{{ $message }}</span> @enderror
+                        <label class="mb-1 block text-sm text-gray-600">Moneda</label>
+                        <input type="text" wire:model="currency" maxlength="3" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                        @error('currency') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                     </div>
                     <div class="sm:col-span-2">
-                        <label class="mb-1 block text-sm text-slate-300">Zona horaria</label>
-                        <input type="text" wire:model="timezone" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
-                        @error('timezone') <span class="mt-1 block text-sm text-red-400">{{ $message }}</span> @enderror
+                        <label class="mb-1 block text-sm text-gray-600">Zona horaria</label>
+                        <input type="text" wire:model="timezone" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                        @error('timezone') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                     </div>
                 </div>
             </div>
 
             <div>
-                <h2 class="mb-2 text-sm font-semibold text-slate-300">Cuenta de administrador</h2>
+                <h2 class="mb-2 text-sm font-semibold text-gray-600">Cuenta de administrador</h2>
                 <div class="space-y-3">
                     <div>
-                        <label class="mb-1 block text-sm text-slate-300">Nombre</label>
-                        <input type="text" wire:model="admin_name" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
-                        @error('admin_name') <span class="mt-1 block text-sm text-red-400">{{ $message }}</span> @enderror
+                        <label class="mb-1 block text-sm text-gray-600">Nombre</label>
+                        <input type="text" wire:model="admin_name" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                        @error('admin_name') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                     </div>
                     <div>
-                        <label class="mb-1 block text-sm text-slate-300">Correo</label>
-                        <input type="email" wire:model="admin_email" autocomplete="username" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
-                        @error('admin_email') <span class="mt-1 block text-sm text-red-400">{{ $message }}</span> @enderror
+                        <label class="mb-1 block text-sm text-gray-600">Correo</label>
+                        <input type="email" wire:model="admin_email" autocomplete="username" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                        @error('admin_email') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                     </div>
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
-                            <label class="mb-1 block text-sm text-slate-300">Contraseña</label>
-                            <input type="password" wire:model="admin_password" autocomplete="new-password" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
-                            @error('admin_password') <span class="mt-1 block text-sm text-red-400">{{ $message }}</span> @enderror
+                            <label class="mb-1 block text-sm text-gray-600">Contraseña</label>
+                            <input type="password" wire:model="admin_password" autocomplete="new-password" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                            @error('admin_password') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                         </div>
                         <div>
-                            <label class="mb-1 block text-sm text-slate-300">Confirmar contraseña</label>
-                            <input type="password" wire:model="admin_password_confirmation" autocomplete="new-password" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
+                            <label class="mb-1 block text-sm text-gray-600">Confirmar contraseña</label>
+                            <input type="password" wire:model="admin_password_confirmation" autocomplete="new-password" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
                         </div>
                     </div>
                 </div>
             </div>
 
-            <button type="submit" wire:loading.attr="disabled" class="w-full rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition hover:bg-indigo-500 disabled:opacity-50">
+            <button type="submit" wire:loading.attr="disabled" class="w-full rounded-lg bg-violet-600 px-4 py-2 font-medium text-white transition hover:bg-violet-700 disabled:opacity-50">
                 <span wire:loading.remove wire:target="install">Crear negocio y comenzar</span>
                 <span wire:loading wire:target="install">Configurando…</span>
             </button>

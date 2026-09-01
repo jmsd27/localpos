@@ -101,45 +101,45 @@ new #[Layout('layouts.app')] class extends Component
 };
 ?>
 
-<div class="min-h-screen bg-slate-950 p-8 text-white">
+<div >
     <div class="mx-auto max-w-4xl">
         <div class="mb-6 flex items-center justify-between">
             <div>
-                <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-slate-400 hover:text-white">&larr; Dashboard</a>
+                <a href="{{ route('dashboard') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">&larr; Dashboard</a>
                 <h1 class="mt-1 text-2xl font-semibold">Categorías</h1>
             </div>
             @can('productos.crear')
-                <button wire:click="create" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">
+                <button wire:click="create" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-700 text-white">
                     Nueva categoría
                 </button>
             @endcan
         </div>
 
         @if ($showForm)
-            <div class="mb-6 rounded-xl border border-slate-800 bg-slate-900 p-6">
+            <div class="mb-6 rounded-xl border border-gray-200 bg-white p-6">
                 <form wire:submit="save" class="space-y-4">
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_auto]">
                         <div>
-                            <label class="mb-1 block text-sm text-slate-300">Nombre</label>
-                            <input type="text" wire:model="name" class="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
-                            @error('name') <span class="mt-1 block text-sm text-red-400">{{ $message }}</span> @enderror
+                            <label class="mb-1 block text-sm text-gray-600">Nombre</label>
+                            <input type="text" wire:model="name" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                            @error('name') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                         </div>
                         <div>
-                            <label class="mb-1 block text-sm text-slate-300">Color</label>
-                            <input type="color" wire:model="color" class="h-10 w-16 rounded-lg border border-slate-700 bg-slate-800">
+                            <label class="mb-1 block text-sm text-gray-600">Color</label>
+                            <input type="color" wire:model="color" class="h-10 w-16 rounded-lg border border-gray-300 bg-white">
                         </div>
                     </div>
 
-                    <label class="flex items-center gap-2 text-sm text-slate-300">
-                        <input type="checkbox" wire:model="is_active" class="rounded border-slate-700 bg-slate-800">
+                    <label class="flex items-center gap-2 text-sm text-gray-600">
+                        <input type="checkbox" wire:model="is_active" class="rounded border-gray-300 bg-white">
                         Activa
                     </label>
 
                     <div class="flex gap-2">
-                        <button type="submit" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium hover:bg-indigo-500">
+                        <button type="submit" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-700 text-white">
                             Guardar
                         </button>
-                        <button type="button" wire:click="cancel" class="rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800">
+                        <button type="button" wire:click="cancel" class="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-white">
                             Cancelar
                         </button>
                     </div>
@@ -147,9 +147,9 @@ new #[Layout('layouts.app')] class extends Component
             </div>
         @endif
 
-        <div class="overflow-hidden rounded-xl border border-slate-800">
+        <div class="overflow-x-auto rounded-xl border border-gray-200">
             <table class="w-full text-left text-sm">
-                <thead class="bg-slate-900 text-slate-400">
+                <thead class="bg-white text-gray-500">
                     <tr>
                         <th class="px-4 py-3">Nombre</th>
                         <th class="px-4 py-3">Color</th>
@@ -157,7 +157,7 @@ new #[Layout('layouts.app')] class extends Component
                         <th class="px-4 py-3"></th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-800 bg-slate-950">
+                <tbody class="divide-y divide-gray-100">
                     @forelse ($categories as $category)
                         <tr>
                             <td class="px-4 py-3">{{ $category->name }}</td>
@@ -165,22 +165,22 @@ new #[Layout('layouts.app')] class extends Component
                                 <span class="inline-block h-4 w-4 rounded-full align-middle" style="background-color: {{ $category->color }}"></span>
                             </td>
                             <td class="px-4 py-3">
-                                <span class="rounded-full px-2 py-0.5 text-xs {{ $category->is_active ? 'bg-emerald-900 text-emerald-300' : 'bg-slate-800 text-slate-400' }}">
+                                <span class="rounded-full px-2 py-0.5 text-xs {{ $category->is_active ? 'bg-emerald-50 text-emerald-700' : 'bg-white text-gray-500' }}">
                                     {{ $category->is_active ? 'Activa' : 'Inactiva' }}
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-right">
                                 @can('productos.editar')
-                                    <button wire:click="edit({{ $category->id }})" class="text-indigo-400 hover:text-indigo-300">Editar</button>
+                                    <button wire:click="edit({{ $category->id }})" class="text-violet-600 hover:text-violet-600">Editar</button>
                                 @endcan
                                 @can('productos.eliminar')
-                                    <button wire:click="delete({{ $category->id }})" wire:confirm="¿Eliminar esta categoría?" class="ml-3 text-red-400 hover:text-red-300">Eliminar</button>
+                                    <button wire:click="delete({{ $category->id }})" wire:confirm="¿Eliminar esta categoría?" class="ml-3 text-red-600 hover:text-red-700">Eliminar</button>
                                 @endcan
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-4 py-6 text-center text-slate-500">Sin categorías todavía.</td>
+                            <td colspan="4" class="px-4 py-6 text-center text-gray-400">Sin categorías todavía.</td>
                         </tr>
                     @endforelse
                 </tbody>
