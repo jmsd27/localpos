@@ -66,7 +66,7 @@ lados (fuera del alcance de esta entrega).
 
 | Restricción de Vercel | Cómo se resuelve |
 |-----------------------|------------------|
-| No corre PHP nativamente | Runtime comunitario `vercel-php` (`vercel.json`) |
+| No corre PHP nativamente | Runtime comunitario `vercel-php@0.8.0` → PHP 8.4 (`vercel.json`) |
 | Sistema de archivos de solo lectura (salvo `/tmp`) | `api/index.php` reubica `storage/` a `/tmp` |
 | Sin MySQL | MySQL gestionado externo (TiDB Cloud / PlanetScale / Railway) |
 | Sin proceso de cron persistente | `crons` en `vercel.json` → `GET /cron/housekeeping` |

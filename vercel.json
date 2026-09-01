@@ -1,11 +1,8 @@
 {
     "$schema": "https://openapi.vercel.sh/vercel.json",
-    "version": 2,
-    "buildCommand": "npm ci --include=dev && npm run build",
     "functions": {
         "api/index.php": {
-            "runtime": "[email protected]",
-            "maxDuration": 30
+            "runtime": "vercel-php@0.8.0"
         }
     },
     "routes": [

@@ -11,7 +11,7 @@ Vercel no tiene PHP ni MySQL propios. Este repo ya trae lo necesario:
 | Archivo | Rol |
 |---------|-----|
 | `api/index.php` | Entrada serverless; reubica `storage/` a `/tmp` (FS de solo lectura). |
-| `vercel.json` | Runtime `vercel-php`, ruteo de estáticos, cron diario. |
+| `vercel.json` | Runtime `vercel-php@0.8.0` (PHP 8.4), ruteo de estáticos, cron diario. |
 | `.vercelignore` | Excluye tests, docs y basura local del deploy. |
 | `.env.vercel.example` | Plantilla de variables de entorno del espejo. |
 
@@ -49,12 +49,18 @@ vercel login
 vercel link          # crea/enlaza el proyecto; NO despliegues aún
 ```
 
-En **Vercel › Project › Settings › General**:
+En **Vercel › Project › Settings › General**, deja casi todo en automático:
 - **Framework Preset:** Other
-- **Build Command:** `npm ci --include=dev && npm run build` (ya viene en `vercel.json`)
+- **Build Command:** (vacío / *Override* apagado) — `vercel-php` corre
+  `composer install` y éste ejecuta el script `vercel` de `composer.json`
+  (`npm ci` + `npm run build` + limpieza de `node_modules`).
 - **Output Directory:** (vacío)
-- **Install Command:** (vacío — `vercel-php` corre `composer install` solo)
-- **Node.js Version:** 20.x
+- **Install Command:** (vacío)
+- **Node.js Version:** 22.x
+
+> **Versión de PHP.** `vercel.json` fija `vercel-php@0.8.0` → PHP **8.4** sobre
+> Amazon Linux 2023 (la misma línea que se usa en desarrollo). No subas a
+> `0.9.0` sin probar: usa PHP 8.5, que Laravel 12 aún no soporta oficialmente.
 
 ## 3.4 Variables de entorno
 
@@ -152,7 +158,7 @@ Conecta la primera sucursal → [documento 4](04-alta-de-sucursales.md).
 | `SQLSTATE[HY000] [2002]` o timeout de DB | `DB_HOST/PORT` mal, o falta `MYSQL_ATTR_SSL_CA`. TiDB usa puerto `4000`. |
 | `SSL connection error` | Ruta de CA incorrecta. En Vercel: `/etc/pki/tls/certs/ca-bundle.crt`. |
 | 500 con `file_put_contents .../storage/...` | `api/index.php` no se está usando. Revisa `vercel.json` › `routes`. |
-| CSS/JS sin cargar | El build no corrió. Revisa **Build Command** y que `public/build/manifest.json` exista en el deploy. |
+| CSS/JS sin cargar | El script `vercel` de `composer.json` no corrió. Revisa el log de build de Vercel; debe verse `npm run build` y `public/build/manifest.json` generado. |
 | Redirige a `http://` / sesión no persiste | Falta `trustProxies` (ya está) o `APP_URL` con `http://`. Debe ser `https://`. |
 | 419 Page Expired al iniciar sesión | `APP_KEY` distinto entre deploys, o `SESSION_SECURE_COOKIE` sin HTTPS. |
 | El cron no corre | En plan Hobby, Vercel Cron corre máx. 1 vez/día — por eso está a `0 8 * * *`. La sincronización NO depende de este cron. |
