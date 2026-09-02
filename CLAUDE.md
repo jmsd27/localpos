@@ -76,9 +76,9 @@ source), `sync:make-viewer` (solo mirror), `localpos:housekeeping`, `localpos:ba
   `vercel-php` a 0.9.0 (= PHP 8.5, no soportado por Laravel 12).
 - El logo del negocio subido (`businesses.logo_path`, disco local) **no se replica a Vercel** —
   haría falta un disco S3 compartido en ambos lados.
-- El sync **no reescribe FKs polimórficas** (`audit_logs.auditable_id`,
-  `inventory_movements.reference_id`): no están en `config('sync.fk_map')`. En el espejo quedan
-  con el id local; hoy solo se muestran como texto, nunca se desreferencian.
+- Las FKs polimórficas (`audit_logs.auditable_id`, `inventory_movements.reference_id`) se
+  reescriben *best-effort* vía `config('sync.morph_map')`; si el tipo no se sincroniza o el
+  referido no llegó, el id local se deja intacto (no se difiere la entrada).
 - El motor de sync tiene cobertura en `tests/Feature/Cloud/SyncEngineTest.php` — corre esos
   tests si tocas `Sync*Service`, `SyncOutboxObserver`, `config/sync.php` o el `Gate::before`.
 - Íconos PWA (`public/icons/*.png`) son la marca de la app (violeta + storefront), no un logo

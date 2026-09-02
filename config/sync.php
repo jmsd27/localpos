@@ -179,4 +179,17 @@ return [
         'purchase_item' => ['purchase_id' => 'purchase', 'ingredient_id' => 'ingredient'],
         'audit_log' => ['user_id' => 'user', 'business_id' => 'business', 'branch_id' => 'branch', 'terminal_id' => 'terminal'],
     ],
+
+    /*
+     * Referencias polimórficas (columna *_type con el FQCN + columna *_id).
+     * El lado de ingesta traduce el *_id vía sync_id_map buscando la clave
+     * del modelo por su FQCN. Best-effort: si el tipo no se sincroniza o el
+     * padre aún no llegó, el id local se deja tal cual (no se difiere).
+     *
+     * model_type => [type_column => id_column]
+     */
+    'morph_map' => [
+        'audit_log' => ['auditable_type' => 'auditable_id'],
+        'inventory_movement' => ['reference_type' => 'reference_id'],
+    ],
 ];

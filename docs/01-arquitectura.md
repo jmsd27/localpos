@@ -66,11 +66,12 @@ logo en el espejo, configura un disco S3 y `FILESYSTEM_DISK=s3` en ambos
 lados (fuera del alcance de esta entrega).
 
 **Referencias polimórficas** (`audit_logs.auditable_id`,
-`inventory_movements.reference_id`): no se reescriben — no están en
-`fk_map` porque su tipo es dinámico. En el espejo el id queda con el valor
-local. Hoy solo se muestra como texto informativo ("Order #42"), nunca se
-desreferencia, así que es inofensivo; si en el futuro una vista carga esas
-relaciones habría que hacer el `fk_map` consciente del `*_type`.
+`inventory_movements.reference_id`): se reescriben con `config('sync.morph_map')`
+— la ingesta busca la clave del modelo por el FQCN de la columna `*_type` y
+traduce el id vía `sync_id_map`. Es *best-effort*: si el tipo no se sincroniza
+o el referido aún no llegó, el id local se deja tal cual (no se difiere la
+entrada, porque estas filas son informativas y su referido puede haberse
+borrado o preceder al backfill).
 
 ## Cobertura de pruebas
 

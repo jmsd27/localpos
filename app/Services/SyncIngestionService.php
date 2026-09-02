@@ -149,7 +149,54 @@ class SyncIngestionService
             $payload[$column] = $cloudId;
         }
 
+        return $this->rewriteMorphKeys($modelType, $payload, $branchCode);
+    }
+
+    /**
+     * Referencias polimórficas (audit_logs.auditable_*, inventory_movements.reference_*):
+     * el tipo se guarda como FQCN, así que se busca su clave en config('sync.models')
+     * y se traduce el id vía sync_id_map. Best-effort: si el tipo no se sincroniza o
+     * el padre aún no llegó, se deja el id local en vez de diferir para siempre
+     * (estas filas son informativas y su referido puede haberse borrado o preceder
+     * al backfill).
+     */
+    protected function rewriteMorphKeys(string $modelType, array $payload, string $branchCode): array
+    {
+        foreach (config("sync.morph_map.{$modelType}", []) as $typeColumn => $idColumn) {
+            $class = $payload[$typeColumn] ?? null;
+            $localId = $payload[$idColumn] ?? null;
+
+            if (! is_string($class) || $localId === null) {
+                continue;
+            }
+
+            $refModelType = $this->modelTypeForClass($class);
+
+            if ($refModelType === null) {
+                continue;
+            }
+
+            $cloudId = $this->resolveCloudId($refModelType, (int) $localId, $branchCode);
+
+            if ($cloudId !== null) {
+                $payload[$idColumn] = $cloudId;
+            }
+        }
+
         return $payload;
+    }
+
+    protected function modelTypeForClass(string $class): ?string
+    {
+        $class = ltrim($class, '\\');
+
+        foreach (config('sync.models', []) as $key => $config) {
+            if (ltrim((string) ($config['model'] ?? ''), '\\') === $class) {
+                return $key;
+            }
+        }
+
+        return null;
     }
 
     protected function resolveCloudId(string $modelType, int $localId, string $branchCode): ?int

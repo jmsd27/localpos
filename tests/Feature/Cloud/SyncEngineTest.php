@@ -376,6 +376,64 @@ test('la ingesta conserva los campos JSON sin doble codificar', function () {
         ->and($cloudLog->after)->toBe(['price' => 12, 'name' => 'Café']);
 });
 
+test('la ingesta reescribe la referencia polimórfica de un audit log a su id de la nube', function () {
+    config()->set('sync.role', 'mirror');
+
+    $localBranch = Branch::factory()->create();
+    $localOrder = Order::factory()->create(['business_id' => $localBranch->business_id, 'branch_id' => $localBranch->id]);
+    [, $cloudBranch] = provisionOrderDeps($localOrder, $localBranch->code);
+
+    ingest($localBranch->code, [syncEntry($localOrder, 'order', localId: $localOrder->id)]);
+    $cloudOrderId = SyncIdMap::where('model_type', 'order')->where('local_id', $localOrder->id)->value('cloud_id');
+
+    $localLog = AuditLog::create([
+        'user_id' => $localOrder->user_id,
+        'business_id' => $localBranch->business_id,
+        'branch_id' => $localBranch->id,
+        'action' => 'venta.anular',
+        'auditable_type' => $localOrder->getMorphClass(),
+        'auditable_id' => $localOrder->id,
+        'created_at' => now(),
+    ]);
+
+    ingest($localBranch->code, [syncEntry($localLog, 'audit_log', localId: $localLog->id)]);
+
+    $cloudLog = AuditLog::findOrFail(
+        SyncIdMap::where('model_type', 'audit_log')->where('local_id', $localLog->id)->value('cloud_id')
+    );
+
+    expect($cloudLog->auditable_id)->toBe($cloudOrderId)
+        ->and($cloudLog->auditable_id)->not->toBe($localOrder->id);
+});
+
+test('un audit log cuya referencia polimórfica no resuelve se acepta con el id local intacto', function () {
+    config()->set('sync.role', 'mirror');
+
+    $localBranch = Branch::factory()->create();
+    $user = User::factory()->create(['branch_id' => $localBranch->id]);
+    [, $cloudBranch] = provisionCloudBranch($localBranch->code, $localBranch->business_id, $localBranch->id);
+    mapCloudId($localBranch->code, 'user', $user->id, User::factory()->create(['branch_id' => $cloudBranch->id])->id);
+
+    $localLog = AuditLog::create([
+        'user_id' => $user->id,
+        'business_id' => $localBranch->business_id,
+        'branch_id' => $localBranch->id,
+        'action' => 'sesion.iniciar',
+        'auditable_type' => 'App\\Models\\Order',
+        'auditable_id' => 987654, // nunca sincronizado
+        'created_at' => now(),
+    ]);
+
+    $result = ingest($localBranch->code, [syncEntry($localLog, 'audit_log', localId: $localLog->id)]);
+
+    $cloudLog = AuditLog::findOrFail(
+        SyncIdMap::where('model_type', 'audit_log')->where('local_id', $localLog->id)->value('cloud_id')
+    );
+
+    expect($result['accepted'])->toHaveCount(1)
+        ->and($cloudLog->auditable_id)->toBe(987654);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Endpoint HTTP + autenticación por token
