@@ -6,10 +6,14 @@
 
         <title>{{ $title ?? config('app.name') }}</title>
 
+        <link rel="icon" href="/favicon.ico" sizes="any">
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+        <link rel="icon" type="image/png" href="/favicon.png">
         <link rel="manifest" href="/manifest.webmanifest">
         <meta name="theme-color" content="#7c3aed">
         <link rel="apple-touch-icon" href="/icons/icon-192.png">
         <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="LOCALPOS">
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>

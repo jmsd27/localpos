@@ -2,7 +2,7 @@
 // dinámico a propósito: Livewire es server-driven y servir HTML viejo desde
 // caché sería activamente incorrecto en un POS/reporting. Solo assets
 // estáticos de build (hash en el nombre de archivo) e íconos van cache-first.
-const CACHE_NAME = 'localpos-static-v1';
+const CACHE_NAME = 'localpos-static-v2';
 const STATIC_PATTERNS = [/^\/build\//, /^\/icons\//];
 
 function isStaticAsset(url) {
