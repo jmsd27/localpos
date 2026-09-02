@@ -1,4 +1,11 @@
-# Manuales de implementación — LOCALPOS
+# Espejo en la nube — LOCALPOS
+
+> **¿Buscas cómo poner en marcha un negocio nuevo desde cero?** Esos manuales
+> paso a paso (instalación, catálogo, cajas, cocina, personal, impresión…)
+> están **dentro de la app**, en **Administración → Manuales** (solo visibles
+> para el super administrador). Los archivos viven en `resources/manuales/`.
+>
+> Este directorio `docs/` es la referencia profunda del **espejo en la nube**.
 
 LOCALPOS opera **100% local** en cada sucursal (Laravel + MySQL sobre
 Laragon, servido por LAN, sin depender de Internet para vender). Además

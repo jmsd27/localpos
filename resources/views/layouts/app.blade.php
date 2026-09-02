@@ -267,6 +267,13 @@
                                     Auditoría
                                 </a>
                             @endcan
+                            @role('super-admin')
+                                <a href="{{ route('admin.manuales') }}" wire:navigate
+                                    class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.manuales') ? 'border-l-2 border-violet-600 bg-violet-50 text-violet-700' : 'text-gray-600 hover:bg-gray-50' }}">
+                                    <x-icon name="book-open" class="h-5 w-5" />
+                                    Manuales
+                                </a>
+                            @endrole
                         </div>
                     </div>
                 @endcanany

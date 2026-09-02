@@ -83,4 +83,9 @@ source), `sync:make-viewer` (solo mirror), `localpos:housekeeping`, `localpos:ba
   tests si tocas `Sync*Service`, `SyncOutboxObserver`, `config/sync.php` o el `Gate::before`.
 - Íconos PWA (`public/icons/*.png`) son la marca de la app (violeta + storefront), no un logo
   del negocio.
-- Documentación operativa completa en `docs/` (`01-arquitectura` … `06-checklist-lanzamiento`).
+- Documentación operativa del espejo en la nube en `docs/` (`01-arquitectura` … `06-checklist-lanzamiento`).
+- **Manuales de onboarding de un negocio nuevo**: archivos Markdown en `resources/manuales/*.md`,
+  renderizados in-app en **Administración → Manuales** (`Route::livewire('/manuales', 'admin.manuales.index')`,
+  middleware `role:super-admin`). El avance de lectura se guarda por negocio en `settings` (grupo
+  `onboarding`, key `manual:<slug>`). Para agregar/editar un manual basta tocar el `.md` (el índice
+  se arma solo por orden de nombre de archivo y el primer `# heading`).

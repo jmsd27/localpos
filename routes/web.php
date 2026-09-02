@@ -96,6 +96,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::livewire('/menus-qr', 'admin.menus-qr.index')
         ->middleware('permission:productos.ver')
         ->name('menus-qr');
+
+    // Manuales de implementación: solo el super administrador.
+    Route::livewire('/manuales', 'admin.manuales.index')
+        ->middleware('role:super-admin')
+        ->name('manuales');
 });
 
 Route::middleware(['auth'])->prefix('inventario')->name('inventario.')->group(function () {
