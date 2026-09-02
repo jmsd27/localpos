@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    /*
+     * API de Claude (Anthropic) para el módulo "Diagnóstico y asistencia"
+     * (Administración → Asistencia, solo super admin). Si la clave está vacía
+     * el botón "Explicar con IA" no aparece: el resto del panel funciona igual.
+     * La clave nunca se muestra en la UI y solo se usa server-side.
+     */
+    'anthropic' => [
+        'key' => env('ANTHROPIC_API_KEY'),
+        'model' => env('ANTHROPIC_MODEL', 'claude-opus-5'),
+    ],
+
 ];

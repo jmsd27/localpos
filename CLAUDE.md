@@ -89,3 +89,10 @@ source), `sync:make-viewer` (solo mirror), `localpos:housekeeping`, `localpos:ba
   middleware `role:super-admin`). El avance de lectura se guarda por negocio en `settings` (grupo
   `onboarding`, key `manual:<slug>`). Para agregar/editar un manual basta tocar el `.md` (el índice
   se arma solo por orden de nombre de archivo y el primer `# heading`).
+- **Diagnóstico y asistencia** (solo super admin): `Route::livewire('/asistencia', 'admin.asistencia.index')`,
+  middleware `role:super-admin`. Panel de **solo lectura** (`DiagnosticsService`): salud de app/BD/colas/
+  disco/sync + errores parseados de `storage/logs/laravel.log` (`LaravelLogReader`). El botón "Explicar
+  con IA" (`ClaudeAssistantService`, API de Claude vía `Http`, no SDK) manda el error + extractos del
+  código citado —con secretos redactados, nunca lee `.env`— y devuelve el diagnóstico como texto; se
+  activa solo si hay `ANTHROPIC_API_KEY` (config `services.anthropic`). No ejecuta nada: el arreglo se
+  aplica por local → git → redeploy. Funciona igual en el `mirror` (es de solo lectura).

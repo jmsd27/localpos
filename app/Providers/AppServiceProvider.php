@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Enums\RoleName;
 use App\Observers\SyncOutboxObserver;
+use App\Support\LaravelLogReader;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -34,6 +35,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // El lector del log de Laravel apunta al archivo por defecto; los tests
+        // lo sobrescriben con una ruta temporal.
+        $this->app->bind(LaravelLogReader::class, fn () => LaravelLogReader::default());
+
         // Se registra en register() —no en boot()— a propósito: así este
         // Gate::before queda ANTES que el de spatie/laravel-permission (que
         // se engancha vía callAfterResolving(Gate) al bootear el paquete).

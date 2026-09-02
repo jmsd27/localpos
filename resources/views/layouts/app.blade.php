@@ -273,6 +273,11 @@
                                     <x-icon name="book-open" class="h-5 w-5" />
                                     Manuales
                                 </a>
+                                <a href="{{ route('admin.asistencia') }}" wire:navigate
+                                    class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.asistencia') ? 'border-l-2 border-violet-600 bg-violet-50 text-violet-700' : 'text-gray-600 hover:bg-gray-50' }}">
+                                    <x-icon name="wrench-screwdriver" class="h-5 w-5" />
+                                    Asistencia
+                                </a>
                             @endrole
                         </div>
                     </div>

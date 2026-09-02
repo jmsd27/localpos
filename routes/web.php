@@ -101,6 +101,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::livewire('/manuales', 'admin.manuales.index')
         ->middleware('role:super-admin')
         ->name('manuales');
+
+    // Diagnóstico y asistencia (panel de salud + "explicar error" con IA):
+    // solo el super administrador. Es de solo lectura, así que funciona igual
+    // en el espejo de la nube.
+    Route::livewire('/asistencia', 'admin.asistencia.index')
+        ->middleware('role:super-admin')
+        ->name('asistencia');
 });
 
 Route::middleware(['auth'])->prefix('inventario')->name('inventario.')->group(function () {
