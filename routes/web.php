@@ -172,7 +172,7 @@ Route::get('/menu', PublicMenuController::class)->name('menu.show');
 
 // Lo llama el Cron de Vercel (envía "Authorization: Bearer <CRON_SECRET>").
 Route::get('/cron/housekeeping', function (Request $request) {
-    $secret = env('CRON_SECRET');
+    $secret = config('ops.cron_secret');
 
     abort_unless(
         is_string($secret) && $secret !== '' && hash_equals($secret, (string) $request->bearerToken()),
@@ -186,7 +186,7 @@ Route::get('/cron/housekeeping', function (Request $request) {
 
 // Dispara migraciones sin abrir una shell:  curl -XPOST -H "Authorization: Bearer <DEPLOY_KEY>" .../deploy/migrate
 Route::post('/deploy/migrate', function (Request $request) {
-    $key = env('DEPLOY_KEY');
+    $key = config('ops.deploy_key');
 
     abort_unless(
         is_string($key) && $key !== '' && hash_equals($key, (string) $request->bearerToken()),
