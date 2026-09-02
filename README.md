@@ -1,4 +1,4 @@
-# LOCALPOS
+# puntoYA
 
 Punto de venta para restaurantes/bares que opera **100 % local** en cada
 sucursal (Laravel 12 + Livewire 4 + Tailwind v4, sobre Laragon: Apache +
@@ -35,7 +35,7 @@ Todos los manuales de implementación y operación están en **[`docs/`](docs/RE
 | Documento | Tema |
 |-----------|------|
 | [01 · Arquitectura](docs/01-arquitectura.md) | Cómo encajan el local y el espejo; qué se sincroniza. |
-| [02 · Implementación local](docs/02-implementacion-local.md) | Montar LOCALPOS en una sucursal. |
+| [02 · Implementación local](docs/02-implementacion-local.md) | Montar puntoYA en una sucursal. |
 | [03 · Despliegue en Vercel](docs/03-despliegue-vercel.md) | Crear el espejo en la nube. |
 | [04 · Alta de sucursales](docs/04-alta-de-sucursales.md) | Conectar cada sucursal al espejo. |
 | [05 · Operación y diagnóstico](docs/05-operacion-y-diagnostico.md) | Día a día, salud del sync, respaldos. |

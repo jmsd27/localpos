@@ -13,7 +13,7 @@
         <meta name="theme-color" content="#7c3aed">
         <link rel="apple-touch-icon" href="/icons/icon-192.png">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-title" content="LOCALPOS">
+        <meta name="apple-mobile-web-app-title" content="puntoYA">
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
@@ -41,7 +41,7 @@
                 <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-600 text-white">
                     <x-icon name="building-storefront" class="h-5 w-5" />
                 </span>
-                <span class="text-base font-semibold text-gray-900">{{ config('app.name', 'LOCALPOS') }}</span>
+                <span class="text-base font-semibold text-gray-900">{{ config('app.name', 'puntoYA') }}</span>
             </div>
 
             <nav class="flex-1 space-y-6 overflow-y-auto px-3 py-5">

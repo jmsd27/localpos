@@ -86,7 +86,7 @@ new #[Layout('layouts.guest', ['title' => 'Instalación'])] class extends Compon
 
 <div class="flex min-h-screen items-center justify-center bg-slate-950 px-4 py-10">
     <div class="w-full max-w-lg rounded-xl border border-gray-200 bg-white p-8 shadow-xl">
-        <h1 class="mb-1 text-center text-2xl font-semibold text-gray-900">LOCALPOS</h1>
+        <h1 class="mb-1 text-center text-2xl font-semibold text-gray-900">{{ config('app.name', 'puntoYA') }}</h1>
         <p class="mb-6 text-center text-sm text-gray-500">Configuración inicial &mdash; solo se hace una vez.</p>
 
         <form wire:submit="install" class="space-y-4">

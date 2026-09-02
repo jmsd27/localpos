@@ -1,6 +1,6 @@
 {
-    "name": "LOCALPOS",
-    "short_name": "LOCALPOS",
+    "name": "puntoYA",
+    "short_name": "puntoYA",
     "start_url": "/dashboard",
     "scope": "/",
     "display": "standalone",

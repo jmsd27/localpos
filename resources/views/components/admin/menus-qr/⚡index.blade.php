@@ -178,7 +178,7 @@ new #[Layout('layouts.app')] class extends Component
             ctx.fillStyle = '#ffffff';
             ctx.textAlign = 'center';
             ctx.font = '600 56px sans-serif';
-            ctx.fillText(negocio || 'LOCALPOS', width / 2, 160);
+            ctx.fillText(negocio || 'puntoYA', width / 2, 160);
 
             ctx.font = '500 34px sans-serif';
             ctx.fillText('Escanea para ver el menú', width / 2, 230);

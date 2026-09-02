@@ -64,7 +64,7 @@ new #[Layout('layouts.app')] class extends Component
 <div >
     <div class="mx-auto max-w-3xl">
         <div class="mb-6 flex items-center justify-between">
-            <h1 class="text-2xl font-semibold">LOCALPOS</h1>
+            <h1 class="text-2xl font-semibold">{{ config('app.name', 'puntoYA') }}</h1>
             <button wire:click="logout" class="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-white">
                 Cerrar sesión
             </button>

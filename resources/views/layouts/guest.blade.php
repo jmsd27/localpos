@@ -30,14 +30,14 @@
                 <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-600/30">
                     <x-icon name="building-storefront" class="h-6 w-6" />
                 </span>
-                <span class="text-xl font-semibold tracking-tight text-gray-900">{{ config('app.name', 'LOCALPOS') }}</span>
+                <span class="text-xl font-semibold tracking-tight text-gray-900">{{ config('app.name', 'puntoYA') }}</span>
             </div>
 
             <div class="w-full max-w-md rounded-2xl border border-white bg-white/80 p-8 shadow-2xl shadow-gray-900/10 ring-1 ring-gray-900/5 backdrop-blur-sm">
                 {{ $slot }}
             </div>
 
-            <p class="relative mt-8 text-xs text-gray-400">&copy; {{ now()->year }} {{ config('app.name', 'LOCALPOS') }}</p>
+            <p class="relative mt-8 text-xs text-gray-400">&copy; {{ now()->year }} {{ config('app.name', 'puntoYA') }}</p>
         </div>
 
         @livewireScripts
