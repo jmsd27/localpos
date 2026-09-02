@@ -61,13 +61,23 @@ class SyncIngestionService
         }
 
         $payload = $entry['payload'] ?? [];
-        unset($payload['id'], $payload['created_at'], $payload['updated_at']);
+
+        // El PK lo asigna la nube; el resto de columnas —timestamps y campos
+        // JSON incluidos— se escriben tal cual llegaron de la sucursal.
+        $model = new $modelClass;
+        unset($payload[$model->getKeyName()]);
 
         $rewritten = $this->rewriteForeignKeys($modelType, $payload, $branchCode);
 
         if ($rewritten === null) {
             return false;
         }
+
+        // Escritura cruda (query builder, no Eloquent): el espejo es una
+        // copia fiel de solo lectura, así que NO se aplican casts (que
+        // doble-codificarían los strings JSON de before/after de auditoría),
+        // ni mutators, ni el updated_at automático, ni eventos de modelo.
+        $table = $model->getTable();
 
         $existingMap = SyncIdMap::query()
             ->where('branch_code', $branchCode)
@@ -76,18 +86,18 @@ class SyncIngestionService
             ->first();
 
         if ($existingMap) {
-            $modelClass::query()->whereKey($existingMap->cloud_id)->update($rewritten);
+            DB::table($table)->where($model->getKeyName(), $existingMap->cloud_id)->update($rewritten);
 
             return true;
         }
 
-        $created = $modelClass::query()->create($rewritten);
+        $cloudId = DB::table($table)->insertGetId($rewritten, $model->getKeyName());
 
         SyncIdMap::query()->create([
             'branch_code' => $branchCode,
             'model_type' => $modelType,
             'local_id' => $localId,
-            'cloud_id' => $created->getKey(),
+            'cloud_id' => $cloudId,
         ]);
 
         return true;

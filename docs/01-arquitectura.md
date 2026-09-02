@@ -26,7 +26,10 @@ comportamiento.
    con el header `X-Sync-Token` (un token único por sucursal). HTTPS
    obligatorio — el token es una credencial.
 4. **Ingesta.** En el espejo, `SyncIngestionService` aplica el lote dentro de
-   una transacción, en orden (padres antes que hijos).
+   una transacción, en orden (padres antes que hijos). Escribe con el query
+   builder crudo, no Eloquent: el espejo es una copia fiel, así que conserva
+   los `created_at`/`updated_at` de origen y los campos JSON tal cual (sin
+   casts que los doble-codificarían), y no dispara eventos de modelo.
 
 ## Identidad entre sucursales
 
@@ -61,6 +64,24 @@ iniciar sesión en el espejo. El acceso al espejo se crea aparte con
 Vercel (no hay disco persistente). El reporte funciona igual; si necesitas el
 logo en el espejo, configura un disco S3 y `FILESYSTEM_DISK=s3` en ambos
 lados (fuera del alcance de esta entrega).
+
+**Referencias polimórficas** (`audit_logs.auditable_id`,
+`inventory_movements.reference_id`): no se reescriben — no están en
+`fk_map` porque su tipo es dinámico. En el espejo el id queda con el valor
+local. Hoy solo se muestra como texto informativo ("Order #42"), nunca se
+desreferencia, así que es inofensivo; si en el futuro una vista carga esas
+relaciones habría que hacer el `fk_map` consciente del `*_type`.
+
+## Cobertura de pruebas
+
+`tests/Feature/Cloud/SyncEngineTest.php` cubre el motor de punta a punta:
+captura en el outbox (incluida la resolución de sucursal vía relación y el
+blanqueo de campos sensibles), identidad cruzada entre sucursales,
+idempotencia, diferimiento padre-antes-que-hijo, fidelidad de `created_at` y
+JSON en el espejo, autenticación del endpoint por token, y el bloqueo de
+escritura del `Gate::before` (incluido que gana sobre el callback de
+spatie/laravel-permission — por eso se registra en `register()`, no en
+`boot()`).
 
 ## Por qué Vercel necesita adaptación
 

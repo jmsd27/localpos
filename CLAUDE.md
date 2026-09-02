@@ -29,8 +29,10 @@ npm run build              # assets de producción
 ## Arquitectura
 
 - **Un código, dos roles** vía `SYNC_ROLE` (`source` = local, fuente de verdad; `mirror` = nube,
-  solo lectura). El `mirror` bloquea toda ability que no sea de lectura con un `Gate::before` en
-  `AppServiceProvider` y muestra un banner ámbar en `layouts/app.blade.php`.
+  solo lectura). El `mirror` bloquea toda ability que no sea de lectura con un `Gate::before`
+  registrado en `AppServiceProvider::register()` (no `boot()` — tiene que quedar antes del
+  `Gate::before` de spatie/laravel-permission, que devuelve `true` en cuanto el usuario tiene el
+  permiso) y muestra un banner ámbar en `layouts/app.blade.php`.
 - **Captura de cambios**: `SyncOutboxObserver` (genérico, registrado en `AppServiceProvider::boot()`
   para cada modelo de `config/sync.php`) escribe en `sync_outbox`. `config/sync.php` es la única
   fuente de verdad de qué se sincroniza (`models`, `fk_map`, `branch_via`, `exclude_fields`).
@@ -74,6 +76,11 @@ source), `sync:make-viewer` (solo mirror), `localpos:housekeeping`, `localpos:ba
   `vercel-php` a 0.9.0 (= PHP 8.5, no soportado por Laravel 12).
 - El logo del negocio subido (`businesses.logo_path`, disco local) **no se replica a Vercel** —
   haría falta un disco S3 compartido en ambos lados.
+- El sync **no reescribe FKs polimórficas** (`audit_logs.auditable_id`,
+  `inventory_movements.reference_id`): no están en `config('sync.fk_map')`. En el espejo quedan
+  con el id local; hoy solo se muestran como texto, nunca se desreferencian.
+- El motor de sync tiene cobertura en `tests/Feature/Cloud/SyncEngineTest.php` — corre esos
+  tests si tocas `Sync*Service`, `SyncOutboxObserver`, `config/sync.php` o el `Gate::before`.
 - Íconos PWA (`public/icons/*.png`) son la marca de la app (violeta + storefront), no un logo
   del negocio.
 - Documentación operativa completa en `docs/` (`01-arquitectura` … `06-checklist-lanzamiento`).

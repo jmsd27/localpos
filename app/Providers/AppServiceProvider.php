@@ -34,21 +34,21 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Se registra en register() —no en boot()— a propósito: así este
+        // Gate::before queda ANTES que el de spatie/laravel-permission (que
+        // se engancha vía callAfterResolving(Gate) al bootear el paquete).
+        // El orden importa: Gate::before corta en el primer resultado no
+        // nulo, y el callback de Spatie devuelve true en cuanto el usuario
+        // tiene el permiso —si corriera primero, un usuario con permiso de
+        // escritura podría operar el POS contra el espejo de la nube pese al
+        // rol "mirror". Ver tests/Feature/Cloud/SyncEngineTest.php.
         //
-    }
-
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {
-        // Un solo callback, no dos: si estuvieran separados, el bypass de
-        // SuperAdmin (registrado primero) ganaría sobre el bloqueo de
-        // escritura del espejo (Gate::before corta en el primer resultado
-        // no nulo) y un SuperAdmin podría operar el POS contra la nube. En
-        // "mirror" tampoco existen roles/permisos sincronizados (Spatie no
-        // está en config('sync.models')), así que la lista de habilidades
-        // de solo lectura decide todo por sí sola, sin depender de eso.
+        // Es un solo callback, no dos: si el bypass de SuperAdmin estuviera en
+        // un Gate::before separado y anterior, ganaría sobre el bloqueo del
+        // espejo y un SuperAdmin podría escribir en la nube. En "mirror"
+        // tampoco existen roles/permisos sincronizados (Spatie no está en
+        // config('sync.models')), así que la lista de habilidades de solo
+        // lectura decide todo por sí sola.
         Gate::before(function ($user, string $ability) {
             if (config('sync.role') === 'mirror') {
                 return in_array($ability, self::MIRROR_READ_ONLY_ABILITIES, true) ? true : false;
@@ -56,7 +56,13 @@ class AppServiceProvider extends ServiceProvider
 
             return $user->hasRole(RoleName::SuperAdmin->value) ? true : null;
         });
+    }
 
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
         foreach (config('sync.models', []) as $syncModel) {
             $syncModel['model']::observe(SyncOutboxObserver::class);
         }
