@@ -67,7 +67,7 @@ new #[Layout('layouts.app')] class extends Component
             'ip_address' => 'nullable|ip',
             'printer_name' => 'nullable|string|max:255',
             'printer_port' => 'nullable|integer|min:1|max:65535',
-            'connection_type' => 'required|in:red,usb',
+            'connection_type' => 'required|in:red,usb_serial,usb_impresora',
             'usb_path' => 'nullable|string|max:255',
             'paper_width_chars' => 'required|integer|min:24|max:64',
             'cash_register_id' => 'nullable|exists:cash_registers,id',
@@ -174,25 +174,29 @@ new #[Layout('layouts.app')] class extends Component
                             @error('cash_register_id') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                         </div>
                         <div>
-                            <label class="mb-1 block text-sm text-gray-600">Impresora (opcional)</label>
-                            <input type="text" wire:model="printer_name" placeholder="Epson TM-T20 USB" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
-                        </div>
-                        <div>
                             <label class="mb-1 block text-sm text-gray-600">Tipo de conexión</label>
                             <select wire:model="connection_type" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
-                                <option value="red">Red (Ethernet/WiFi)</option>
-                                <option value="usb">USB</option>
+                                <option value="red">Red (Ethernet/WiFi, por IP)</option>
+                                <option value="usb_serial">USB — puerto serie / COM</option>
+                                <option value="usb_impresora">USB — impresora instalada en Windows</option>
                             </select>
                             @error('connection_type') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                         </div>
                         <div>
-                            <label class="mb-1 block text-sm text-gray-600">Puerto de impresora</label>
+                            <label class="mb-1 block text-sm text-gray-600">Nombre de impresora compartida (solo si es "USB — impresora instalada en Windows")</label>
+                            <input type="text" wire:model="printer_name" placeholder="POS-80" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                            <p class="mt-1 text-xs text-gray-400">Debe coincidir exactamente con el "Nombre de recurso compartido" que le pusiste en Windows (Dispositivos e impresoras &gt; Propiedades &gt; Compartir).</p>
+                            @error('printer_name') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-sm text-gray-600">Puerto de impresora (solo si es Red)</label>
                             <input type="number" wire:model="printer_port" placeholder="9100" min="1" max="65535" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
                             @error('printer_port') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                         </div>
                         <div>
-                            <label class="mb-1 block text-sm text-gray-600">Ruta USB (solo si la conexión es USB)</label>
+                            <label class="mb-1 block text-sm text-gray-600">Puerto COM (solo si es "USB — puerto serie")</label>
                             <input type="text" wire:model="usb_path" placeholder="COM3" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                            <p class="mt-1 text-xs text-gray-400">Búscalo en el Administrador de dispositivos de Windows, sección "Puertos (COM y LPT)".</p>
                             @error('usb_path') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                         </div>
                         <div>

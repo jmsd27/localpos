@@ -2,7 +2,7 @@
     "name": "localpos-print-agent",
     "version": "1.0.0",
     "private": true,
-    "description": "Agente local de impresión ESC/POS de LOCALPOS (modo red TCP:9100 o USB/serie).",
+    "description": "Agente local de impresión ESC/POS de LOCALPOS (red TCP:9100, USB puerto serie o USB impresora instalada en Windows).",
     "main": "agent.js",
     "scripts": {
         "start": "node agent.js"

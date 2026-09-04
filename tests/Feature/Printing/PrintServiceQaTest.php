@@ -124,7 +124,7 @@ test('el formulario de Admin > Terminales rechaza un ancho de papel fuera del ra
     expect(Terminal::where('code', 'caja-99')->exists())->toBeFalse();
 });
 
-test('el formulario de Admin > Terminales rechaza un tipo de conexion que no sea red o usb', function () {
+test('el formulario de Admin > Terminales rechaza un tipo de conexion que no sea red, usb_serial o usb_impresora', function () {
     $user = loginAsRole(RoleName::Administrador->value);
 
     Livewire::test('admin.terminales.index')
@@ -139,14 +139,14 @@ test('el formulario de Admin > Terminales rechaza un tipo de conexion que no sea
     expect(Terminal::where('code', 'caja-98')->exists())->toBeFalse();
 });
 
-test('el formulario de Admin > Terminales guarda correctamente los 4 campos nuevos', function () {
+test('el formulario de Admin > Terminales guarda correctamente los 4 campos nuevos (modo usb_serial)', function () {
     $user = loginAsRole(RoleName::Administrador->value);
 
     Livewire::test('admin.terminales.index')
         ->call('create')
         ->set('name', 'Impresora barra')
         ->set('code', 'barra-01')
-        ->set('connection_type', 'usb')
+        ->set('connection_type', 'usb_serial')
         ->set('usb_path', 'COM3')
         ->set('printer_port', 9100)
         ->set('paper_width_chars', 40)
@@ -156,7 +156,27 @@ test('el formulario de Admin > Terminales guarda correctamente los 4 campos nuev
     $terminal = Terminal::where('code', 'barra-01')->first();
 
     expect($terminal)->not->toBeNull();
-    expect($terminal->connection_type)->toBe('usb');
+    expect($terminal->connection_type)->toBe('usb_serial');
     expect($terminal->usb_path)->toBe('COM3');
     expect($terminal->paper_width_chars)->toBe(40);
+});
+
+test('el formulario de Admin > Terminales guarda correctamente el modo usb_impresora (impresora instalada en Windows)', function () {
+    $user = loginAsRole(RoleName::Administrador->value);
+
+    Livewire::test('admin.terminales.index')
+        ->call('create')
+        ->set('name', 'Impresora cocina')
+        ->set('code', 'cocina-01')
+        ->set('connection_type', 'usb_impresora')
+        ->set('printer_name', 'POS-80')
+        ->set('paper_width_chars', 48)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $terminal = Terminal::where('code', 'cocina-01')->first();
+
+    expect($terminal)->not->toBeNull();
+    expect($terminal->connection_type)->toBe('usb_impresora');
+    expect($terminal->printer_name)->toBe('POS-80');
 });
