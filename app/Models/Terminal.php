@@ -19,6 +19,10 @@ class Terminal extends Model
         'code',
         'ip_address',
         'printer_name',
+        'printer_port',
+        'connection_type',
+        'usb_path',
+        'paper_width_chars',
         'api_token',
         'is_active',
         'last_seen_at',
@@ -29,6 +33,8 @@ class Terminal extends Model
         return [
             'is_active' => 'boolean',
             'last_seen_at' => 'datetime',
+            'printer_port' => 'integer',
+            'paper_width_chars' => 'integer',
         ];
     }
 

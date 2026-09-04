@@ -13,7 +13,16 @@ use Illuminate\Support\Collection;
 
 class PrintService
 {
-    private const WIDTH = 42;
+    /**
+     * Ancho de impresión (en caracteres) usado por el trabajo que se está
+     * renderizando en este momento. Se recalcula al inicio de cada
+     * `render*()` según el terminal de destino, con 48 como respaldo cuando
+     * el terminal no tiene `paper_width_chars` configurado (p. ej. no
+     * existe o el campo es null).
+     */
+    private const DEFAULT_WIDTH = 48;
+
+    private int $width = self::DEFAULT_WIDTH;
 
     public function __construct(private readonly AuditLogger $auditLogger) {}
 
@@ -23,7 +32,7 @@ class PrintService
      */
     public function enqueueSaleTicket(Order $order): PrintJob
     {
-        $order->loadMissing(['items.modifiers', 'payments', 'business', 'user', 'customer']);
+        $order->loadMissing(['items.modifiers', 'payments', 'business', 'user', 'customer', 'terminal']);
 
         $hasCash = $order->payments->contains(fn ($payment) => $payment->method->value === 'efectivo');
 
@@ -66,7 +75,7 @@ class PrintService
                 'terminal_id' => $station?->printer_terminal_id,
                 'type' => PrintJobType::ComandaCocina,
                 'status' => PrintJobStatus::Pendiente,
-                'content' => $this->renderKitchenComanda($order, $stationItems, $station?->name),
+                'content' => $this->renderKitchenComanda($order, $stationItems, $station),
                 'reference_type' => $order->getMorphClass(),
                 'reference_id' => $order->id,
             ]);
@@ -120,6 +129,8 @@ class PrintService
 
     private function renderSaleTicket(Order $order): string
     {
+        $this->width = $order->terminal?->paper_width_chars ?? self::DEFAULT_WIDTH;
+
         $lines = [];
         $lines[] = $this->center($order->business->name);
 
@@ -187,10 +198,12 @@ class PrintService
     /**
      * @param  Collection<int, OrderItem>  $items
      */
-    private function renderKitchenComanda(Order $order, Collection $items, ?string $stationName): string
+    private function renderKitchenComanda(Order $order, Collection $items, ?KitchenStation $station): string
     {
+        $this->width = $station?->printerTerminal?->paper_width_chars ?? self::DEFAULT_WIDTH;
+
         $lines = [];
-        $lines[] = $this->center($stationName ?? 'Cocina');
+        $lines[] = $this->center($station?->name ?? 'Cocina');
         $lines[] = $this->rule();
         $lines[] = $order->table ? 'Mesa: '.$order->table->name : 'Mostrador';
         $lines[] = 'Folio: '.($order->comanda_folio ?? $order->folio ?? '—');
@@ -216,19 +229,19 @@ class PrintService
 
     private function center(string $text): string
     {
-        $padding = max(0, intdiv(self::WIDTH - strlen($text), 2));
+        $padding = max(0, intdiv($this->width - strlen($text), 2));
 
         return str_repeat(' ', $padding).$text;
     }
 
     private function rule(): string
     {
-        return str_repeat('-', self::WIDTH);
+        return str_repeat('-', $this->width);
     }
 
     private function row(string $label, string $value): string
     {
-        $space = max(1, self::WIDTH - strlen($label) - strlen($value));
+        $space = max(1, $this->width - strlen($label) - strlen($value));
 
         return $label.str_repeat(' ', $space).$value;
     }

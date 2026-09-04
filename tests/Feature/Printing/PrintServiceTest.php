@@ -79,6 +79,67 @@ test('cobrar solo con tarjeta no activa la apertura de cajon', function () {
     expect($ticket->open_drawer)->toBeFalse();
 });
 
+test('el ticket de venta usa el ancho de papel configurado en el terminal', function () {
+    [$user, $terminal] = posContext();
+    $terminal->update(['paper_width_chars' => 32]);
+
+    $product = Product::factory()->create(['business_id' => $user->businessId(), 'price' => 60, 'tax_rate' => 0]);
+
+    Livewire::test('pos.index')
+        ->call('addProduct', $product->id)
+        ->call('openCheckout')
+        ->set('paymentRows.0.amount', '60')
+        ->set('paymentRows.0.received_amount', '60')
+        ->call('checkout');
+
+    $ticket = PrintJob::where('type', 'ticket_venta')->first();
+    $ruleLine = collect(explode("\n", $ticket->content))->first(fn ($line) => $line !== '' && str_repeat('-', strlen($line)) === $line);
+
+    expect($ruleLine)->not->toBeNull();
+    expect(strlen($ruleLine))->toBe(32);
+});
+
+test('la comanda de cocina usa el ancho de papel del terminal impresor de la estacion', function () {
+    [$user] = posContext();
+
+    $printerTerminal = Terminal::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'paper_width_chars' => 40]);
+    $station = KitchenStation::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'printer_terminal_id' => $printerTerminal->id]);
+    $product = Product::factory()->create(['business_id' => $user->businessId(), 'price' => 60, 'tax_rate' => 0, 'kitchen_station_id' => $station->id]);
+
+    Livewire::test('pos.index')
+        ->call('addProduct', $product->id)
+        ->call('openCheckout')
+        ->set('paymentRows.0.amount', '60')
+        ->set('paymentRows.0.received_amount', '60')
+        ->call('checkout');
+
+    $comanda = PrintJob::where('type', 'comanda_cocina')->first();
+    $ruleLine = collect(explode("\n", $comanda->content))->first(fn ($line) => $line !== '' && str_repeat('-', strlen($line)) === $line);
+
+    expect($ruleLine)->not->toBeNull();
+    expect(strlen($ruleLine))->toBe(40);
+});
+
+test('la comanda de cocina usa 48 columnas de respaldo si la estacion no tiene terminal impresor', function () {
+    [$user] = posContext();
+
+    $station = KitchenStation::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'printer_terminal_id' => null]);
+    $product = Product::factory()->create(['business_id' => $user->businessId(), 'price' => 60, 'tax_rate' => 0, 'kitchen_station_id' => $station->id]);
+
+    Livewire::test('pos.index')
+        ->call('addProduct', $product->id)
+        ->call('openCheckout')
+        ->set('paymentRows.0.amount', '60')
+        ->set('paymentRows.0.received_amount', '60')
+        ->call('checkout');
+
+    $comanda = PrintJob::where('type', 'comanda_cocina')->first();
+    $ruleLine = collect(explode("\n", $comanda->content))->first(fn ($line) => $line !== '' && str_repeat('-', strlen($line)) === $line);
+
+    expect($ruleLine)->not->toBeNull();
+    expect(strlen($ruleLine))->toBe(48);
+});
+
 test('abrir el cajon manualmente encola un trabajo de apertura', function () {
     [$user, $terminal] = posContext();
 

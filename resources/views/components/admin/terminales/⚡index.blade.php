@@ -21,6 +21,14 @@ new #[Layout('layouts.app')] class extends Component
 
     public string $printer_name = '';
 
+    public ?int $printer_port = 9100;
+
+    public string $connection_type = 'red';
+
+    public string $usb_path = '';
+
+    public ?int $paper_width_chars = 48;
+
     public ?int $cash_register_id = null;
 
     public bool $is_active = true;
@@ -40,6 +48,10 @@ new #[Layout('layouts.app')] class extends Component
         $this->code = $terminal->code;
         $this->ip_address = (string) $terminal->ip_address;
         $this->printer_name = (string) $terminal->printer_name;
+        $this->printer_port = $terminal->printer_port;
+        $this->connection_type = $terminal->connection_type;
+        $this->usb_path = (string) $terminal->usb_path;
+        $this->paper_width_chars = $terminal->paper_width_chars;
         $this->cash_register_id = $terminal->cash_register_id;
         $this->is_active = $terminal->is_active;
         $this->showForm = true;
@@ -54,12 +66,17 @@ new #[Layout('layouts.app')] class extends Component
             'code' => 'required|string|max:255',
             'ip_address' => 'nullable|ip',
             'printer_name' => 'nullable|string|max:255',
+            'printer_port' => 'nullable|integer|min:1|max:65535',
+            'connection_type' => 'required|in:red,usb',
+            'usb_path' => 'nullable|string|max:255',
+            'paper_width_chars' => 'required|integer|min:24|max:64',
             'cash_register_id' => 'nullable|exists:cash_registers,id',
             'is_active' => 'boolean',
         ]);
 
         $data['ip_address'] = $data['ip_address'] !== '' ? $data['ip_address'] : null;
         $data['printer_name'] = $data['printer_name'] !== '' ? $data['printer_name'] : null;
+        $data['usb_path'] = ($data['usb_path'] ?? '') !== '' ? $data['usb_path'] : null;
         $data['business_id'] = $businessId;
         $data['branch_id'] = Auth::user()->branch_id;
 
@@ -92,7 +109,10 @@ new #[Layout('layouts.app')] class extends Component
 
     private function resetForm(): void
     {
-        $this->reset(['editingId', 'name', 'code', 'ip_address', 'printer_name', 'cash_register_id']);
+        $this->reset(['editingId', 'name', 'code', 'ip_address', 'printer_name', 'usb_path', 'cash_register_id']);
+        $this->printer_port = 9100;
+        $this->connection_type = 'red';
+        $this->paper_width_chars = 48;
         $this->is_active = true;
     }
 
@@ -156,6 +176,29 @@ new #[Layout('layouts.app')] class extends Component
                         <div>
                             <label class="mb-1 block text-sm text-gray-600">Impresora (opcional)</label>
                             <input type="text" wire:model="printer_name" placeholder="Epson TM-T20 USB" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-sm text-gray-600">Tipo de conexión</label>
+                            <select wire:model="connection_type" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                                <option value="red">Red (Ethernet/WiFi)</option>
+                                <option value="usb">USB</option>
+                            </select>
+                            @error('connection_type') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-sm text-gray-600">Puerto de impresora</label>
+                            <input type="number" wire:model="printer_port" placeholder="9100" min="1" max="65535" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                            @error('printer_port') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-sm text-gray-600">Ruta USB (solo si la conexión es USB)</label>
+                            <input type="text" wire:model="usb_path" placeholder="COM3" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                            @error('usb_path') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-sm text-gray-600">Ancho de papel (caracteres)</label>
+                            <input type="number" wire:model="paper_width_chars" placeholder="48" min="24" max="64" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                            @error('paper_width_chars') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                         </div>
                     </div>
 
