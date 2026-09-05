@@ -88,7 +88,7 @@ new #[Layout('layouts.app')] class extends Component
                     @error('opening_amount') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
                 </div>
 
-                <button type="submit" class="w-full rounded-lg bg-violet-600 px-4 py-2 font-medium hover:bg-violet-700 text-white">
+                <button type="submit" x-data :disabled="!$store.offline.online" class="w-full rounded-lg bg-violet-600 px-4 py-2 font-medium hover:bg-violet-700 text-white disabled:opacity-50" :title="$store.offline.online ? '' : 'Necesita conexión'">
                     Abrir caja
                 </button>
             </form>

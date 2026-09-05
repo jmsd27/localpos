@@ -88,7 +88,7 @@ new #[Layout('layouts.app')] class extends Component
                     </select>
                     <input type="number" step="0.01" wire:model="amount" placeholder="Monto" class="w-32 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
                     <input type="text" wire:model="reason" placeholder="Motivo" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
-                    <button type="submit" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-700 text-white">Registrar</button>
+                    <button type="submit" x-data :disabled="!$store.offline.online" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-700 text-white disabled:opacity-50" :title="$store.offline.online ? '' : 'Necesita conexión'">Registrar</button>
                 </form>
                 @error('amount') <span class="mt-2 block text-sm text-red-600">{{ $message }}</span> @enderror
                 @error('reason') <span class="mt-2 block text-sm text-red-600">{{ $message }}</span> @enderror

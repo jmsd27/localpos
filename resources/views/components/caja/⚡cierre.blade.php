@@ -237,7 +237,7 @@ new #[Layout('layouts.app')] class extends Component
                     <label class="mb-1 block text-sm text-gray-600">Notas (opcional)</label>
                     <textarea wire:model="notes" rows="2" class="mb-4 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none"></textarea>
 
-                    <button wire:click="close" class="w-full rounded-lg bg-emerald-600 px-4 py-3 font-semibold hover:bg-emerald-500 text-white">
+                    <button wire:click="close" x-data :disabled="!$store.offline.online" class="w-full rounded-lg bg-emerald-600 px-4 py-3 font-semibold hover:bg-emerald-500 text-white disabled:opacity-50" :title="$store.offline.online ? '' : 'Necesita conexión'">
                         Cerrar caja
                     </button>
                 </div>
