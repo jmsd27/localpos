@@ -140,6 +140,14 @@ async function syncAllDrafts() {
 document.addEventListener('alpine:init', () => {
     refreshCatalog();
     setInterval(refreshCatalog, CATALOG_REFRESH_MS);
+
+    // Si la pestaña se abre/recarga ya conectada pero quedaron borradores de
+    // un corte anterior (la app se cerró offline y se reabrió más tarde), la
+    // detección de abajo por transición offline→online nunca los vería:
+    // intentamos una sincronización también al cargar.
+    if (navigator.onLine) {
+        syncAllDrafts();
+    }
 });
 
 let wasOffline = !navigator.onLine;
@@ -186,6 +194,7 @@ document.addEventListener('alpine:init', () => {
             const draft = upsertDraft(tableId, (current) => ({
                 ...current,
                 existing_order_id: existingOrderId,
+                client_order_uuid: existingOrderId ? current.client_order_uuid : (current.client_order_uuid ?? uuid()),
                 items: [
                     ...current.items,
                     {

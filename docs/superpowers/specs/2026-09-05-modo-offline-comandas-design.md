@@ -235,3 +235,53 @@ solo existen para hacer idempotente la reproducción de un borrador offline.
   forma de imprimir algo que el servidor todavía no vio).
 - Failover de conectividad a nivel de infraestructura (router 4G de
   respaldo) — se lo ofrecimos al negocio y lo descartaron por ahora.
+
+## QA manual (2026-09-05)
+
+Suite completa (`php artisan test`, 207 tests) y `npm run build` en verde
+antes y después del QA. El QA manual se hizo con Playwright contra una
+instancia aislada (SQLite temporal en el scratchpad, negocio "QA Offline"
+creado vía `/instalacion`, admin propio) para no tocar la base real de Bar
+La Martina — nunca se corrió contra los datos de producción local.
+
+**Guion probado:** login como admin → seleccionar terminal → abrir caja →
+mapa de mesas → entrar a una mesa vacía → forzar offline (`navigator.onLine`
++ el store de Alpine, ya que las devtools de red no aplican a este runner) →
+agregar el mismo producto dos veces desde el panel offline → pedir la
+cuenta preliminar (total `$110.00`, correcto) → volver a mesas (badge
+"Pendiente" visible) → restaurar conexión real → confirmar que el badge
+desaparece solo (~3s, sin recargar) → verificar en BD: orden con folio real
+`COMANDA-000001`, `client_uuid` preservado, 2 items, mesa en `to_pay`.
+
+**Bugs encontrados y corregidos durante este QA** (no estaban cubiertos por
+los tests Pest porque son puramente de cliente):
+
+1. `addOfflineItem` en `offline-comanda.js` nunca generaba
+   `client_order_uuid` para una mesa **sin** orden previa (el caso más común:
+   alguien se sienta mientras está cortada la conexión). El borrador
+   quedaba con `client_order_uuid: null` y `existing_order_id: null`, así
+   que al sincronizar el servidor respondía `422 Falta client_order_uuid o
+   existing_order_id` y la comanda se perdía en silencio. Arreglado
+   generando el uuid una sola vez por borrador (reutilizado en reintentos,
+   sigue siendo idempotente) cuando no hay `existingOrderId`.
+2. La sincronización automática solo se disparaba en la transición
+   offline→online detectada por el heartbeat (`wasOffline` en memoria). Si
+   la pestaña se cerraba/recargaba durante el corte y se reabría ya con
+   conexión, esa transición nunca ocurría en ese `document` y los
+   borradores pendientes quedaban atascados hasta el próximo corte real.
+   Arreglado con un intento de `syncAllDrafts()` también al cargar
+   (`alpine:init`) cuando `navigator.onLine` ya es `true`; falla en
+   silencio y sin efecto si en realidad no hay conexión (mismo manejo de
+   errores que la ruta por heartbeat).
+
+**Observación menor, no corregida:** `offline-comanda.js` pide el catálogo
+offline en cualquier página (incluida `/instalacion` sin sesión), lo que
+genera un `401` inofensivo en la consola en cada carga no autenticada. No
+afecta el funcionamiento (el error se atrapa y se sirve el caché previo),
+se deja documentado por si se quiere acotar a las rutas de mesas en una
+mejora futura.
+
+No se probaron a mano los botones deshabilitados de Caja (Task 9): quedan
+cubiertos por lectura de código + que `CashRegister*Test` sigue en verde;
+repetir el guion de Task 9 Step 5 del plan si se quiere verificación visual
+antes de ir a producción.
