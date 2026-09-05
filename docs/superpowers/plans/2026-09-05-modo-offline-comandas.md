@@ -60,7 +60,7 @@
 **Interfaces:**
 - Produces: `Order::create([..., 'client_uuid' => ?string])`, `$order->items()->create([..., 'client_uuid' => ?string])` — ambos opcionales, `null` por defecto, usados por el controlador del Task 4.
 
-- [ ] **Step 1: Escribir el test que falla**
+- [x] **Step 1: Escribir el test que falla**
 
 Agregar al final de `tests/Feature/Sales/SaleServiceTest.php` (revisar primero el `use` de arriba del archivo para reusar los mismos helpers que ya usa; si no importa `Ingredient`/`SaleService` explícitamente, usar `app(SaleService::class)`):
 
@@ -103,7 +103,7 @@ test('dos ordenes del mismo negocio no pueden repetir client_uuid', function () 
 
 `posContext()` está definido en `tests/Feature/Sales/PosTest.php` y ya es visible para toda la suite Pest (mismo patrón que usa `tests/Feature/Tables/ComandaFlowTest.php`).
 
-- [ ] **Step 2: Correr el test y confirmar que falla**
+- [x] **Step 2: Correr el test y confirmar que falla**
 
 ```bash
 export PATH="/c/laragon/bin/php/php-8.4.25-nts-Win32-vs17-x64:$PATH"
@@ -111,7 +111,7 @@ php artisan test --filter=SaleServiceTest
 ```
 Esperado: FAIL — `client_uuid` no existe todavía en `orders` ni en `$fillable`.
 
-- [ ] **Step 3: Migraciones**
+- [x] **Step 3: Migraciones**
 
 `database/migrations/2026_09_06_000001_add_client_uuid_to_orders_table.php`:
 
@@ -171,13 +171,13 @@ return new class extends Migration
 };
 ```
 
-- [ ] **Step 4: Modelos**
+- [x] **Step 4: Modelos**
 
 En `app/Models/Order.php`, agregar `'client_uuid',` al arreglo `$fillable` (justo después de `'comanda_folio',`).
 
 En `app/Models/OrderItem.php`, agregar `'client_uuid',` al arreglo `$fillable` (justo después de `'order_id',`).
 
-- [ ] **Step 5: `SaleService`**
+- [x] **Step 5: `SaleService`**
 
 En `app/Services/SaleService.php`, dentro de `createDraftOrder()` (la llamada a `Order::create([...])`), agregar después de `'comanda_folio' => ...,`:
 
@@ -191,7 +191,7 @@ Dentro de `addItemsToOrder()`, en la llamada `$order->items()->create([...])`, a
                     'client_uuid' => $item['client_uuid'] ?? null,
 ```
 
-- [ ] **Step 6: Migrar y correr el test**
+- [x] **Step 6: Migrar y correr el test**
 
 ```bash
 export PATH="/c/laragon/bin/php/php-8.4.25-nts-Win32-vs17-x64:$PATH"
@@ -199,14 +199,14 @@ php artisan test --filter=SaleServiceTest
 ```
 Esperado: PASS.
 
-- [ ] **Step 7: Correr toda la suite (no debe romper nada existente)**
+- [x] **Step 7: Correr toda la suite (no debe romper nada existente)**
 
 ```bash
 php artisan test
 ```
 Esperado: todos los tests existentes siguen en verde (los que llaman `createDraftOrder`/`addItemsToOrder` sin `client_uuid` no cambian de comportamiento porque el campo es opcional).
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add database/migrations/2026_09_06_000001_add_client_uuid_to_orders_table.php \
@@ -226,7 +226,7 @@ git commit -m "puntoYA: agrega client_uuid a orders/order_items para sincronizar
 **Interfaces:**
 - Produces: `<meta name="csrf-token" content="...">` en el `<head>` de toda página autenticada — lo consume `resources/js/offline-comanda.js` (Task 6) para mandar `X-CSRF-TOKEN` en el `POST` de sincronización (la ruta usa el middleware `web` normal, con CSRF activo).
 
-- [ ] **Step 1: Agregar el meta tag**
+- [x] **Step 1: Agregar el meta tag**
 
 En `resources/views/layouts/app.blade.php`, dentro de `<head>`, justo debajo de `<meta name="viewport" ...>`:
 
@@ -234,7 +234,7 @@ En `resources/views/layouts/app.blade.php`, dentro de `<head>`, justo debajo de 
         <meta name="csrf-token" content="{{ csrf_token() }}">
 ```
 
-- [ ] **Step 2: Verificar manualmente**
+- [x] **Step 2: Verificar manualmente**
 
 ```bash
 export PATH="/c/laragon/bin/php/php-8.4.25-nts-Win32-vs17-x64:$PATH"
@@ -242,7 +242,7 @@ php artisan test --filter=MirrorOfflineTest
 ```
 Esperado: PASS (este test ya revisa contenido del `<head>`, confirma que no rompiste el layout).
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add resources/views/layouts/app.blade.php
@@ -261,7 +261,7 @@ git commit -m "puntoYA: agrega meta csrf-token para las llamadas fetch del modo 
 **Interfaces:**
 - Produces: `GET /mesas/catalogo-offline` → JSON `{generated_at, products: [{id,name,price,tax_rate,product_category_id,kitchen_station_id,modifier_groups:[{id,name,min_selections,max_selections,options:[{id,name,price_delta}]}]}], categories: [{id,name}], tables: [{id,name,status}]}`.
 
-- [ ] **Step 1: Escribir el test que falla**
+- [x] **Step 1: Escribir el test que falla**
 
 Crear `tests/Feature/Tables/ComandaSincronizacionTest.php`:
 
@@ -306,7 +306,7 @@ test('sin permiso de ventas no se puede pedir el catalogo offline', function () 
 
 `ModifierGroup` se relaciona con `Product` por muchos-a-muchos (tabla pivote `product_modifier_group`, ver `Product::modifierGroups()` y `ModifierGroup::products()`), por eso el test usa `attach()` en vez de un `product_id` directo.
 
-- [ ] **Step 2: Correr el test y confirmar que falla**
+- [x] **Step 2: Correr el test y confirmar que falla**
 
 ```bash
 export PATH="/c/laragon/bin/php/php-8.4.25-nts-Win32-vs17-x64:$PATH"
@@ -314,7 +314,7 @@ php artisan test --filter=ComandaSincronizacionTest
 ```
 Esperado: FAIL — la ruta `mesas.catalogo-offline` no existe.
 
-- [ ] **Step 3: Controlador**
+- [x] **Step 3: Controlador**
 
 Crear `app/Http/Controllers/OfflineComandaController.php`:
 
@@ -390,7 +390,7 @@ class OfflineComandaController extends Controller
 }
 ```
 
-- [ ] **Step 4: Ruta**
+- [x] **Step 4: Ruta**
 
 En `routes/web.php`, dentro del grupo que ya tiene `/pos`, `/mesas`, agregar antes del `});` de cierre:
 
@@ -401,14 +401,14 @@ En `routes/web.php`, dentro del grupo que ya tiene `/pos`, `/mesas`, agregar ant
 
 (Agregar `use App\Http\Controllers\OfflineComandaController;` arriba del archivo junto a los demás `use App\Http\Controllers\...` y usar `OfflineComandaController::class` directo, siguiendo el estilo ya usado para `BackupDownloadController`/`TicketController`.)
 
-- [ ] **Step 5: Correr el test**
+- [x] **Step 5: Correr el test**
 
 ```bash
 php artisan test --filter=ComandaSincronizacionTest
 ```
 Esperado: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/Http/Controllers/OfflineComandaController.php routes/web.php tests/Feature/Tables/ComandaSincronizacionTest.php
@@ -428,7 +428,7 @@ git commit -m "puntoYA: endpoint de catalogo offline para armar comandas sin con
 - Consumes: `SaleService::createDraftOrder(array $data)`, `addItemsToOrder(Order $order, array $items)`, `requestBill(Order $order)` — firmas ya existentes, sin cambios más allá del Task 1.
 - Produces: `POST /mesas/{table}/comanda/sincronizar` con body `{client_order_uuid?, existing_order_id?, people_count?, requested_bill?, items: [{client_item_uuid, product_id, quantity, notes?, modifiers?: [{modifier_option_id?, name, price_delta}]}]}` → `200 {"order": {...}}` | `409` (conflicto) | `422` (validación) | `403` (permiso).
 
-- [ ] **Step 1: Escribir los tests que fallan**
+- [x] **Step 1: Escribir los tests que fallan**
 
 Agregar a `tests/Feature/Tables/ComandaSincronizacionTest.php`:
 
@@ -561,7 +561,7 @@ test('sin permiso de ventas no se puede sincronizar una comanda', function () {
 
 `KitchenStationFactory` crea su propia sucursal internamente y acepta que se le pise `business_id` en el `create([...])` (igual que otras factories del repo); no hace falta pasarle `branch_id` para este test porque `PrintService::enqueueKitchenComandas` no valida que la estación pertenezca a la misma sucursal de la orden.
 
-- [ ] **Step 2: Correr los tests y confirmar que fallan**
+- [x] **Step 2: Correr los tests y confirmar que fallan**
 
 ```bash
 export PATH="/c/laragon/bin/php/php-8.4.25-nts-Win32-vs17-x64:$PATH"
@@ -569,7 +569,7 @@ php artisan test --filter=ComandaSincronizacionTest
 ```
 Esperado: FAIL — la ruta `mesas.comanda.sincronizar` no existe.
 
-- [ ] **Step 3: Agregar `sincronizar()` y `resolveOrder()` al controlador**
+- [x] **Step 3: Agregar `sincronizar()` y `resolveOrder()` al controlador**
 
 Agregar a `app/Http/Controllers/OfflineComandaController.php` (imports adicionales arriba: `App\Enums\OrderStatus`, `App\Models\Order`, `App\Services\SaleService`, `Illuminate\Http\Request`, `Illuminate\Support\Facades\DB`):
 
@@ -678,7 +678,7 @@ Agregar a `app/Http/Controllers/OfflineComandaController.php` (imports adicional
     }
 ```
 
-- [ ] **Step 4: Ruta**
+- [x] **Step 4: Ruta**
 
 En `routes/web.php`, junto a la ruta del Task 3:
 
@@ -687,21 +687,21 @@ En `routes/web.php`, junto a la ruta del Task 3:
         ->name('mesas.comanda.sincronizar');
 ```
 
-- [ ] **Step 5: Correr los tests**
+- [x] **Step 5: Correr los tests**
 
 ```bash
 php artisan test --filter=ComandaSincronizacionTest
 ```
 Esperado: PASS en los 9 tests del archivo (2 del catálogo + 7 de sincronización).
 
-- [ ] **Step 6: Correr toda la suite**
+- [x] **Step 6: Correr toda la suite**
 
 ```bash
 php artisan test
 ```
 Esperado: todo en verde.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add app/Http/Controllers/OfflineComandaController.php routes/web.php tests/Feature/Tables/ComandaSincronizacionTest.php
@@ -719,7 +719,7 @@ git commit -m "puntoYA: endpoint idempotente para sincronizar comandas armadas s
 **Interfaces:**
 - Produces: `Alpine.store('offline').online` (boolean, reactivo) — lo consumen el Task 7 (panel offline), Task 8 (indicador del mapa) y Task 9 (botones de caja).
 
-- [ ] **Step 1: Crear el módulo**
+- [x] **Step 1: Crear el módulo**
 
 `resources/js/offline-connectivity.js`:
 
@@ -765,7 +765,7 @@ window.addEventListener('load', () => {
 export { heartbeat };
 ```
 
-- [ ] **Step 2: Importarlo desde `app.js`**
+- [x] **Step 2: Importarlo desde `app.js`**
 
 En `resources/js/app.js`, agregar arriba de todo (antes de `import './bootstrap';`):
 
@@ -773,7 +773,7 @@ En `resources/js/app.js`, agregar arriba de todo (antes de `import './bootstrap'
 import './offline-connectivity';
 ```
 
-- [ ] **Step 3: Verificar que compila**
+- [x] **Step 3: Verificar que compila**
 
 ```bash
 export PATH="/c/laragon/bin/php/php-8.4.25-nts-Win32-vs17-x64:$PATH"
@@ -781,7 +781,7 @@ npm run build
 ```
 Esperado: build sin errores, `public/build/assets/app-*.js` crece un poco.
 
-- [ ] **Step 4: Verificar a mano en el navegador**
+- [x] **Step 4: Verificar a mano en el navegador**
 
 Abrir `http://localpos.test/dashboard`, consola del navegador:
 
@@ -790,7 +790,7 @@ Alpine.store('offline').online
 ```
 Esperado: `true`. Simular offline con las devtools (Network → Offline) y esperar 15s: debe pasar a `false`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add resources/js/offline-connectivity.js resources/js/app.js
@@ -809,7 +809,7 @@ git commit -m "puntoYA: detector de conexion real (heartbeat) para el modo offli
 - Consumes: `GET /mesas/catalogo-offline` (Task 3), `POST /mesas/{id}/comanda/sincronizar` (Task 4), `Alpine.store('offline').online` (Task 5), meta `csrf-token` (Task 2).
 - Produces: `window.PuntoyaOffline` con `{ loadCatalog(), refreshCatalog(), getDraft(tableId), upsertDraft(tableId, mutator), clearDraft(tableId), loadDrafts(), syncAllDrafts(), uuid() }` — lo consumen los Tasks 7 y 8.
 
-- [ ] **Step 1: Crear el módulo**
+- [x] **Step 1: Crear el módulo**
 
 `resources/js/offline-comanda.js`:
 
@@ -982,7 +982,7 @@ window.PuntoyaOffline = {
 };
 ```
 
-- [ ] **Step 2: Importarlo desde `app.js`**
+- [x] **Step 2: Importarlo desde `app.js`**
 
 En `resources/js/app.js`, junto al import del Task 5:
 
@@ -990,13 +990,13 @@ En `resources/js/app.js`, junto al import del Task 5:
 import './offline-comanda';
 ```
 
-- [ ] **Step 3: Verificar que compila**
+- [x] **Step 3: Verificar que compila**
 
 ```bash
 npm run build
 ```
 
-- [ ] **Step 4: Verificar a mano en el navegador**
+- [x] **Step 4: Verificar a mano en el navegador**
 
 Logueado en `http://localpos.test/mesas`, en la consola:
 
@@ -1007,7 +1007,7 @@ PuntoyaOffline.upsertDraft(1, d => ({ ...d, items: [...d.items, { client_item_uu
 PuntoyaOffline.loadDrafts()    // debe tener la mesa 1 con un item
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add resources/js/offline-comanda.js resources/js/app.js
@@ -1024,7 +1024,7 @@ git commit -m "puntoYA: cache de catalogo, borradores por mesa y cola de sincron
 **Interfaces:**
 - Consumes: `window.PuntoyaOffline` (Task 6), `Alpine.store('offline').online` (Task 5).
 
-- [ ] **Step 1a: Envolver la apertura del panel en vivo**
+- [x] **Step 1a: Envolver la apertura del panel en vivo**
 
 En `resources/views/components/mesas/⚡comanda.blade.php`, reemplazar (línea 356-357):
 
@@ -1044,7 +1044,7 @@ por:
 
 No se toca ninguna otra línea del panel en vivo (desde el segundo `<div>` de arriba hasta la línea 479 `</div>` que cierra el panel "Comanda" quedan exactamente como están hoy).
 
-- [ ] **Step 1b: Cerrar el panel en vivo y agregar el panel offline**
+- [x] **Step 1b: Cerrar el panel en vivo y agregar el panel offline**
 
 Reemplazar (líneas 475-481, el botón "Cobrar mesa", el cierre del panel "Comanda" y el comentario del primer modal):
 
@@ -1120,7 +1120,7 @@ por:
 
 El resto del archivo (modales de modificadores, cobro y venta completada, y el `</div>` final que cierra la raíz) queda exactamente igual — esos modales son overlays de posición fija que no dependen de si hay conexión, así que quedan fuera de los dos `<template>` sin tocarlos.
 
-- [ ] **Step 2: Agregar el componente Alpine `offlineComanda`**
+- [x] **Step 2: Agregar el componente Alpine `offlineComanda`**
 
 Al final de `resources/js/offline-comanda.js` (antes de `window.PuntoyaOffline = {...}`), agregar:
 
@@ -1193,13 +1193,13 @@ document.addEventListener('alpine:init', () => {
 
 Nota: `loadCatalog`, `getDraft`, `upsertDraft`, `uuid` ya están definidas arriba en el mismo archivo (no hace falta importarlas, son del mismo módulo).
 
-- [ ] **Step 3: Verificar que compila**
+- [x] **Step 3: Verificar que compila**
 
 ```bash
 npm run build
 ```
 
-- [ ] **Step 4: Verificar a mano en el navegador**
+- [x] **Step 4: Verificar a mano en el navegador**
 
 En `http://localpos.test/mesas/{id}/comanda` con una mesa real:
 1. DevTools → Network → Offline.
@@ -1207,7 +1207,7 @@ En `http://localpos.test/mesas/{id}/comanda` con una mesa real:
 3. Confirmar que aparece el panel offline, se pueden agregar productos del catálogo cacheado, y "Pedir la cuenta" marca el total preliminar.
 4. DevTools → Network → Online otra vez, esperar el heartbeat, y confirmar (Network tab) que sale el `POST /mesas/{id}/comanda/sincronizar` y que al recargar la página el pedido aparece con folio real dentro del flujo normal (Livewire).
 
-- [ ] **Step 5: Correr toda la suite del servidor (esto no toca PHP, pero confirma que no se rompió nada)**
+- [x] **Step 5: Correr toda la suite del servidor (esto no toca PHP, pero confirma que no se rompió nada)**
 
 ```bash
 export PATH="/c/laragon/bin/php/php-8.4.25-nts-Win32-vs17-x64:$PATH"
@@ -1215,7 +1215,7 @@ php artisan test --filter=ComandaFlowTest
 ```
 Esperado: PASS (el flujo en línea original queda intacto porque solo se activa dentro del `template x-if="$store.offline.online"`).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add "resources/views/components/mesas/⚡comanda.blade.php" resources/js/offline-comanda.js
@@ -1232,7 +1232,7 @@ git commit -m "puntoYA: panel offline para armar comandas sin conexion en mesas/
 **Interfaces:**
 - Consumes: `window.PuntoyaOffline.loadDrafts()` (Task 6).
 
-- [ ] **Step 1: Marcar cada tarjeta de mesa con su id**
+- [x] **Step 1: Marcar cada tarjeta de mesa con su id**
 
 En `resources/views/components/mesas/⚡mapa.blade.php:80`, agregar `data-table-id="{{ $table->id }}"` al `<div class="rounded-xl border {{ $colors[...] }} p-4">`:
 
@@ -1240,7 +1240,7 @@ En `resources/views/components/mesas/⚡mapa.blade.php:80`, agregar `data-table-
                         <div data-table-id="{{ $table->id }}" class="relative rounded-xl border {{ $colors[$table->status->value] }} p-4">
 ```
 
-- [ ] **Step 2: Agregar el badge y el script que lo actualiza**
+- [x] **Step 2: Agregar el badge y el script que lo actualiza**
 
 Justo antes de `<a href="{{ route('mesas.comanda', $table) }}" ...>` (dentro del mismo div, línea 81), agregar:
 
@@ -1255,7 +1255,7 @@ Justo antes de `<a href="{{ route('mesas.comanda', $table) }}" ...>` (dentro del
                             </span>
 ```
 
-- [ ] **Step 2: Verificar que compila**
+- [x] **Step 2: Verificar que compila**
 
 No hay build de JS involucrado en este paso (es solo Blade), pero confirmar que la vista renderiza:
 
@@ -1265,11 +1265,11 @@ php artisan test --filter=ComandaFlowTest
 ```
 Esperado: PASS (no debería verse afectado por este cambio puramente visual).
 
-- [ ] **Step 3: Verificar a mano en el navegador**
+- [x] **Step 3: Verificar a mano en el navegador**
 
 Con un borrador offline pendiente en `localStorage` (dejado del Task 7), abrir `/mesas` y confirmar que la mesa correspondiente muestra el badge "Pendiente". Sincronizar (volver online) y confirmar que el badge desaparece solo.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add "resources/views/components/mesas/⚡mapa.blade.php"
@@ -1288,7 +1288,7 @@ git commit -m "puntoYA: indicador de comanda pendiente de sincronizar en el mapa
 **Interfaces:**
 - Consumes: `Alpine.store('offline').online` (Task 5).
 
-- [ ] **Step 1: Apertura**
+- [x] **Step 1: Apertura**
 
 En `resources/views/components/caja/⚡apertura.blade.php:91`, el botón de submit pasa de:
 
@@ -1302,7 +1302,7 @@ a:
                 <button type="submit" x-data :disabled="!$store.offline.online" class="w-full rounded-lg bg-violet-600 px-4 py-2 font-medium hover:bg-violet-700 text-white disabled:opacity-50" :title="$store.offline.online ? '' : 'Necesita conexión'">
 ```
 
-- [ ] **Step 2: Movimientos**
+- [x] **Step 2: Movimientos**
 
 En `resources/views/components/caja/⚡movimientos.blade.php:91`, el botón "Registrar" pasa de:
 
@@ -1316,7 +1316,7 @@ a:
                     <button type="submit" x-data :disabled="!$store.offline.online" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-700 text-white disabled:opacity-50" :title="$store.offline.online ? '' : 'Necesita conexión'">Registrar</button>
 ```
 
-- [ ] **Step 3: Cierre**
+- [x] **Step 3: Cierre**
 
 En `resources/views/components/caja/⚡cierre.blade.php:240`, el botón `close` pasa de:
 
@@ -1330,7 +1330,7 @@ a:
                     <button wire:click="close" x-data :disabled="!$store.offline.online" class="w-full rounded-lg bg-emerald-600 px-4 py-3 font-semibold hover:bg-emerald-500 text-white disabled:opacity-50" :title="$store.offline.online ? '' : 'Necesita conexión'">
 ```
 
-- [ ] **Step 4: Correr los tests de caja**
+- [x] **Step 4: Correr los tests de caja**
 
 ```bash
 export PATH="/c/laragon/bin/php/php-8.4.25-nts-Win32-vs17-x64:$PATH"
@@ -1338,11 +1338,11 @@ php artisan test --filter=CashRegister
 ```
 Esperado: PASS (los tests de Livewire llaman los métodos directo, no dependen de que el botón esté habilitado en el DOM).
 
-- [ ] **Step 5: Verificar a mano en el navegador**
+- [x] **Step 5: Verificar a mano en el navegador**
 
 En `/caja/apertura`, `/caja/movimientos` y `/caja/cierre`, simular offline (DevTools → Network → Offline, esperar el heartbeat) y confirmar que el botón principal de cada pantalla queda deshabilitado con el tooltip "Necesita conexión", y vuelve a habilitarse al reconectar.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add "resources/views/components/caja/⚡apertura.blade.php" "resources/views/components/caja/⚡movimientos.blade.php" "resources/views/components/caja/⚡cierre.blade.php"
@@ -1355,7 +1355,7 @@ git commit -m "puntoYA: deshabilita las acciones de caja cuando no hay conexion"
 
 **Files:** ninguno (verificación).
 
-- [ ] **Step 1: Suite completa del servidor**
+- [x] **Step 1: Suite completa del servidor**
 
 ```bash
 export PATH="/c/laragon/bin/php/php-8.4.25-nts-Win32-vs17-x64:$PATH"
@@ -1363,14 +1363,14 @@ php artisan test
 ```
 Esperado: todos los tests en verde (los ~210 existentes + los agregados en Tasks 1, 3 y 4).
 
-- [ ] **Step 2: Build de producción**
+- [x] **Step 2: Build de producción**
 
 ```bash
 npm run build
 ```
 Esperado: sin errores.
 
-- [ ] **Step 3: QA manual con el navegador (Playwright o a mano), guion completo**
+- [x] **Step 3: QA manual con el navegador (Playwright o a mano), guion completo**
 
 1. Login como cajero/mesero con `ventas.crear`, abrir terminal y caja.
 2. Ir a `/mesas`, entrar a una mesa vacía.
@@ -1382,11 +1382,11 @@ Esperado: sin errores.
 8. Entrar a la comanda de esa mesa: los productos agregados offline aparecen como "Enviado", con folio real (`COMANDA-...`), y se puede cobrar normalmente.
 9. Revisar `storage/logs/laravel.log`: no debe haber excepciones nuevas.
 
-- [ ] **Step 4: Actualizar la spec con el resultado del QA**
+- [x] **Step 4: Actualizar la spec con el resultado del QA**
 
 Agregar al final de `docs/superpowers/specs/2026-09-05-modo-offline-comandas-design.md` una sección corta `## QA manual (fecha)` con el resultado del guion del Step 3 (qué se probó, con qué usuario/rol, y cualquier ajuste que haya hecho falta).
 
-- [ ] **Step 5: Commit final**
+- [x] **Step 5: Commit final**
 
 ```bash
 git add docs/superpowers/specs/2026-09-05-modo-offline-comandas-design.md
