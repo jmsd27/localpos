@@ -154,6 +154,71 @@ setInterval(() => {
     wasOffline = !online;
 }, 5000);
 
+document.addEventListener('alpine:init', () => {
+    window.Alpine.data('offlineComanda', (tableId, existingOrderId) => ({
+        catalogProducts: [],
+        draftItems: [],
+        draftTotal: 0,
+
+        init() {
+            this.loadCatalogProducts();
+            this.loadDraft();
+
+            window.addEventListener('puntoya:drafts-synced', () => this.loadDraft());
+        },
+
+        loadCatalogProducts() {
+            const catalog = loadCatalog();
+            this.catalogProducts = catalog?.products ?? [];
+        },
+
+        loadDraft() {
+            const draft = getDraft(tableId);
+            this.draftItems = draft?.items ?? [];
+            this.recalculateTotal();
+        },
+
+        recalculateTotal() {
+            this.draftTotal = this.draftItems.reduce((sum, item) => sum + item.unit_price * item.quantity, 0);
+        },
+
+        addOfflineItem(product) {
+            const draft = upsertDraft(tableId, (current) => ({
+                ...current,
+                existing_order_id: existingOrderId,
+                items: [
+                    ...current.items,
+                    {
+                        client_item_uuid: uuid(),
+                        product_id: product.id,
+                        name: product.name,
+                        unit_price: product.price,
+                        quantity: 1,
+                        modifiers: [],
+                    },
+                ],
+            }));
+
+            this.draftItems = draft.items;
+            this.recalculateTotal();
+        },
+
+        removeOfflineItem(clientItemUuid) {
+            const draft = upsertDraft(tableId, (current) => ({
+                ...current,
+                items: current.items.filter((item) => item.client_item_uuid !== clientItemUuid),
+            }));
+
+            this.draftItems = draft.items;
+            this.recalculateTotal();
+        },
+
+        requestOfflineBill() {
+            upsertDraft(tableId, (current) => ({ ...current, requested_bill: true }));
+        },
+    }));
+});
+
 window.PuntoyaOffline = {
     uuid,
     loadCatalog,
