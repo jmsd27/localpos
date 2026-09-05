@@ -1,4 +1,5 @@
 import './offline-connectivity';
+import './offline-comanda';
 import './bootstrap';
 
 if ('serviceWorker' in navigator) {
