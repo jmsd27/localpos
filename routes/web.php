@@ -111,6 +111,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 });
 
 Route::middleware(['auth'])->prefix('inventario')->name('inventario.')->group(function () {
+    Route::livewire('/conteo', 'inventario.conteo')
+        ->middleware('permission:inventario.ajustar')
+        ->name('conteo');
+
     Route::livewire('/movimientos', 'inventario.movimientos')
         ->middleware('permission:inventario.ajustar')
         ->name('movimientos');

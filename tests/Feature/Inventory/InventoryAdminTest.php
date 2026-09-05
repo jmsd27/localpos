@@ -58,3 +58,48 @@ test('un usuario sin permiso de inventario no puede ver el kardex', function () 
 
     $this->get(route('inventario.kardex'))->assertForbidden();
 });
+
+test('el conteo físico registra un ajuste por la diferencia contada', function () {
+    $user = loginAsRole(RoleName::Administrador->value);
+
+    $ingredient = Ingredient::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'stock' => 10]);
+
+    Livewire::test('inventario.conteo')
+        ->set("counts.{$ingredient->id}", '7.5')
+        ->call('registrar');
+
+    expect((float) $ingredient->fresh()->stock)->toBe(7.5);
+});
+
+test('el conteo físico no genera movimiento si la cantidad contada coincide con la existencia', function () {
+    $user = loginAsRole(RoleName::Administrador->value);
+
+    $ingredient = Ingredient::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'stock' => 10]);
+
+    Livewire::test('inventario.conteo')
+        ->set("counts.{$ingredient->id}", '10')
+        ->call('registrar')
+        ->assertSet('lastResults', []);
+
+    expect(\App\Models\InventoryMovement::where('ingredient_id', $ingredient->id)->exists())->toBeFalse();
+});
+
+test('el conteo físico ignora insumos que no se capturaron', function () {
+    $user = loginAsRole(RoleName::Administrador->value);
+
+    $counted = Ingredient::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'stock' => 10]);
+    $untouched = Ingredient::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'stock' => 3]);
+
+    Livewire::test('inventario.conteo')
+        ->set("counts.{$counted->id}", '12')
+        ->call('registrar');
+
+    expect((float) $counted->fresh()->stock)->toBe(12.0)
+        ->and((float) $untouched->fresh()->stock)->toBe(3.0);
+});
+
+test('un usuario sin permiso de inventario no puede ver el conteo físico', function () {
+    loginAsRole(RoleName::Mesero->value);
+
+    $this->get(route('inventario.conteo'))->assertForbidden();
+});
