@@ -138,6 +138,8 @@ Route::middleware(['auth', 'permission:ventas.crear'])->group(function () {
 
     Route::get('/mesas/catalogo-offline', [OfflineComandaController::class, 'catalogo'])
         ->name('mesas.catalogo-offline');
+    Route::post('/mesas/{table}/comanda/sincronizar', [OfflineComandaController::class, 'sincronizar'])
+        ->name('mesas.comanda.sincronizar');
 });
 
 Route::middleware(['auth'])->prefix('compras')->name('compras.')->group(function () {
