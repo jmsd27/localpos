@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BackupDownloadController;
+use App\Http\Controllers\OfflineComandaController;
 use App\Http\Controllers\PublicMenuController;
 use App\Http\Controllers\ReportExportController;
 use App\Http\Controllers\TicketController;
@@ -134,6 +135,9 @@ Route::middleware(['auth', 'permission:ventas.crear'])->group(function () {
 
     Route::livewire('/mesas', 'mesas.mapa')->name('mesas.mapa');
     Route::livewire('/mesas/{table}/comanda', 'mesas.comanda')->name('mesas.comanda');
+
+    Route::get('/mesas/catalogo-offline', [OfflineComandaController::class, 'catalogo'])
+        ->name('mesas.catalogo-offline');
 });
 
 Route::middleware(['auth'])->prefix('compras')->name('compras.')->group(function () {
