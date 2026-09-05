@@ -15,16 +15,23 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="puntoYA">
 
+        <script>window.__SYNC_ROLE__ = @js(config('sync.role'));</script>
+
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
         @livewireStyles
     </head>
-    <body class="min-h-screen bg-gray-50 text-gray-900 antialiased lg:flex" x-data="{ sidebarOpen: false }">
+    <body class="min-h-screen bg-gray-50 text-gray-900 antialiased lg:flex"
+        x-data="{ sidebarOpen: false, online: navigator.onLine }"
+        @online.window="online = true" @offline.window="online = false">
 
         @if (config('sync.role') === 'mirror')
-            <div class="fixed inset-x-0 top-0 z-50 bg-amber-500 px-4 py-1.5 text-center text-sm font-medium text-white">
+            <div x-show="online" x-cloak class="fixed inset-x-0 top-0 z-50 bg-amber-500 px-4 py-1.5 text-center text-sm font-medium text-white">
                 Vista de solo lectura — reflejo en la nube. La operación real ocurre en el sistema local.
+            </div>
+            <div x-show="!online" x-cloak class="fixed inset-x-0 top-0 z-50 bg-slate-700 px-4 py-1.5 text-center text-sm font-medium text-white">
+                Sin conexión — mostrando la última información disponible. Se actualiza sola al reconectar.
             </div>
         @endif
 
