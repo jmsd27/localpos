@@ -77,7 +77,15 @@ new #[Layout('layouts.app')] class extends Component
                                 'to_pay' => 'border-red-700 bg-red-50 hover:border-red-500',
                             ];
                         @endphp
-                        <div class="rounded-xl border {{ $colors[$table->status->value] }} p-4">
+                        <div data-table-id="{{ $table->id }}" class="relative rounded-xl border {{ $colors[$table->status->value] }} p-4">
+                            <span x-data="{ pending: false }"
+                                x-init="pending = !!PuntoyaOffline.getDraft({{ $table->id }})?.items?.length;
+                                    window.addEventListener('puntoya:drafts-synced', () => pending = !!PuntoyaOffline.getDraft({{ $table->id }})?.items?.length);
+                                    setInterval(() => pending = !!PuntoyaOffline.getDraft({{ $table->id }})?.items?.length, 3000)"
+                                x-show="pending" x-cloak
+                                class="absolute right-2 top-2 rounded-full bg-orange-500 px-2 py-0.5 text-[10px] font-semibold text-white">
+                                Pendiente
+                            </span>
                             <a href="{{ route('mesas.comanda', $table) }}" wire:navigate class="block">
                                 <div class="mb-1 flex items-center justify-between">
                                     <span class="font-semibold">{{ $table->name }}</span>
