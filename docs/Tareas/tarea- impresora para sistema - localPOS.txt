@@ -1,0 +1,26 @@
+Instrucciones para sistema POS:
+1. el sistema en la nube, tiene que funcionar 100% con impresoras locales e ips
+2. Son 3 impresoras, estas estaran conectadas via wifi, por ip tambien
+3. Hay que hacer que cuando levanten el pedido de la mesa, detecte pedido de barra vaya solo lo de barra
+e imprima esa comanda a la impresora de barra, y lo de cocina imprima la comanda a la impresora de cocina.
+4. Barra y cocina no pueden ver precios, solamente la caja puede ver precios y que tenga ese permiso
+5. el ticket debe salir al formato de la impresora
+6. La impresora es de marca: HOSTECH modelo:HT-100
+7. Estas impresoras estaran conectadas tambien a un hub por ethernet que ahran la conecttividad via wifi donde tendran
+ip dhcp o fija. y tambien conectividad por usb 
+8. Tambien impresoras termicas epson por usb serial
+
+
+
+
+
+
+
+
+
+                                                              copied 230 chars to clipboard
+─────────────────────────────────────────────────────────────────────────────────────────────
+> > Hola podrias abrir el proyecto localpos en laragon en carpeta www, cuando lo abras abre
+    la agencia general tambien con los agentes y asigna todas las siguientes tareas,
+    ejecutalas y se autonomo con las mejores decisiones
+──────────────────────────────────────────────────────────────────────────

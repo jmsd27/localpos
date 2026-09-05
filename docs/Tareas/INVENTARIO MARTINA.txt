@@ -1,0 +1,70 @@
+Mesas:
+Mesa 1 a la 14
+
+Nombre de cliente
+-------------------------------
+
+Insumos:
+Queso para nachos(Lata o Bolsa)
+Chile Curtido(Kilos)
+Chile Jalapeño(Lata o Bolsa)
+Tomate(K
+Cebolla
+Limon
+Pepino
+Lechuga
+Papa
+Papa Casera
+Bisteck(Kilos)
+Carne Molina(Kgs)
+Carne Pastor(KGS)
+Camaron Seco(Kg)
+Carne Seca(Kgs)
+Cacahates(kgs)
+Rielitos(Kgs)
+Mayonesa(Bote)
+Capsup(Bote)
+Mostaza(Bote)
+Queso Laurel(Kgs)
+Cilantro(Manojo)
+Aceitunas(bote)
+Cerezas(bote o lata)
+Fresas Congeladas(Bolsa)
+Crema chantigi(Bote)
+Huevo(Cartera)
+Leche clavel(Por litro)
+Leche coco(Por litro)
+Jugo naranja(Litros)
+Jugo Piña(Litros)
+Jugo de Arandono(Litros)
+Jugo de Mango(Litros)
+Aguas(Paquete o indivual)
+Refresco toronga(Paquete de 8)
+Refresco coca-cola(Paquete de 8)
+Refresco agua mineral(Paquete de 8)
+Aceito Porror de 10 L
+--------------------------------
+Endulzaste Granadina(Litros)
+---------------------------
+Comida empleado(Individual)
+----------------------------
+Cerveza
+Agregar todas y por paquete o individual
+------------------------
+Botella
+Agregar toda la parte de botellas
+--------------------------------------
+Insumos de limpieza
+Papel de baño por caja
+Sanitas paraa baño por caja
+Papeel canela por caja
+Porron de 20 L de fabuloso
+Cloralex de 20 L desengrasante lavalosa
+Trapeador
+Escoba 
+Recojedores
+Trapos
+------------------------------
+
+
+
