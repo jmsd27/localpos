@@ -137,3 +137,38 @@ test('cancelar una venta crea un registro de cancelacion y no borra la venta', f
     expect(Order::find($order->id))->not->toBeNull();
     expect(OrderCancellation::where('order_id', $order->id)->exists())->toBeTrue();
 });
+
+test('createDraftOrder guarda el client_uuid cuando se manda', function () {
+    [$user, $terminal, $session] = posContext();
+
+    $order = app(SaleService::class)->createDraftOrder([
+        'business_id' => $user->businessId(),
+        'branch_id' => $user->branch_id,
+        'terminal_id' => $terminal->id,
+        'cash_register_session_id' => $session->id,
+        'user_id' => $user->id,
+        'table_id' => null,
+        'order_type' => 'mesa',
+        'client_uuid' => 'draft-uuid-123',
+    ]);
+
+    expect($order->client_uuid)->toBe('draft-uuid-123');
+});
+
+test('dos ordenes del mismo negocio no pueden repetir client_uuid', function () {
+    [$user] = posContext();
+
+    Order::factory()->create([
+        'business_id' => $user->businessId(),
+        'branch_id' => $user->branch_id,
+        'user_id' => $user->id,
+        'client_uuid' => 'draft-uuid-dup',
+    ]);
+
+    expect(fn () => Order::factory()->create([
+        'business_id' => $user->businessId(),
+        'branch_id' => $user->branch_id,
+        'user_id' => $user->id,
+        'client_uuid' => 'draft-uuid-dup',
+    ]))->toThrow(\Illuminate\Database\QueryException::class);
+});

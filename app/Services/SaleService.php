@@ -71,6 +71,7 @@ class SaleService
             'table_id' => $data['table_id'] ?? null,
             'people_count' => $data['people_count'] ?? null,
             'comanda_folio' => ($data['table_id'] ?? null) ? $this->folios->next($data['business_id'], 'comanda') : null,
+            'client_uuid' => $data['client_uuid'] ?? null,
             'order_type' => $data['order_type'],
             'status' => OrderStatus::Pending,
             'subtotal' => 0,
@@ -102,6 +103,7 @@ class SaleService
 
                 $orderItem = $order->items()->create([
                     'product_id' => $item['product_id'],
+                    'client_uuid' => $item['client_uuid'] ?? null,
                     'kitchen_station_id' => $item['kitchen_station_id'] ?? null,
                     'name' => $item['name'],
                     'quantity' => $item['quantity'],

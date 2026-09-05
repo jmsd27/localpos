@@ -25,6 +25,7 @@ class Order extends Model
         'people_count',
         'folio',
         'comanda_folio',
+        'client_uuid',
         'order_type',
         'status',
         'subtotal',
