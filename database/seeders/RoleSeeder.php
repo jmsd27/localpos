@@ -51,6 +51,25 @@ class RoleSeeder extends Seeder
             RoleName::Reportes->value => [
                 'reportes.ver', 'reportes.exportar',
             ],
+            // Auditor: ve todo para revisar, no opera ni escribe nada.
+            RoleName::Auditor->value => [
+                'ventas.ver', 'caja.ver_movimientos', 'inventario.ver', 'inventario.ver_kardex',
+                'productos.ver', 'clientes.ver', 'compras.ver', 'reportes.ver', 'reportes.exportar',
+                'configuracion.ver',
+            ],
+            // Director: dueño/gerente general, mismo alcance que Administrador.
+            RoleName::Director->value => [
+                'ventas.crear', 'ventas.ver', 'ventas.editar', 'ventas.anular', 'ventas.aplicar_descuento',
+                'caja.abrir', 'caja.cerrar', 'caja.ver_movimientos', 'caja.registrar_movimiento',
+                'inventario.ver', 'inventario.ajustar', 'inventario.ver_kardex',
+                'productos.crear', 'productos.editar', 'productos.eliminar', 'productos.ver',
+                'clientes.crear', 'clientes.editar', 'clientes.eliminar', 'clientes.ver',
+                'compras.crear', 'compras.aprobar', 'compras.ver',
+                'cocina.ver', 'cocina.gestionar',
+                'reportes.ver', 'reportes.exportar',
+                'usuarios.crear', 'usuarios.editar', 'usuarios.eliminar', 'usuarios.asignar_rol',
+                'configuracion.editar', 'configuracion.ver',
+            ],
         ];
 
         foreach ($roles as $name => $permissions) {

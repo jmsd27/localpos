@@ -13,6 +13,8 @@ enum RoleName: string
     case Barra = 'barra';
     case Inventarios = 'inventarios';
     case Reportes = 'reportes';
+    case Auditor = 'auditor';
+    case Director = 'director';
 
     public function label(): string
     {
@@ -26,6 +28,8 @@ enum RoleName: string
             self::Barra => 'Barra',
             self::Inventarios => 'Inventarios',
             self::Reportes => 'Reportes',
+            self::Auditor => 'Auditor',
+            self::Director => 'Director',
         };
     }
 }
