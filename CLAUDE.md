@@ -52,8 +52,14 @@ npm run build              # assets de producción
   `recurso.ver` / `.ver_movimientos` / `.ver_kardex` = lectura; `.crear` / `.editar` / `.eliminar`
   / `.abrir` / `.cerrar` / `.ajustar` / `.anular` = escritura. El `mirror` usa esta convención
   para decidir qué bloquear.
-- **Vistas**: Volt single-file, prefijo `⚡`, en `resources/views/components/<módulo>/⚡nombre.blade.php`.
-  Layout staff: `layouts/app.blade.php` (sidebar violeta, marca = heroicon `building-storefront`).
+- **Vistas**: Volt single-file, **sin** el prefijo `⚡` (se sacó el 2026-09-08: un despliegue real a
+  un hosting Linux corrompió el emoji en el nombre de archivo al subir/descomprimir el zip, tirando
+  abajo las 37 pantallas de la app con `ComponentNotFoundException`). Livewire 4 ya soporta nombre de
+  archivo plano como variante de resolución (`Finder::resolveSingleFileComponentPath()`), así que el
+  archivo va directo en `resources/views/components/<módulo>/nombre.blade.php` — sin renombrar rutas
+  ni tests, porque Livewire resuelve por el nombre del componente (`'auth.login'`), no por el nombre
+  de archivo. No reintroducir el prefijo `⚡` en componentes nuevos.
+  Layout staff: `layouts/app.blade.php` (sidebar azul oscuro, marca = heroicon `building-storefront`).
 - **Lógica de negocio** en `app/Services/*` (`SaleService`, `CashRegisterService`,
   `InventoryService`, `KitchenService`, `PurchaseService`, `PrintService`, `ReportService`,
   `BackupService`, `SettingsService`, `AuditLogger`, `FolioGenerator`). Los componentes Livewire
