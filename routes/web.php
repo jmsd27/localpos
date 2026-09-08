@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BackupDownloadController;
+use App\Http\Controllers\InsumoTemplateController;
 use App\Http\Controllers\OfflineComandaController;
 use App\Http\Controllers\PublicMenuController;
 use App\Http\Controllers\ReportExportController;
@@ -73,6 +74,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::livewire('/insumos', 'admin.insumos.index')
         ->middleware('permission:inventario.ajustar')
         ->name('insumos');
+
+    Route::get('/insumos/plantilla', InsumoTemplateController::class)
+        ->middleware('permission:inventario.ajustar')
+        ->name('insumos.plantilla');
 
     Route::livewire('/recetas', 'admin.recetas.index')
         ->middleware('permission:inventario.ajustar')

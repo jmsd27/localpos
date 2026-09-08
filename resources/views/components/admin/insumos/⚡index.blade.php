@@ -1,13 +1,19 @@
 <?php
 
+use App\Enums\InventoryMovementType;
 use App\Enums\ProductUnit;
 use App\Models\Ingredient;
+use App\Services\InventoryService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\WithFileUploads;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 new #[Layout('layouts.app')] class extends Component
 {
+    use WithFileUploads;
+
     public bool $showForm = false;
 
     public ?int $editingId = null;
@@ -25,6 +31,13 @@ new #[Layout('layouts.app')] class extends Component
     public string $cost_per_unit = '';
 
     public bool $is_active = true;
+
+    public $importFile = null;
+
+    public ?string $importError = null;
+
+    /** @var array{created:int,adjusted:int,unchanged:int}|null */
+    public ?array $importSummary = null;
 
     public function create(): void
     {
@@ -87,6 +100,117 @@ new #[Layout('layouts.app')] class extends Component
         Ingredient::query()->where('business_id', Auth::user()->businessId())->findOrFail($id)->delete();
     }
 
+    /**
+     * Importa insumos desde un Excel/CSV: Nombre (obligatorio), Unidad y
+     * Cantidad (ambas opcionales) en las primeras tres columnas, en ese
+     * orden. Un insumo nuevo se crea con esa existencia inicial; uno que ya
+     * existe (mismo nombre, sin distinguir mayúsculas) recibe un ajuste de
+     * inventario por la diferencia, igual que el conteo físico manual.
+     */
+    public function importar(InventoryService $inventory): void
+    {
+        $this->importError = null;
+        $this->importSummary = null;
+
+        $this->validate([
+            'importFile' => 'required|file|mimes:xlsx,xls,csv,txt|max:5120',
+        ]);
+
+        try {
+            $spreadsheet = IOFactory::load($this->importFile->getRealPath());
+        } catch (\Throwable $e) {
+            $this->importError = 'No se pudo leer el archivo. Verificá que sea un Excel (.xlsx) o CSV válido.';
+
+            return;
+        }
+
+        $businessId = Auth::user()->businessId();
+        $branchId = Auth::user()->branch_id;
+
+        $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, false);
+
+        $existing = Ingredient::query()
+            ->where('business_id', $businessId)
+            ->get()
+            ->keyBy(fn (Ingredient $i) => mb_strtolower(trim($i->name)));
+
+        $created = 0;
+        $adjusted = 0;
+        $unchanged = 0;
+
+        foreach ($rows as $rowIndex => $row) {
+            $name = trim((string) ($row[0] ?? ''));
+
+            if ($name === '' || ($rowIndex === 0 && $this->isHeaderCell($name))) {
+                continue;
+            }
+
+            $unit = $this->mapUnit(trim((string) ($row[1] ?? '')));
+            $quantityRaw = trim((string) ($row[2] ?? ''));
+            $quantity = is_numeric($quantityRaw) ? round((float) $quantityRaw, 3) : null;
+
+            $key = mb_strtolower($name);
+            $ingredient = $existing->get($key);
+
+            if (! $ingredient) {
+                $ingredient = Ingredient::create([
+                    'business_id' => $businessId,
+                    'branch_id' => $branchId,
+                    'name' => $name,
+                    'unit' => $unit ?? ProductUnit::Pieza->value,
+                    'stock' => $quantity ?? 0,
+                    'is_active' => true,
+                ]);
+                $existing->put($key, $ingredient);
+                $created++;
+
+                continue;
+            }
+
+            if ($quantity === null) {
+                $unchanged++;
+
+                continue;
+            }
+
+            $diff = round($quantity - (float) $ingredient->stock, 3);
+
+            if ($diff === 0.0) {
+                $unchanged++;
+
+                continue;
+            }
+
+            $inventory->adjustStock($ingredient, InventoryMovementType::Ajuste, $diff, Auth::id(), reason: 'Importación desde Excel');
+            $adjusted++;
+        }
+
+        $this->importSummary = ['created' => $created, 'adjusted' => $adjusted, 'unchanged' => $unchanged];
+        $this->importFile = null;
+    }
+
+    private function isHeaderCell(string $name): bool
+    {
+        return in_array(mb_strtolower($name), ['nombre', 'insumo', 'name'], true);
+    }
+
+    private function mapUnit(string $raw): ?string
+    {
+        $normalized = mb_strtolower($raw);
+
+        return match (true) {
+            $normalized === '' => null,
+            in_array($normalized, ['kg', 'kilo', 'kilos', 'kgs'], true) => ProductUnit::Kg->value,
+            in_array($normalized, ['g', 'gr', 'gramo', 'gramos'], true) => ProductUnit::Gramo->value,
+            in_array($normalized, ['l', 'lt', 'litro', 'litros'], true) => ProductUnit::Litro->value,
+            in_array($normalized, ['ml', 'mililitro', 'mililitros'], true) => ProductUnit::Mililitro->value,
+            in_array($normalized, ['botella', 'botellas', 'bote'], true) => ProductUnit::Botella->value,
+            in_array($normalized, ['caja', 'cajas', 'paquete', 'paquetes', 'lata', 'latas', 'bolsa', 'bolsas'], true) => ProductUnit::Caja->value,
+            in_array($normalized, ['pieza', 'piezas', 'pza', 'unidad'], true) => ProductUnit::Pieza->value,
+            default => null,
+        };
+    }
+
     public function cancel(): void
     {
         $this->resetForm();
@@ -124,6 +248,33 @@ new #[Layout('layouts.app')] class extends Component
             <button wire:click="create" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-700 text-white">
                 Nuevo insumo
             </button>
+        </div>
+
+        <div class="mb-6 rounded-xl border border-gray-200 bg-white p-6">
+            <div class="mb-3 flex items-center justify-between">
+                <h2 class="text-sm font-semibold text-gray-700">Importar desde Excel</h2>
+                <a href="{{ route('admin.insumos.plantilla') }}" class="text-xs text-violet-600 hover:text-violet-600">Descargar plantilla</a>
+            </div>
+            <p class="mb-3 text-xs text-gray-500">
+                Subí un archivo .xlsx o .csv con columnas <strong>Nombre</strong>, <strong>Unidad</strong> (kg, litro, botella, caja, pieza…) y <strong>Cantidad</strong>, en ese orden.
+                Un insumo nuevo se crea con esa cantidad; uno que ya existe recibe un ajuste por la diferencia (igual que en Conteo físico).
+            </p>
+            <form wire:submit="importar" class="flex flex-wrap items-center gap-3">
+                <input type="file" wire:model="importFile" accept=".xlsx,.xls,.csv,.txt" class="text-sm text-gray-600">
+                <button type="submit" wire:loading.attr="disabled" wire:target="importar" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-700 text-white disabled:opacity-50">
+                    <span wire:loading.remove wire:target="importar">Importar</span>
+                    <span wire:loading wire:target="importar">Importando…</span>
+                </button>
+            </form>
+            @error('importFile') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
+            @if ($importError)
+                <p class="mt-2 text-sm text-red-600">{{ $importError }}</p>
+            @endif
+            @if ($importSummary)
+                <p class="mt-2 text-sm text-emerald-700">
+                    {{ $importSummary['created'] }} insumo(s) nuevo(s), {{ $importSummary['adjusted'] }} ajustado(s), {{ $importSummary['unchanged'] }} sin cambios.
+                </p>
+            @endif
         </div>
 
         @if ($showForm)

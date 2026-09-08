@@ -2,9 +2,33 @@
 
 use App\Enums\RoleName;
 use App\Models\Ingredient;
+use App\Models\InventoryMovement;
 use App\Models\Product;
 use App\Models\RecipeItem;
+use Illuminate\Http\UploadedFile;
 use Livewire\Livewire;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+/**
+ * Genera un .xlsx real (no un UploadedFile::fake(), que no tiene contenido
+ * parseable) para probar el importador de admin.insumos.index.
+ */
+function insumosSpreadsheet(array $rows): UploadedFile
+{
+    $spreadsheet = new Spreadsheet();
+    $spreadsheet->getActiveSheet()->fromArray($rows, null, 'A1');
+
+    $path = tempnam(sys_get_temp_dir(), 'insumos').'.xlsx';
+    (new Xlsx($spreadsheet))->save($path);
+
+    // UploadedFile::fake()->createWithContent() en vez de "new UploadedFile"
+    // a secas: Livewire::test()->set() con un archivo espera un objeto con
+    // la propiedad pública ->name (Illuminate\Http\Testing\File la tiene),
+    // pero igual necesitamos bytes reales de .xlsx para que IOFactory::load()
+    // los pueda leer.
+    return UploadedFile::fake()->createWithContent('insumos.xlsx', file_get_contents($path));
+}
 
 test('un administrador puede crear un insumo con existencia inicial', function () {
     $user = loginAsRole(RoleName::Administrador->value);
@@ -102,4 +126,80 @@ test('un usuario sin permiso de inventario no puede ver el conteo físico', func
     loginAsRole(RoleName::Mesero->value);
 
     $this->get(route('inventario.conteo'))->assertForbidden();
+});
+
+test('importar un excel crea insumos nuevos con la unidad y cantidad de cada fila', function () {
+    $user = loginAsRole(RoleName::Administrador->value);
+
+    $file = insumosSpreadsheet([
+        ['Nombre', 'Unidad', 'Cantidad'],
+        ['Cerveza Modelo 355ml', 'botella', '24'],
+        ['Chile Curtido', 'Kilos', '5'],
+    ]);
+
+    Livewire::test('admin.insumos.index')
+        ->set('importFile', $file)
+        ->call('importar')
+        ->assertSet('importSummary', ['created' => 2, 'adjusted' => 0, 'unchanged' => 0]);
+
+    $cerveza = Ingredient::where('business_id', $user->businessId())->where('name', 'Cerveza Modelo 355ml')->firstOrFail();
+    expect($cerveza->unit->value)->toBe('botella')
+        ->and((float) $cerveza->stock)->toBe(24.0);
+
+    $chile = Ingredient::where('business_id', $user->businessId())->where('name', 'Chile Curtido')->firstOrFail();
+    expect($chile->unit->value)->toBe('kg')
+        ->and((float) $chile->stock)->toBe(5.0);
+});
+
+test('importar un excel ajusta un insumo existente por la diferencia de cantidad', function () {
+    $user = loginAsRole(RoleName::Administrador->value);
+
+    $ingredient = Ingredient::factory()->create([
+        'business_id' => $user->businessId(),
+        'branch_id' => $user->branch_id,
+        'name' => 'Papa',
+        'stock' => 10,
+    ]);
+
+    $file = insumosSpreadsheet([
+        ['Nombre', 'Unidad', 'Cantidad'],
+        ['papa', 'kg', '15'],
+    ]);
+
+    Livewire::test('admin.insumos.index')
+        ->set('importFile', $file)
+        ->call('importar')
+        ->assertSet('importSummary', ['created' => 0, 'adjusted' => 1, 'unchanged' => 0]);
+
+    expect((float) $ingredient->fresh()->stock)->toBe(15.0);
+    expect(InventoryMovement::where('ingredient_id', $ingredient->id)->where('reason', 'Importación desde Excel')->exists())->toBeTrue();
+});
+
+test('importar un excel no genera cambios si la cantidad esta vacia o coincide', function () {
+    $user = loginAsRole(RoleName::Administrador->value);
+
+    Ingredient::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'name' => 'Cebolla', 'stock' => 8]);
+
+    $file = insumosSpreadsheet([
+        ['Nombre', 'Unidad', 'Cantidad'],
+        ['Cebolla', 'kg', '8'],
+        ['Limon', 'kg', ''],
+    ]);
+
+    Livewire::test('admin.insumos.index')
+        ->set('importFile', $file)
+        ->call('importar')
+        ->assertSet('importSummary', ['created' => 1, 'adjusted' => 0, 'unchanged' => 1]);
+
+    expect(Ingredient::where('business_id', $user->businessId())->where('name', 'Limon')->firstOrFail()->stock)
+        ->toEqualWithDelta(0.0, 0.001);
+});
+
+test('la plantilla de insumos se puede descargar', function () {
+    loginAsRole(RoleName::Administrador->value);
+
+    $this->get(route('admin.insumos.plantilla'))
+        ->assertOk()
+        ->assertHeader('Content-Type', 'text/csv; charset=UTF-8')
+        ->assertSee('Nombre,Unidad,Cantidad', false);
 });
