@@ -68,7 +68,7 @@ test('deploy/importar-datos-reales carga el catalogo, los roles y el personal re
 
     expect(App\Models\Business::where('name', 'Bar La Martina')->exists())->toBeTrue();
     expect(App\Models\Product::count())->toBe(155);
-    expect(App\Models\Ingredient::count())->toBe(98);
+    expect(App\Models\Ingredient::count())->toBe(134);
     expect(App\Models\RecipeItem::count())->toBe(103);
     expect(Spatie\Permission\Models\Role::where('name', 'auditor')->exists())->toBeTrue();
     expect(Spatie\Permission\Models\Role::where('name', 'director')->exists())->toBeTrue();

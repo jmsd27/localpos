@@ -253,6 +253,55 @@ class BarLaMartinaCatalogSeeder extends Seeder
             92 => ['Presidente', 'botella'], 93 => ['Bacardi', 'botella'], 94 => ['Capitán Morgan', 'botella'],
             95 => ['Bajio', 'botella'], 96 => ['Jagger', 'botella'], 97 => ['Licor 43', 'botella'],
             98 => ['Ron de la Casa', 'botella'],
+            // Del conteo físico por fotos del 2026-09-08 (licores/cervezas que
+            // no tenían insumo todavía).
+            99 => ['Don Julio 70', 'botella'], 100 => ['Jose Cuervo Margarita', 'botella'],
+            101 => ['Etiqueta Negra', 'botella'], 102 => ['Ginebra', 'botella'],
+            103 => ['Bacardi Sabores', 'botella'], 104 => ['Baileys', 'botella'],
+            105 => ['Don Pedro', 'botella'], 106 => ['Hpnotiq', 'botella'],
+            107 => ['Chivas 12', 'botella'], 108 => ['Gran Malo Horchata', 'botella'],
+            109 => ['Gran Malo Tamarindo', 'botella'], 110 => ['Gran Malo Jamaica', 'botella'],
+            111 => ['Don Julio Cristalino', 'botella'], 112 => ['7 Leguas', 'botella'],
+            113 => ['Jose Cuervo Cristalino', 'botella'], 114 => ['Centenario Reposado', 'botella'],
+            115 => ['Hornitos Cristalino', 'botella'], 116 => ["Jack Daniel's Piña", 'botella'],
+            117 => ['Black & White', 'botella'], 118 => ['1800 Añejo', 'botella'],
+            119 => ['Conti', 'botella'], 120 => ['100 Conejos', 'botella'],
+            121 => ['Campari', 'botella'], 122 => ['Ampevol', 'botella'],
+            123 => ['Cinzano', 'botella'], 124 => ['Kahlúa', 'botella'],
+            125 => ['Absolut Azul', 'botella'], 126 => ['Cointreau', 'botella'],
+            127 => ['Martell', 'botella'], 128 => ["Buchanan's Piña", 'botella'],
+            129 => ['Appleton', 'botella'], 130 => ['Anís', 'botella'],
+            131 => ['Chichón', 'botella'], 132 => ['Jefe', 'botella'],
+            133 => ['Flamingo', 'botella'], 134 => ['VOH', 'botella'],
+        ];
+
+        // Existencia real del conteo físico por fotos del 2026-09-08 (licores
+        // en onzas convertidas a botella de 750 ml, cervezas/caguamas por
+        // unidad). Los insumos que no aparecen acá (comida, limpieza, etc.)
+        // quedan en 0 — se cargan con Conteo físico cuando el negocio los
+        // cuente. Ver database/data-real/conteo-2026-09-08.md para el detalle.
+        $stockCounts = [
+            'Don Julio 70' => 1.534, 'Jose Cuervo Margarita' => 2.399, "Jack Daniel's" => 3.776,
+            'Red Label' => 5.861, 'Tradicional Plata' => 6.254, 'Tradicional Rep' => 1.809,
+            'Capitán Morgan' => 2.832, 'Etiqueta Negra' => 0.826, 'Ginebra' => 2.753,
+            'Hornitos Reposado' => 1.298, 'Smirnoff' => 2.242, 'Bacardi Sabores' => 0.157,
+            'Presidente' => 1.219, 'Baileys' => 1.337, 'Don Pedro' => 0.983, 'Hpnotiq' => 1.337,
+            "Buchanan's" => 3.737, 'Chivas 12' => 3.068, 'Gran Malo Horchata' => 1.416,
+            'Gran Malo Tamarindo' => 1.809, 'Gran Malo Jamaica' => 0.983, 'Don Julio Cristalino' => 1.495,
+            '7 Leguas' => 1.731, 'Jose Cuervo Cristalino' => 0.983, 'Maestro Dobel' => 1.573,
+            'Centenario Reposado' => 0.669, 'Hornitos Cristalino' => 0.157, 'Jagger' => 1.062,
+            "Jack Daniel's Piña" => 0.787, 'Azteca de Oro' => 1.731, 'Passport' => 0.590,
+            '1800 Cristalino' => 0.079, 'Black & White' => 2.714, '1800 Añejo' => 3.343,
+            'Conti' => 1.731, '100 Conejos' => 3.619, 'Campari' => 2.950, 'Ampevol' => 2.714,
+            'Cinzano' => 0.983, 'Kahlúa' => 0.747, 'Zaverich' => 1.180, 'Absolut Rasberry' => 0.944,
+            'Absolut Azul' => 2.045, 'Cointreau' => 1.180, 'Martell' => 0.826, "Buchanan's Piña" => 0.669,
+            'Appleton' => 0.708, 'Anís' => 0.983, 'Torres 10' => 1.495, 'Bacardi' => 0.393,
+            'Torres 5' => 0.787, 'Chichón' => 0.905, 'Jefe' => 11.682, 'Flamingo' => 8.024,
+            'VOH' => 28, 'Corona' => 39, 'Victoria' => 94, 'Pacífico Suave' => 154,
+            'Modelo Especial' => 102, 'Victoria Mega' => 123, 'Corona Mega' => 69,
+            'Michelob Ultra' => 220, 'Bud Light' => 190, 'Modelo 0' => 26, 'Corona Extra' => 83,
+            'Pacifico Clara' => 41, 'Barrilito' => 100, 'Modelo Negra' => 40, 'Skyy' => 22,
+            'Caribe' => 20,
         ];
 
         // Nota: "Pacífico Clara" (ref 67) y "Pacifico Clara" (ref 61) son dos
@@ -266,7 +315,7 @@ class BarLaMartinaCatalogSeeder extends Seeder
                 'branch_id' => $branchId,
                 'name' => $name,
                 'unit' => $unit,
-                'stock' => 0,
+                'stock' => $stockCounts[$name] ?? 0,
                 'is_active' => true,
             ]);
 
