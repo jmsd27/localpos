@@ -50,3 +50,43 @@ test('deploy/migrate rechaza un DEPLOY_KEY equivocado', function () {
         ->post('/deploy/migrate')
         ->assertForbidden();
 });
+
+test('deploy/importar-datos-reales rechaza sin DEPLOY_KEY configurada', function () {
+    config()->set('ops.deploy_key', null);
+
+    withHeaders(['Authorization' => 'Bearer lo-que-sea'])
+        ->post('/deploy/importar-datos-reales')
+        ->assertForbidden();
+});
+
+test('deploy/importar-datos-reales carga el catalogo, los roles y el personal real', function () {
+    config()->set('ops.deploy_key', 'clave-correcta');
+
+    withHeaders(['Authorization' => 'Bearer clave-correcta'])
+        ->post('/deploy/importar-datos-reales')
+        ->assertOk();
+
+    expect(App\Models\Business::where('name', 'Bar La Martina')->exists())->toBeTrue();
+    expect(App\Models\Product::count())->toBe(155);
+    expect(App\Models\Ingredient::count())->toBe(98);
+    expect(App\Models\RecipeItem::count())->toBe(103);
+    expect(Spatie\Permission\Models\Role::where('name', 'auditor')->exists())->toBeTrue();
+    expect(Spatie\Permission\Models\Role::where('name', 'director')->exists())->toBeTrue();
+
+    $jennifer = App\Models\User::where('email', 'jennifer.franco@barlamartina.local')->firstOrFail();
+    expect($jennifer->roles->pluck('name')->sort()->values()->all())->toBe(['auditor', 'mesero']);
+
+    $arturo = App\Models\User::where('email', 'arturo.leon@barlamartina.local')->firstOrFail();
+    expect($arturo->hasRole('director'))->toBeTrue();
+});
+
+test('deploy/importar-datos-reales se puede reintentar sin duplicar nada', function () {
+    config()->set('ops.deploy_key', 'clave-correcta');
+
+    withHeaders(['Authorization' => 'Bearer clave-correcta'])->post('/deploy/importar-datos-reales')->assertOk();
+    withHeaders(['Authorization' => 'Bearer clave-correcta'])->post('/deploy/importar-datos-reales')->assertOk();
+
+    expect(App\Models\Business::count())->toBe(1);
+    expect(App\Models\Product::count())->toBe(155);
+    expect(App\Models\User::where('email', 'like', '%@barlamartina.local')->count())->toBe(6);
+});

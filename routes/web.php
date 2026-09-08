@@ -225,4 +225,20 @@ Route::post('/deploy/migrate', function (Request $request) {
     return response(Artisan::output(), 200)->header('Content-Type', 'text/plain');
 })->name('deploy.migrate');
 
+// Carga única del catálogo/roles/personal reales de Bar La Martina al pasar
+// este despliegue a SYNC_ROLE=source. Mismo secreto que /deploy/migrate.
+// curl -XPOST -H "Authorization: Bearer <DEPLOY_KEY>" .../deploy/importar-datos-reales
+Route::post('/deploy/importar-datos-reales', function (Request $request) {
+    $key = config('ops.deploy_key');
+
+    abort_unless(
+        is_string($key) && $key !== '' && hash_equals($key, (string) $request->bearerToken()),
+        403
+    );
+
+    Artisan::call('barlamartina:importar-datos-reales');
+
+    return response(Artisan::output(), 200)->header('Content-Type', 'text/plain');
+})->name('deploy.importar-datos-reales');
+
 Route::get('/', fn () => redirect()->route(Business::query()->exists() ? 'dashboard' : 'instalacion'));
