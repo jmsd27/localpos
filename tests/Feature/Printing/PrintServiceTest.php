@@ -28,6 +28,38 @@ test('vender un producto con estacion encola una comanda para el terminal impres
     expect($comanda->content)->toContain($product->name);
 });
 
+test('una comanda con productos de barra y cocina se reparte: un ticket por terminal', function () {
+    [$user] = posContext();
+
+    $terminalBarra = Terminal::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'name' => 'BARRA', 'ip_address' => '192.168.1.75']);
+    $terminalCocina = Terminal::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'name' => 'COCINA', 'ip_address' => '192.168.1.74']);
+
+    $barra = KitchenStation::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'name' => 'Barra', 'printer_terminal_id' => $terminalBarra->id]);
+    $cocina = KitchenStation::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'name' => 'Cocina', 'printer_terminal_id' => $terminalCocina->id]);
+
+    $cerveza = Product::factory()->create(['business_id' => $user->businessId(), 'name' => 'Cerveza Victoria', 'price' => 45, 'tax_rate' => 0, 'kitchen_station_id' => $barra->id]);
+    $hamburguesa = Product::factory()->create(['business_id' => $user->businessId(), 'name' => 'Hamburguesa Sencilla', 'price' => 120, 'tax_rate' => 0, 'kitchen_station_id' => $cocina->id]);
+
+    Livewire::test('pos.index')
+        ->call('addProduct', $cerveza->id)
+        ->call('addProduct', $hamburguesa->id)
+        ->call('openCheckout')
+        ->set('paymentRows.0.amount', '165')
+        ->set('paymentRows.0.received_amount', '165')
+        ->call('checkout');
+
+    $comandas = PrintJob::where('type', 'comanda_cocina')->get();
+
+    expect($comandas)->toHaveCount(2);
+
+    $porTerminal = $comandas->keyBy('terminal_id');
+
+    expect($porTerminal[$terminalBarra->id]->content)->toContain('Cerveza Victoria')
+        ->and($porTerminal[$terminalBarra->id]->content)->not->toContain('Hamburguesa')
+        ->and($porTerminal[$terminalCocina->id]->content)->toContain('Hamburguesa Sencilla')
+        ->and($porTerminal[$terminalCocina->id]->content)->not->toContain('Cerveza');
+});
+
 test('un producto sin estacion no genera comanda impresa', function () {
     [$user] = posContext();
 

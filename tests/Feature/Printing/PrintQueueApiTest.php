@@ -23,6 +23,28 @@ test('con un token invalido el endpoint responde 401', function () {
     $this->getJson('/api/print-jobs', ['X-Terminal-Token' => 'token-falso'])->assertUnauthorized();
 });
 
+test('la respuesta trae la config de impresora del terminal para que el agente la use', function () {
+    $business = Business::factory()->create();
+    $branch = Branch::factory()->for($business)->create();
+    $terminal = Terminal::factory()->create([
+        'business_id' => $business->id,
+        'branch_id' => $branch->id,
+        'name' => 'BARRA',
+        'connection_type' => 'red',
+        'ip_address' => '192.168.1.75',
+        'printer_port' => 9100,
+        'paper_width_chars' => 48,
+    ]);
+
+    $response = $this->getJson('/api/print-jobs', ['X-Terminal-Token' => $terminal->api_token]);
+
+    $response->assertOk()
+        ->assertJsonPath('terminal.name', 'BARRA')
+        ->assertJsonPath('terminal.connection_type', 'red')
+        ->assertJsonPath('terminal.ip_address', '192.168.1.75')
+        ->assertJsonPath('terminal.printer_port', 9100);
+});
+
 test('el agente obtiene solo los trabajos pendientes de su propia terminal', function () {
     [$business, $branch, $terminal] = printQueueContext();
     $otherTerminal = Terminal::factory()->create(['business_id' => $business->id, 'branch_id' => $branch->id]);

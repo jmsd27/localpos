@@ -11,9 +11,18 @@
  * Uso:
  *   node agent.js
  *
- * Configuración por variables de entorno (o edita los valores por defecto):
- *   LOCALPOS_URL            http://192.168.1.10:8000   (IP del servidor en la LAN)
- *   LOCALPOS_TERMINAL_TOKEN token del terminal (ver Admin > Terminales > Regenerar)
+ * Lo mínimo que hay que definir por variable de entorno:
+ *   LOCALPOS_URL            https://barlamartina.com.mx  (o la IP del servidor
+ *                           en la LAN si es instalación local)
+ *   LOCALPOS_TERMINAL_TOKEN token del terminal (Admin > Terminales > el token
+ *                           de la fila BARRA o COCINA)
+ *
+ * TODO LO DEMÁS —IP y puerto de la impresora, tipo de conexión, ruta USB,
+ * nombre compartido de Windows, ancho de papel— sale del terminal que cargaste
+ * en Administración → Terminales y llega solo en cada sondeo a /api/print-jobs.
+ * No hace falta repetirlo acá. Las variables de abajo siguen existiendo como
+ * override manual: si definís una, esa gana sobre lo que diga el servidor.
+ *
  *   POLL_INTERVAL_MS        intervalo de sondeo, por defecto 4000ms
  *   CONNECTION_TYPE         'red' (por defecto), 'usb_serial' o 'usb_impresora'
  *
@@ -83,16 +92,64 @@ function normalizeConnectionType(raw) {
     return value;
 }
 
+// Lo único imprescindible por env: dónde está el servidor y el token del
+// terminal. El resto (IP/puerto de la impresora, tipo de conexión, ruta USB,
+// nombre compartido, ancho de papel) sale del terminal configurado en
+// Administración → Terminales y llega en cada respuesta de /api/print-jobs.
+// Si igual definís una de esas variables de entorno, esa gana sobre lo que
+// diga el servidor (útil para forzar algo puntual sin tocar la config).
 const CONFIG = {
     baseUrl: process.env.LOCALPOS_URL || 'http://127.0.0.1:8000',
     terminalToken: process.env.LOCALPOS_TERMINAL_TOKEN || '',
     pollIntervalMs: Number(process.env.POLL_INTERVAL_MS || 4000),
-    connectionType: normalizeConnectionType(process.env.CONNECTION_TYPE),
-    printerHost: process.env.PRINTER_HOST || '192.168.1.50',
-    printerPort: Number(process.env.PRINTER_PORT || 9100),
+    connectionType: process.env.CONNECTION_TYPE ? normalizeConnectionType(process.env.CONNECTION_TYPE) : 'red',
+    printerHost: process.env.PRINTER_HOST || '',
+    printerPort: process.env.PRINTER_PORT ? Number(process.env.PRINTER_PORT) : 9100,
     usbPath: process.env.USB_PATH || '',
     printerName: process.env.PRINTER_NAME || '',
 };
+
+// Qué valores fijó el operador por env: esos no se pisan con la config del
+// servidor.
+const ENV_LOCKED = {
+    connectionType: Boolean(process.env.CONNECTION_TYPE),
+    printerHost: Boolean(process.env.PRINTER_HOST),
+    printerPort: Boolean(process.env.PRINTER_PORT),
+    usbPath: Boolean(process.env.USB_PATH),
+    printerName: Boolean(process.env.PRINTER_NAME),
+};
+
+let lastTargetDescription = '';
+
+/**
+ * Aplica la configuración de impresora que mandó el servidor (el terminal
+ * cargado en Admin → Terminales), respetando cualquier override por env.
+ */
+function applyServerTerminalConfig(terminal) {
+    if (!terminal || typeof terminal !== 'object') return;
+
+    if (!ENV_LOCKED.connectionType && terminal.connection_type) {
+        CONFIG.connectionType = normalizeConnectionType(terminal.connection_type);
+    }
+    if (!ENV_LOCKED.printerHost && terminal.ip_address) {
+        CONFIG.printerHost = terminal.ip_address;
+    }
+    if (!ENV_LOCKED.printerPort && terminal.printer_port) {
+        CONFIG.printerPort = Number(terminal.printer_port);
+    }
+    if (!ENV_LOCKED.usbPath && terminal.usb_path) {
+        CONFIG.usbPath = terminal.usb_path;
+    }
+    if (!ENV_LOCKED.printerName && terminal.printer_name) {
+        CONFIG.printerName = terminal.printer_name;
+    }
+
+    const target = describeTarget();
+    if (target !== lastTargetDescription) {
+        console.log(`[${new Date().toISOString()}] Config de impresora (terminal "${terminal.name || '?'}"): ${target}`);
+        lastTargetDescription = target;
+    }
+}
 
 // --- Construcción de comandos ESC/POS ---------------------------------
 
@@ -268,8 +325,26 @@ function request(method, path, body) {
     });
 }
 
+function printerTargetMissing() {
+    if (CONFIG.connectionType === 'usb_serial') return !CONFIG.usbPath;
+    if (CONFIG.connectionType === 'usb_impresora') return !CONFIG.printerName;
+
+    return !CONFIG.printerHost;
+}
+
 async function pollOnce() {
-    const { jobs } = await request('GET', '/api/print-jobs');
+    const { jobs, terminal } = await request('GET', '/api/print-jobs');
+
+    applyServerTerminalConfig(terminal);
+
+    if (jobs.length > 0 && printerTargetMissing()) {
+        console.error(
+            `[${new Date().toISOString()}] Hay ${jobs.length} trabajo(s) en cola pero este terminal no tiene `
+            + `impresora configurada (Administración → Terminales → Editar → IP / tipo de conexión). `
+            + `Quedan pendientes y se imprimen apenas se configure.`
+        );
+        return;
+    }
 
     for (const job of jobs) {
         try {
@@ -297,7 +372,7 @@ function describeTarget() {
         return `USB impresora instalada en Windows (${CONFIG.printerName || 'sin configurar'})`;
     }
 
-    return `${CONFIG.printerHost}:${CONFIG.printerPort}`;
+    return CONFIG.printerHost ? `${CONFIG.printerHost}:${CONFIG.printerPort}` : 'red (IP sin configurar todavía)';
 }
 
 async function main() {
@@ -306,7 +381,10 @@ async function main() {
         process.exit(1);
     }
 
-    console.log(`Agente de impresión LOCALPOS iniciado. Servidor: ${CONFIG.baseUrl}, impresora: ${describeTarget()}`);
+    console.log(
+        `Agente de impresión LOCALPOS iniciado. Servidor: ${CONFIG.baseUrl}. `
+        + `La impresora se toma del terminal configurado en el sistema (llega en el primer sondeo).`
+    );
 
     // eslint-disable-next-line no-constant-condition
     while (true) {

@@ -443,15 +443,37 @@ class BarLaMartinaCatalogSeeder extends Seeder
         $cashRegister = CashRegister::where('business_id', $businessId)->where('name', 'Caja Principal')->first()
             ?: CashRegister::create(['business_id' => $businessId, 'branch_id' => $branchId, 'name' => 'Caja Principal', 'code' => 'caja-1']);
 
-        if (! Terminal::where('business_id', $businessId)->where('name', 'CAJA1')->exists()) {
-            Terminal::create([
-                'business_id' => $businessId,
-                'branch_id' => $branchId,
-                'cash_register_id' => $cashRegister->id,
-                'name' => 'CAJA1',
-                'code' => 'caja1',
-            ]);
+        // Dos terminales físicas: una en la barra y otra en la cocina, cada
+        // una con su impresora térmica ESC/POS por red (RAW :9100). Las IPs
+        // son las de la LAN del local — si la red cambia, se editan desde
+        // Administración → Terminales. El agente local las lee del sistema.
+        $terminals = [
+            'barra' => ['name' => 'BARRA', 'code' => 'BARRA', 'ip_address' => '192.168.1.75'],
+            'cocina' => ['name' => 'COCINA', 'code' => 'COC-1', 'ip_address' => '192.168.1.74'],
+        ];
+
+        $terminalIds = [];
+
+        foreach ($terminals as $key => $data) {
+            $terminal = Terminal::where('business_id', $businessId)->where('name', $data['name'])->first()
+                ?: Terminal::create($data + [
+                    'business_id' => $businessId,
+                    'branch_id' => $branchId,
+                    'cash_register_id' => $cashRegister->id,
+                    'connection_type' => 'red',
+                    'printer_port' => 9100,
+                    'paper_width_chars' => 48,
+                    'api_token' => \Illuminate\Support\Str::random(48),
+                ]);
+
+            $terminalIds[$key] = $terminal->id;
         }
+
+        // Cada estación imprime sus comandas en su propia terminal.
+        KitchenStation::where('business_id', $businessId)->where('name', 'Cocina')
+            ->update(['printer_terminal_id' => $terminalIds['cocina']]);
+        KitchenStation::where('business_id', $businessId)->where('name', 'Barra')
+            ->update(['printer_terminal_id' => $terminalIds['barra']]);
     }
 
     private function seedSuppliers(int $businessId): void

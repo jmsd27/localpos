@@ -32,7 +32,21 @@ class PrintQueueController extends Controller
             ->limit(20)
             ->get(['id', 'type', 'content', 'open_drawer', 'created_at']);
 
-        return response()->json(['jobs' => $jobs]);
+        // El agente local toma de acá la configuración de la impresora
+        // (IP/puerto o USB) que el admin cargó en Administración → Terminales,
+        // así no hace falta repetirla en variables de entorno en cada PC.
+        return response()->json([
+            'terminal' => [
+                'name' => $terminal->name,
+                'connection_type' => $terminal->connection_type,
+                'ip_address' => $terminal->ip_address,
+                'printer_port' => $terminal->printer_port,
+                'printer_name' => $terminal->printer_name,
+                'usb_path' => $terminal->usb_path,
+                'paper_width_chars' => $terminal->paper_width_chars,
+            ],
+            'jobs' => $jobs,
+        ]);
     }
 
     public function ack(Request $request, PrintJob $printJob, PrintService $printer): JsonResponse
