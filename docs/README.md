@@ -33,6 +33,7 @@ PWA instalable en el celular.
 | 4 | [Alta de sucursales en el espejo](04-alta-de-sucursales.md) | Cada vez que conectes una sucursal al espejo. |
 | 5 | [Operación y diagnóstico](05-operacion-y-diagnostico.md) | Día a día: revisar salud del sync, resolver atascos, respaldos. |
 | 6 | [Checklist de lanzamiento](06-checklist-lanzamiento.md) | Antes de dar por vivo el espejo. |
+| 7 | [Impresoras: cocina y barra](07-impresoras-cocina-barra.md) | Cuando llegue el equipo (PC + impresoras) a la sucursal: instalación, configuración y pruebas paso a paso. |
 
 ## Archivos de configuración relacionados
 
