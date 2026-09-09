@@ -367,8 +367,7 @@ new #[Layout('layouts.app')] class extends Component
 ?>
 
 <div x-data="offlineComanda({{ $table->id }}, {{ $order?->id ?? 'null' }})" class="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white text-gray-900 lg:h-[80vh] lg:flex-row">
-    <div x-show="$store.offline.online">
-    <div class="flex flex-1 flex-col lg:flex-row">
+    <div x-show="$store.offline.online" class="flex flex-1 flex-col lg:flex-row">
     <div class="flex flex-col gap-3 border-b border-gray-200 bg-white/50 p-4 lg:w-56 lg:shrink-0 lg:overflow-y-auto lg:border-b-0 lg:border-r">
         <div>
             <a href="{{ route('mesas.mapa') }}" wire:navigate class="text-sm text-gray-500 hover:text-gray-900">&larr; Mapa de mesas</a>
@@ -493,51 +492,48 @@ new #[Layout('layouts.app')] class extends Component
         @endif
     </div>
     </div>
-    </div>
 
-    <div x-show="!$store.offline.online">
-        <div class="flex flex-1 flex-col p-4">
-            <div class="mb-4 rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 text-sm text-slate-700">
-                Sin conexión — este pedido se manda solo cuando vuelva internet. Todavía no tiene folio ni se mandó a cocina/barra.
-            </div>
+    <div x-show="!$store.offline.online" class="flex flex-1 flex-col p-4">
+        <div class="mb-4 rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 text-sm text-slate-700">
+            Sin conexión — este pedido se manda solo cuando vuelva internet. Todavía no tiene folio ni se mandó a cocina/barra.
+        </div>
 
-            <div class="mb-4 grid grid-cols-2 gap-3 overflow-y-auto sm:grid-cols-3 lg:grid-cols-4">
-                <template x-for="product in catalogProducts" :key="product.id">
-                    <button type="button" @click="addOfflineItem(product)" class="flex h-28 flex-col justify-between rounded-xl border border-gray-200 bg-white p-3 text-left hover:border-violet-500">
-                        <span class="text-sm font-medium" x-text="product.name"></span>
-                        <span class="text-violet-600" x-text="'$' + product.price.toFixed(2)"></span>
-                    </button>
-                </template>
-            </div>
-
-            <div class="flex-1 space-y-2 overflow-y-auto border-t border-gray-200 pt-3">
-                <template x-if="draftItems.length === 0">
-                    <p class="text-center text-sm text-gray-400">Agrega productos a la comanda offline.</p>
-                </template>
-                <template x-for="item in draftItems" :key="item.client_item_uuid">
-                    <div class="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-3 text-sm">
-                        <div>
-                            <div class="font-medium" x-text="item.quantity + ' × ' + item.name"></div>
-                            <div class="text-xs text-amber-600">Sin enviar (offline)</div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="font-medium" x-text="'$' + (item.unit_price * item.quantity).toFixed(2)"></span>
-                            <button type="button" @click="removeOfflineItem(item.client_item_uuid)" class="text-red-600 hover:text-red-700">&times;</button>
-                        </div>
-                    </div>
-                </template>
-            </div>
-
-            <div class="mt-4 space-y-2 border-t border-gray-200 pt-3">
-                <div class="flex justify-between text-base font-semibold">
-                    <span>Total preliminar</span>
-                    <span x-text="'$' + draftTotal.toFixed(2)"></span>
-                </div>
-                <p class="text-xs text-gray-400">Cuenta preliminar — sin folio, pendiente de conexión.</p>
-                <button type="button" @click="requestOfflineBill" :disabled="draftItems.length === 0" class="w-full rounded-lg border border-gray-300 py-2 text-sm text-gray-600 hover:bg-white disabled:opacity-50">
-                    Pedir la cuenta (preliminar)
+        <div class="mb-4 grid grid-cols-2 gap-3 overflow-y-auto sm:grid-cols-3 lg:grid-cols-4">
+            <template x-for="product in catalogProducts" :key="product.id">
+                <button type="button" @click="addOfflineItem(product)" class="flex h-28 flex-col justify-between rounded-xl border border-gray-200 bg-white p-3 text-left hover:border-violet-500">
+                    <span class="text-sm font-medium" x-text="product.name"></span>
+                    <span class="text-violet-600" x-text="'$' + product.price.toFixed(2)"></span>
                 </button>
+            </template>
+        </div>
+
+        <div class="flex-1 space-y-2 overflow-y-auto border-t border-gray-200 pt-3">
+            <template x-if="draftItems.length === 0">
+                <p class="text-center text-sm text-gray-400">Agrega productos a la comanda offline.</p>
+            </template>
+            <template x-for="item in draftItems" :key="item.client_item_uuid">
+                <div class="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-3 text-sm">
+                    <div>
+                        <div class="font-medium" x-text="item.quantity + ' × ' + item.name"></div>
+                        <div class="text-xs text-amber-600">Sin enviar (offline)</div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-medium" x-text="'$' + (item.unit_price * item.quantity).toFixed(2)"></span>
+                        <button type="button" @click="removeOfflineItem(item.client_item_uuid)" class="text-red-600 hover:text-red-700">&times;</button>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div class="mt-4 space-y-2 border-t border-gray-200 pt-3">
+            <div class="flex justify-between text-base font-semibold">
+                <span>Total preliminar</span>
+                <span x-text="'$' + draftTotal.toFixed(2)"></span>
             </div>
+            <p class="text-xs text-gray-400">Cuenta preliminar — sin folio, pendiente de conexión.</p>
+            <button type="button" @click="requestOfflineBill" :disabled="draftItems.length === 0" class="w-full rounded-lg border border-gray-300 py-2 text-sm text-gray-600 hover:bg-white disabled:opacity-50">
+                Pedir la cuenta (preliminar)
+            </button>
         </div>
     </div>
 
