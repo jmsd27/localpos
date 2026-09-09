@@ -24,7 +24,10 @@ class PrintService
 
     private int $width = self::DEFAULT_WIDTH;
 
-    public function __construct(private readonly AuditLogger $auditLogger) {}
+    public function __construct(
+        private readonly AuditLogger $auditLogger,
+        private readonly SettingsService $settings,
+    ) {}
 
     /**
      * Encola el ticket de venta en la cola de impresión del terminal donde se
@@ -129,7 +132,7 @@ class PrintService
 
     private function renderSaleTicket(Order $order): string
     {
-        $this->width = $order->terminal?->paper_width_chars ?? self::DEFAULT_WIDTH;
+        $this->width = $this->resolveWidth($order->terminal?->paper_width_chars, $order->business_id);
 
         $lines = [];
         $lines[] = $this->center($order->business->name);
@@ -190,7 +193,14 @@ class PrintService
         }
 
         $lines[] = $this->rule();
-        $lines[] = $this->center('¡Gracias por su compra!');
+
+        $footer = trim((string) $this->settings->get($order->business_id, 'ticket_pie', '¡Gracias por su compra!'));
+
+        if ($footer !== '') {
+            foreach (explode("\n", $footer) as $footerLine) {
+                $lines[] = $this->center(trim($footerLine));
+            }
+        }
 
         return implode("\n", $lines);
     }
@@ -200,7 +210,7 @@ class PrintService
      */
     private function renderKitchenComanda(Order $order, Collection $items, ?KitchenStation $station): string
     {
-        $this->width = $station?->printerTerminal?->paper_width_chars ?? self::DEFAULT_WIDTH;
+        $this->width = $this->resolveWidth($station?->printerTerminal?->paper_width_chars, $order->business_id);
 
         $lines = [];
         $lines[] = $this->center($station?->name ?? 'Cocina');
@@ -225,6 +235,25 @@ class PrintService
         $lines[] = $this->rule();
 
         return implode("\n", $lines);
+    }
+
+    /**
+     * Resuelve el ancho de impresión (en columnas):
+     *  1. el `paper_width_chars` del terminal, SOLO si fue configurado a un
+     *     valor distinto del 48 por defecto (48 = "usá el del negocio");
+     *  2. el ancho del negocio (Administración → Configuración → Ticket de
+     *     venta), que es el que controla el dueño para todas sus impresoras;
+     *  3. 48 columnas de respaldo (papel de 80 mm).
+     */
+    private function resolveWidth(?int $terminalWidth, int $businessId): int
+    {
+        if ($terminalWidth !== null && $terminalWidth > 0 && $terminalWidth !== self::DEFAULT_WIDTH) {
+            return $terminalWidth;
+        }
+
+        $businessWidth = (int) $this->settings->get($businessId, 'ticket_ancho', self::DEFAULT_WIDTH);
+
+        return $businessWidth > 0 ? $businessWidth : self::DEFAULT_WIDTH;
     }
 
     private function center(string $text): string

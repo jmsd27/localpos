@@ -13,6 +13,7 @@ use App\Models\ModifierOption;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\RecipeItem;
+use App\Models\Setting;
 use App\Models\Supplier;
 use App\Models\Table;
 use App\Models\TableArea;
@@ -57,6 +58,23 @@ class BarLaMartinaCatalogSeeder extends Seeder
         $this->seedCashRegisterAndTerminal($business->id, $branch->id);
         $this->seedSuppliers($business->id);
         $this->seedCoupons($business->id);
+        $this->seedTicketSettings($business->id);
+    }
+
+    private function seedTicketSettings(int $businessId): void
+    {
+        $defaults = [
+            'ticket_ancho' => '48',
+            'ticket_feed' => '3',
+            'ticket_pie' => '¡Gracias por su visita! — Bar La Martina',
+        ];
+
+        foreach ($defaults as $key => $value) {
+            Setting::firstOrCreate(
+                ['business_id' => $businessId, 'key' => $key],
+                ['value' => $value, 'group' => 'ticket'],
+            );
+        }
     }
 
     private function seedCoupons(int $businessId): void

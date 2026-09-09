@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PrintJob;
 use App\Models\Terminal;
 use App\Services\PrintService;
+use App\Services\SettingsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -20,7 +21,7 @@ use Illuminate\Http\Request;
  */
 class PrintQueueController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function index(Request $request, SettingsService $settings): JsonResponse
     {
         /** @var Terminal $terminal */
         $terminal = $request->attributes->get('terminal');
@@ -31,6 +32,8 @@ class PrintQueueController extends Controller
             ->orderBy('created_at')
             ->limit(20)
             ->get(['id', 'type', 'content', 'open_drawer', 'created_at']);
+
+        $logo = $settings->get($terminal->business_id, 'ticket_logo_escpos');
 
         // El agente local toma de acá la configuración de la impresora
         // (IP/puerto o USB) que el admin cargó en Administración → Terminales,
@@ -44,6 +47,13 @@ class PrintQueueController extends Controller
                 'printer_name' => $terminal->printer_name,
                 'usb_path' => $terminal->usb_path,
                 'paper_width_chars' => $terminal->paper_width_chars,
+            ],
+            // Config del ticket de venta (Administración → Configuración →
+            // Ticket de venta). El logo solo viaja cuando hay algo por
+            // imprimir, para no engordar cada sondeo con el mapa de bits.
+            'ticket' => [
+                'feed_lines' => (int) $settings->get($terminal->business_id, 'ticket_feed', 3),
+                'logo' => ($jobs->isNotEmpty() && $logo) ? $logo : null,
             ],
             'jobs' => $jobs,
         ]);

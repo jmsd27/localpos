@@ -18,13 +18,19 @@
  *                           de la fila BARRA o COCINA)
  *
  * TODO LO DEMÁS —IP y puerto de la impresora, tipo de conexión, ruta USB,
- * nombre compartido de Windows, ancho de papel— sale del terminal que cargaste
- * en Administración → Terminales y llega solo en cada sondeo a /api/print-jobs.
- * No hace falta repetirlo acá. Las variables de abajo siguen existiendo como
- * override manual: si definís una, esa gana sobre lo que diga el servidor.
+ * nombre compartido de Windows, ancho de papel, logo del ticket y líneas de
+ * avance antes del corte— sale del terminal y de la configuración del negocio
+ * (Administración → Terminales / Configuración → Ticket de venta) y llega solo
+ * en cada sondeo a /api/print-jobs. No hace falta repetirlo acá. Las variables
+ * de abajo siguen existiendo como override manual: si definís una, esa gana
+ * sobre lo que diga el servidor.
  *
  *   POLL_INTERVAL_MS        intervalo de sondeo, por defecto 4000ms
  *   CONNECTION_TYPE         'red' (por defecto), 'usb_serial' o 'usb_impresora'
+ *   TICKET_FEED_LINES       líneas en blanco que se avanzan antes del corte
+ *                           (por defecto 3, o lo que diga la configuración del
+ *                           negocio). El logo del ticket no se puede forzar por
+ *                           env: se sube en el panel y llega en el sondeo.
  *
  *   Modo red (CONNECTION_TYPE=red, o sin definir):
  *     PRINTER_HOST          IP de la impresora térmica en la red (puerto RAW 9100)
@@ -107,6 +113,10 @@ const CONFIG = {
     printerPort: process.env.PRINTER_PORT ? Number(process.env.PRINTER_PORT) : 9100,
     usbPath: process.env.USB_PATH || '',
     printerName: process.env.PRINTER_NAME || '',
+    ticketFeedLines: process.env.TICKET_FEED_LINES ? Number(process.env.TICKET_FEED_LINES) : 3,
+    // Búfer ESC/POS (base64) del logo del ticket de venta. No se puede fijar
+    // por env; llega del servidor cuando hay trabajos pendientes.
+    ticketLogoBase64: '',
 };
 
 // Qué valores fijó el operador por env: esos no se pisan con la config del
@@ -117,6 +127,7 @@ const ENV_LOCKED = {
     printerPort: Boolean(process.env.PRINTER_PORT),
     usbPath: Boolean(process.env.USB_PATH),
     printerName: Boolean(process.env.PRINTER_NAME),
+    ticketFeedLines: Boolean(process.env.TICKET_FEED_LINES),
 };
 
 let lastTargetDescription = '';
@@ -151,17 +162,44 @@ function applyServerTerminalConfig(terminal) {
     }
 }
 
+/**
+ * Aplica la configuración del ticket de venta que mandó el servidor
+ * (Administración → Configuración → Ticket de venta): líneas de avance antes
+ * del corte y el logo ya convertido a ESC/POS. El logo solo llega cuando hay
+ * trabajos pendientes; si no vino, se limpia.
+ */
+function applyServerTicketConfig(ticket) {
+    if (!ticket || typeof ticket !== 'object') return;
+
+    if (!ENV_LOCKED.ticketFeedLines && Number.isFinite(Number(ticket.feed_lines))) {
+        CONFIG.ticketFeedLines = Math.max(0, Math.min(20, Math.trunc(Number(ticket.feed_lines))));
+    }
+
+    CONFIG.ticketLogoBase64 = typeof ticket.logo === 'string' ? ticket.logo : '';
+}
+
 // --- Construcción de comandos ESC/POS ---------------------------------
 
 const ESC = 0x1b;
 const GS = 0x1d;
 
-function buildReceipt(content, openDrawer) {
+function buildReceipt(content, openDrawer, options = {}) {
     const chunks = [];
 
     chunks.push(Buffer.from([ESC, 0x40])); // ESC @ : inicializa la impresora
+
+    if (options.logoBase64) {
+        // El servidor ya mandó el logo como comando GS v 0 (mapa de bits).
+        chunks.push(Buffer.from([ESC, 0x61, 0x01])); // ESC a 1 : centrar
+        chunks.push(Buffer.from(options.logoBase64, 'base64'));
+        chunks.push(Buffer.from([ESC, 0x61, 0x00])); // ESC a 0 : volver a la izquierda
+        chunks.push(Buffer.from('\n', 'ascii'));
+    }
+
     chunks.push(Buffer.from(content, 'ascii'));
-    chunks.push(Buffer.from('\n\n\n', 'ascii'));
+
+    const feedLines = Number.isFinite(options.feedLines) ? Math.max(0, Math.trunc(options.feedLines)) : 3;
+    chunks.push(Buffer.from('\n'.repeat(feedLines), 'ascii'));
 
     if (openDrawer) {
         // GS ~ p 0 : pulso al cajón de dinero conectado a la impresora (RJ11)
@@ -333,9 +371,10 @@ function printerTargetMissing() {
 }
 
 async function pollOnce() {
-    const { jobs, terminal } = await request('GET', '/api/print-jobs');
+    const { jobs, terminal, ticket } = await request('GET', '/api/print-jobs');
 
     applyServerTerminalConfig(terminal);
+    applyServerTicketConfig(ticket);
 
     if (jobs.length > 0 && printerTargetMissing()) {
         console.error(
@@ -348,7 +387,10 @@ async function pollOnce() {
 
     for (const job of jobs) {
         try {
-            const buffer = buildReceipt(job.content || '', Boolean(job.open_drawer));
+            const buffer = buildReceipt(job.content || '', Boolean(job.open_drawer), {
+                logoBase64: job.type === 'ticket_venta' ? CONFIG.ticketLogoBase64 : '',
+                feedLines: CONFIG.ticketFeedLines,
+            });
             await sendToPrinter(buffer);
             await request('POST', `/api/print-jobs/${job.id}/ack`);
             console.log(`[${new Date().toISOString()}] Trabajo ${job.id} (${job.type}) impreso.`);
