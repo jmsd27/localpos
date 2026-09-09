@@ -1,0 +1,226 @@
+- generic [active] [ref=f1e1]:
+  - complementary [ref=f1e2]:
+    - generic [ref=f1e3]: puntoYA
+    - navigation [ref=f1e11]:
+      - link "Dashboard" [ref=f1e13] [cursor=pointer]:
+        - /url: https://barlamartina.com.mx/dashboard
+      - generic [ref=f1e18]:
+        - paragraph [ref=f1e19]: Operación
+        - generic [ref=f1e20]:
+          - link "Punto de venta" [ref=f1e21] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/pos
+          - link "Mapa de mesas" [ref=f1e26] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/mesas
+          - link "Ventas" [ref=f1e30] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/ventas
+          - link "Tickets" [ref=f1e35] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/tickets
+          - link "Cortesías" [ref=f1e40] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/cortesias
+          - link "Cocina (KDS)" [ref=f1e44] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/kds
+          - link "Caja" [ref=f1e47] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/caja/movimientos
+          - link "Historial de caja" [ref=f1e52] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/caja/historial
+      - generic [ref=f1e55]:
+        - paragraph [ref=f1e56]: Catálogo
+        - generic [ref=f1e57]:
+          - link "Productos" [ref=f1e58] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/productos
+          - link "Categorías" [ref=f1e62] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/categorias
+          - link "Modificadores" [ref=f1e66] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/modificadores
+          - link "Clientes" [ref=f1e70] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/clientes
+          - link "Menús QR" [ref=f1e76] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/menus-qr
+      - generic [ref=f1e83]:
+        - paragraph [ref=f1e84]: Inventario
+        - generic [ref=f1e85]:
+          - link "Insumos" [ref=f1e86] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/insumos
+          - link "Conteo físico" [ref=f1e90] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/conteo
+          - link "Recetas" [ref=f1e94] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/recetas
+          - link "Movimientos" [ref=f1e99] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/movimientos
+          - link "Kardex" [ref=f1e102] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/kardex
+          - link "Reportes" [ref=f1e107] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/reportes
+      - generic [ref=f1e111]:
+        - paragraph [ref=f1e112]: Compras
+        - generic [ref=f1e113]:
+          - link "Compras" [ref=f1e114] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/compras
+          - link "Proveedores" [ref=f1e120] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/proveedores
+      - generic [ref=f1e126]:
+        - paragraph [ref=f1e127]: Reportes
+        - link "Reportes" [ref=f1e129] [cursor=pointer]:
+          - /url: https://barlamartina.com.mx/reportes
+      - generic [ref=f1e132]:
+        - paragraph [ref=f1e133]: Administración
+        - generic [ref=f1e134]:
+          - link "Usuarios" [ref=f1e135] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/usuarios
+          - link "Terminales" [ref=f1e141] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/terminales
+          - link "Cajas" [ref=f1e146] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/cajas
+          - link "Salones" [ref=f1e151] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/salones
+          - link "Mesas" [ref=f1e157] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/mesas
+          - link "Estaciones" [ref=f1e161] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/estaciones
+          - link "Cola de impresión" [ref=f1e164] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/impresion/cola
+          - link "Respaldos" [ref=f1e169] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/backups
+          - link "Configuración" [ref=f1e173] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/configuracion
+          - link "Auditoría" [ref=f1e177] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/auditoria
+          - link "Manuales" [ref=f1e181] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/manuales
+          - link "Asistencia" [ref=f1e185] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/asistencia
+  - generic [ref=f1e190]:
+    - banner [ref=f1e191]:
+      - generic:
+        - heading [level=1]
+      - button "M Manuel Soto super-admin" [ref=f1e193]:
+        - generic [ref=f1e194]: M
+        - generic [ref=f1e195]:
+          - generic [ref=f1e196]: Manuel Soto
+          - generic [ref=f1e197]: super-admin
+    - main [ref=f1e200]:
+      - generic [ref=f1e202]:
+        - generic [ref=f1e203]:
+          - generic [ref=f1e204]:
+            - link "← Dashboard" [ref=f1e205] [cursor=pointer]:
+              - /url: https://barlamartina.com.mx/dashboard
+            - heading "Diagnóstico y asistencia" [level=1] [ref=f1e206]
+            - paragraph [ref=f1e207]: Estado de la instalación y ayuda para resolver errores. Solo visible para el super administrador.
+          - button "Actualizar" [ref=f1e208]
+        - generic [ref=f1e212]:
+          - generic [ref=f1e213]:
+            - paragraph [ref=f1e214]: Aplicación
+            - generic [ref=f1e215]:
+              - generic [ref=f1e216]:
+                - term [ref=f1e217]: Entorno
+                - definition [ref=f1e218]: production
+              - generic [ref=f1e219]:
+                - term [ref=f1e220]: Debug
+                - definition [ref=f1e221]: desactivado
+              - generic [ref=f1e222]:
+                - term [ref=f1e223]: Rol de sync
+                - definition [ref=f1e224]: source
+              - generic [ref=f1e225]:
+                - term [ref=f1e226]: PHP
+                - definition [ref=f1e227]: 8.4.25
+              - generic [ref=f1e228]:
+                - term [ref=f1e229]: Laravel
+                - definition [ref=f1e230]: 12.67.0
+              - generic [ref=f1e231]:
+                - term [ref=f1e232]: Config cacheada
+                - definition [ref=f1e233]: "no"
+          - generic [ref=f1e234]:
+            - paragraph [ref=f1e235]: Base de datos
+            - generic [ref=f1e236]:
+              - generic [ref=f1e237]:
+                - term [ref=f1e238]: Conexión
+                - definition [ref=f1e239]: ok
+              - generic [ref=f1e240]:
+                - term [ref=f1e241]: Driver
+                - definition [ref=f1e242]: mysql
+              - generic [ref=f1e243]:
+                - term [ref=f1e244]: Esquema
+                - definition [ref=f1e245]: barlamar_pruebas
+              - generic [ref=f1e246]:
+                - term [ref=f1e247]: Migraciones pendientes
+                - definition [ref=f1e248]: "1"
+          - generic [ref=f1e249]:
+            - paragraph [ref=f1e250]: Colas
+            - generic [ref=f1e251]:
+              - generic [ref=f1e252]:
+                - term [ref=f1e253]: Pendientes
+                - definition [ref=f1e254]: "720"
+              - generic [ref=f1e255]:
+                - term [ref=f1e256]: Fallidos
+                - definition [ref=f1e257]: "0"
+          - generic [ref=f1e258]:
+            - paragraph [ref=f1e259]: Almacenamiento
+            - generic [ref=f1e260]:
+              - generic [ref=f1e261]:
+                - term [ref=f1e262]: Log de Laravel
+                - definition [ref=f1e263]: 12.1 KB
+              - generic [ref=f1e264]:
+                - term [ref=f1e265]: Disco libre
+                - definition [ref=f1e266]: 163.8 GB
+              - generic [ref=f1e267]:
+                - term [ref=f1e268]: Disco total
+                - definition [ref=f1e269]: 1 TB
+          - generic [ref=f1e270]:
+            - paragraph [ref=f1e271]: Sincronización
+            - generic [ref=f1e272]:
+              - generic [ref=f1e273]:
+                - term [ref=f1e274]: Rol
+                - definition [ref=f1e275]: source
+              - generic [ref=f1e276]:
+                - term [ref=f1e277]: Outbox pendiente
+                - definition [ref=f1e278]: "696"
+              - generic [ref=f1e279]:
+                - term [ref=f1e280]: Con errores
+                - definition [ref=f1e281]: "0"
+              - generic [ref=f1e282]:
+                - term [ref=f1e283]: Último enviado
+                - definition [ref=f1e284]: nunca
+              - generic [ref=f1e285]:
+                - term [ref=f1e286]: Más antiguo sin enviar
+                - definition [ref=f1e287]: 2026-08-27 21:55:11
+        - generic [ref=f1e288]:
+          - generic [ref=f1e289]:
+            - heading "Errores recientes del log" [level=2] [ref=f1e290]
+            - generic [ref=f1e291]: 12.1 KB
+          - list [ref=f1e292]:
+            - listitem [ref=f1e293]:
+              - generic [ref=f1e294]:
+                - generic [ref=f1e295]:
+                  - generic [ref=f1e296]:
+                    - generic [ref=f1e297]: ERROR
+                    - generic [ref=f1e298]: 2026-09-09 02:52:36
+                  - paragraph [ref=f1e299]: "require(C:\\Users\\Manuel Soto\\AppData\\Local\\Temp\\claude\\c--laragon-www-localpos\\b8585f75-944d-4891-ba3b-6ae7aaaae59a\\scratchpad\\prod-build\\vendor\\composer/installed.php): Failed to open stream: No such file or directory {\"exception\":\"[object] (ErrorException(code: 0): require(C:\\\\Users\\\\Manuel Soto\\\\..."
+                - button "Ver contexto" [ref=f1e301]
+              - group [ref=f1e302]:
+                - generic "Entrada completa" [ref=f1e303] [cursor=pointer]
+            - listitem [ref=f1e304]:
+              - generic [ref=f1e305]:
+                - generic [ref=f1e306]:
+                  - generic [ref=f1e307]:
+                    - generic [ref=f1e308]: ERROR
+                    - generic [ref=f1e309]: 2026-09-09 02:51:20
+                  - paragraph [ref=f1e310]: "Class \"Laravel\\Pail\\PailServiceProvider\" not found {\"exception\":\"[object] (Error(code: 0): Class \\\"Laravel\\\\Pail\\\\PailServiceProvider\\\" not found at C:/Users/Manuel Soto/AppData/Local/Temp/claude/c--laragon-www-localpos/b8585f75-944d-4891-ba3b-6ae7aaaae59a/scratchpad/prod-build/vendor/laravel/framew..."
+                - button "Ver contexto" [ref=f1e312]
+              - group [ref=f1e313]:
+                - generic "Entrada completa" [ref=f1e314] [cursor=pointer]
+            - listitem [ref=f1e315]:
+              - generic [ref=f1e316]:
+                - generic [ref=f1e317]:
+                  - generic [ref=f1e318]:
+                    - generic [ref=f1e319]: ERROR
+                    - generic [ref=f1e320]: 2026-09-09 02:50:53
+                  - paragraph [ref=f1e321]: "Class \"Laravel\\Pail\\PailServiceProvider\" not found {\"exception\":\"[object] (Error(code: 0): Class \\\"Laravel\\\\Pail\\\\PailServiceProvider\\\" not found at C:/Users/Manuel Soto/AppData/Local/Temp/claude/c--laragon-www-localpos/b8585f75-944d-4891-ba3b-6ae7aaaae59a/scratchpad/prod-build/vendor/laravel/framew..."
+                - button "Ver contexto" [ref=f1e323]
+              - group [ref=f1e324]:
+                - generic "Entrada completa" [ref=f1e325] [cursor=pointer]
+        - paragraph [ref=f1e326]:
+          - text: El diagnóstico con IA se activa al configurar
+          - code [ref=f1e327]: ANTHROPIC_API_KEY
+          - text: en el
+          - code [ref=f1e328]: .env
+          - text: . Mientras tanto, «Ver contexto» arma el texto para pegar en Claude Code en tu equipo.

@@ -1,0 +1,214 @@
+- generic [active] [ref=f3e1]:
+  - complementary [ref=f3e2]:
+    - generic [ref=f3e3]: puntoYA
+    - navigation [ref=f3e11]:
+      - link "Dashboard" [ref=f3e13] [cursor=pointer]:
+        - /url: https://barlamartina.com.mx/dashboard
+      - generic [ref=f3e18]:
+        - paragraph [ref=f3e19]: Operación
+        - generic [ref=f3e20]:
+          - link "Punto de venta" [ref=f3e21] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/pos
+          - link "Mapa de mesas" [ref=f3e26] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/mesas
+          - link "Ventas" [ref=f3e30] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/ventas
+          - link "Tickets" [ref=f3e35] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/tickets
+          - link "Cortesías" [ref=f3e40] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/cortesias
+          - link "Cocina (KDS)" [ref=f3e44] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/kds
+          - link "Caja" [ref=f3e47] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/caja/movimientos
+          - link "Historial de caja" [ref=f3e52] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/caja/historial
+      - generic [ref=f3e55]:
+        - paragraph [ref=f3e56]: Catálogo
+        - generic [ref=f3e57]:
+          - link "Productos" [ref=f3e58] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/productos
+          - link "Categorías" [ref=f3e62] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/categorias
+          - link "Modificadores" [ref=f3e66] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/modificadores
+          - link "Clientes" [ref=f3e70] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/clientes
+          - link "Menús QR" [ref=f3e76] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/menus-qr
+      - generic [ref=f3e83]:
+        - paragraph [ref=f3e84]: Inventario
+        - generic [ref=f3e85]:
+          - link "Insumos" [ref=f3e86] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/insumos
+          - link "Conteo físico" [ref=f3e90] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/conteo
+          - link "Recetas" [ref=f3e94] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/recetas
+          - link "Movimientos" [ref=f3e99] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/movimientos
+          - link "Kardex" [ref=f3e102] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/kardex
+          - link "Reportes" [ref=f3e107] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/reportes
+      - generic [ref=f3e111]:
+        - paragraph [ref=f3e112]: Compras
+        - generic [ref=f3e113]:
+          - link "Compras" [ref=f3e114] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/compras
+          - link "Proveedores" [ref=f3e120] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/proveedores
+      - generic [ref=f3e126]:
+        - paragraph [ref=f3e127]: Reportes
+        - link "Reportes" [ref=f3e129] [cursor=pointer]:
+          - /url: https://barlamartina.com.mx/reportes
+      - generic [ref=f3e132]:
+        - paragraph [ref=f3e133]: Administración
+        - generic [ref=f3e134]:
+          - link "Usuarios" [ref=f3e135] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/usuarios
+          - link "Terminales" [ref=f3e141] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/terminales
+          - link "Cajas" [ref=f3e146] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/cajas
+          - link "Salones" [ref=f3e151] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/salones
+          - link "Mesas" [ref=f3e157] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/mesas
+          - link "Estaciones" [ref=f3e161] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/estaciones
+          - link "Cola de impresión" [ref=f3e164] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/impresion/cola
+          - link "Respaldos" [ref=f3e169] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/backups
+          - link "Configuración" [ref=f3e173] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/configuracion
+          - link "Auditoría" [ref=f3e177] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/auditoria
+          - link "Manuales" [ref=f3e181] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/manuales
+          - link "Asistencia" [ref=f3e185] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/asistencia
+  - generic [ref=f3e190]:
+    - banner [ref=f3e191]:
+      - generic:
+        - heading [level=1]
+      - button "M Manuel Soto super-admin" [ref=f3e193]:
+        - generic [ref=f3e194]: M
+        - generic [ref=f3e195]:
+          - generic [ref=f3e196]: Manuel Soto
+          - generic [ref=f3e197]: super-admin
+    - main [ref=f3e200]:
+      - generic [ref=f3e202]:
+        - generic [ref=f3e203]:
+          - generic [ref=f3e204]:
+            - link "← Volver al POS" [ref=f3e205] [cursor=pointer]:
+              - /url: https://barlamartina.com.mx/pos
+            - heading "Mapa de mesas" [level=1] [ref=f3e206]
+          - generic [ref=f3e207]:
+            - generic [ref=f3e208]: Disponible
+            - generic [ref=f3e210]: Ocupada
+            - generic [ref=f3e212]: Reservada
+            - generic [ref=f3e214]: Por cobrar
+        - generic [ref=f3e216]:
+          - heading "Salón principal" [level=2] [ref=f3e217]
+          - generic [ref=f3e218]:
+            - link "Mesa 1 4 pers. Ocupada" [ref=f3e220] [cursor=pointer]:
+              - /url: https://barlamartina.com.mx/mesas/1/comanda
+              - generic [ref=f3e221]:
+                - generic [ref=f3e222]: Mesa 1
+                - generic [ref=f3e223]: 4 pers.
+              - generic [ref=f3e224]: Ocupada
+            - 'link "Mesa 10 4 pers. Ocupada Mesero: Super Admin Abierta: 18:13 $423.40" [ref=f3e226] [cursor=pointer]':
+              - /url: https://barlamartina.com.mx/mesas/10/comanda
+              - generic [ref=f3e227]:
+                - generic [ref=f3e228]: Mesa 10
+                - generic [ref=f3e229]: 4 pers.
+              - generic [ref=f3e230]: Ocupada
+              - generic [ref=f3e231]:
+                - generic [ref=f3e232]: "Mesero: Super Admin"
+                - generic [ref=f3e233]: "Abierta: 18:13"
+                - generic [ref=f3e234]: $423.40
+            - generic [ref=f3e235]:
+              - link "Mesa 11 4 pers. Disponible" [ref=f3e236] [cursor=pointer]:
+                - /url: https://barlamartina.com.mx/mesas/11/comanda
+                - generic [ref=f3e237]:
+                  - generic [ref=f3e238]: Mesa 11
+                  - generic [ref=f3e239]: 4 pers.
+                - generic [ref=f3e240]: Disponible
+              - button "Reservar" [ref=f3e241]
+            - generic [ref=f3e242]:
+              - link "Mesa 12 4 pers. Disponible" [ref=f3e243] [cursor=pointer]:
+                - /url: https://barlamartina.com.mx/mesas/12/comanda
+                - generic [ref=f3e244]:
+                  - generic [ref=f3e245]: Mesa 12
+                  - generic [ref=f3e246]: 4 pers.
+                - generic [ref=f3e247]: Disponible
+              - button "Reservar" [ref=f3e248]
+            - generic [ref=f3e249]:
+              - link "Mesa 2 4 pers. Disponible" [ref=f3e250] [cursor=pointer]:
+                - /url: https://barlamartina.com.mx/mesas/2/comanda
+                - generic [ref=f3e251]:
+                  - generic [ref=f3e252]: Mesa 2
+                  - generic [ref=f3e253]: 4 pers.
+                - generic [ref=f3e254]: Disponible
+              - button "Reservar" [ref=f3e255]
+            - generic [ref=f3e256]:
+              - link "Mesa 3 4 pers. Disponible" [ref=f3e257] [cursor=pointer]:
+                - /url: https://barlamartina.com.mx/mesas/3/comanda
+                - generic [ref=f3e258]:
+                  - generic [ref=f3e259]: Mesa 3
+                  - generic [ref=f3e260]: 4 pers.
+                - generic [ref=f3e261]: Disponible
+              - button "Reservar" [ref=f3e262]
+            - generic [ref=f3e263]:
+              - link "Mesa 4 4 pers. Disponible" [ref=f3e264] [cursor=pointer]:
+                - /url: https://barlamartina.com.mx/mesas/4/comanda
+                - generic [ref=f3e265]:
+                  - generic [ref=f3e266]: Mesa 4
+                  - generic [ref=f3e267]: 4 pers.
+                - generic [ref=f3e268]: Disponible
+              - button "Reservar" [ref=f3e269]
+            - generic [ref=f3e270]:
+              - link "Mesa 5 4 pers. Disponible" [ref=f3e271] [cursor=pointer]:
+                - /url: https://barlamartina.com.mx/mesas/5/comanda
+                - generic [ref=f3e272]:
+                  - generic [ref=f3e273]: Mesa 5
+                  - generic [ref=f3e274]: 4 pers.
+                - generic [ref=f3e275]: Disponible
+              - button "Reservar" [ref=f3e276]
+            - generic [ref=f3e277]:
+              - link "Mesa 6 4 pers. Disponible" [ref=f3e278] [cursor=pointer]:
+                - /url: https://barlamartina.com.mx/mesas/6/comanda
+                - generic [ref=f3e279]:
+                  - generic [ref=f3e280]: Mesa 6
+                  - generic [ref=f3e281]: 4 pers.
+                - generic [ref=f3e282]: Disponible
+              - button "Reservar" [ref=f3e283]
+        - generic [ref=f3e284]:
+          - heading "Terraza" [level=2] [ref=f3e285]
+          - generic [ref=f3e286]:
+            - generic [ref=f3e287]:
+              - link "Mesa 7 2 pers. Disponible" [ref=f3e288] [cursor=pointer]:
+                - /url: https://barlamartina.com.mx/mesas/7/comanda
+                - generic [ref=f3e289]:
+                  - generic [ref=f3e290]: Mesa 7
+                  - generic [ref=f3e291]: 2 pers.
+                - generic [ref=f3e292]: Disponible
+              - button "Reservar" [ref=f3e293]
+            - generic [ref=f3e294]:
+              - link "Mesa 8 2 pers. Disponible" [ref=f3e295] [cursor=pointer]:
+                - /url: https://barlamartina.com.mx/mesas/8/comanda
+                - generic [ref=f3e296]:
+                  - generic [ref=f3e297]: Mesa 8
+                  - generic [ref=f3e298]: 2 pers.
+                - generic [ref=f3e299]: Disponible
+              - button "Reservar" [ref=f3e300]
+            - generic [ref=f3e301]:
+              - link "Mesa 9 2 pers. Disponible" [ref=f3e302] [cursor=pointer]:
+                - /url: https://barlamartina.com.mx/mesas/9/comanda
+                - generic [ref=f3e303]:
+                  - generic [ref=f3e304]: Mesa 9
+                  - generic [ref=f3e305]: 2 pers.
+                - generic [ref=f3e306]: Disponible
+              - button "Reservar" [ref=f3e307]

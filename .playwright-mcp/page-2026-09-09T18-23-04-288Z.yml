@@ -1,0 +1,687 @@
+- generic [ref=f5e1]:
+  - complementary [ref=f5e2]:
+    - generic [ref=f5e3]: puntoYA
+    - navigation [ref=f5e11]:
+      - link "Dashboard" [ref=f5e13] [cursor=pointer]:
+        - /url: https://barlamartina.com.mx/dashboard
+      - generic [ref=f5e18]:
+        - paragraph [ref=f5e19]: Operación
+        - generic [ref=f5e20]:
+          - link "Punto de venta" [ref=f5e21] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/pos
+          - link "Mapa de mesas" [ref=f5e26] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/mesas
+          - link "Ventas" [ref=f5e30] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/ventas
+          - link "Tickets" [ref=f5e35] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/tickets
+          - link "Cortesías" [ref=f5e40] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/cortesias
+          - link "Cocina (KDS)" [ref=f5e44] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/kds
+          - link "Caja" [ref=f5e47] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/caja/movimientos
+          - link "Historial de caja" [ref=f5e52] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/caja/historial
+      - generic [ref=f5e55]:
+        - paragraph [ref=f5e56]: Catálogo
+        - generic [ref=f5e57]:
+          - link "Productos" [ref=f5e58] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/productos
+          - link "Categorías" [ref=f5e62] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/categorias
+          - link "Modificadores" [ref=f5e66] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/modificadores
+          - link "Clientes" [ref=f5e70] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/clientes
+          - link "Menús QR" [ref=f5e76] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/menus-qr
+      - generic [ref=f5e83]:
+        - paragraph [ref=f5e84]: Inventario
+        - generic [ref=f5e85]:
+          - link "Insumos" [ref=f5e86] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/insumos
+          - link "Conteo físico" [ref=f5e90] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/conteo
+          - link "Recetas" [ref=f5e94] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/recetas
+          - link "Movimientos" [ref=f5e99] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/movimientos
+          - link "Kardex" [ref=f5e102] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/kardex
+          - link "Reportes" [ref=f5e107] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/reportes
+      - generic [ref=f5e111]:
+        - paragraph [ref=f5e112]: Compras
+        - generic [ref=f5e113]:
+          - link "Compras" [ref=f5e114] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/compras
+          - link "Proveedores" [ref=f5e120] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/proveedores
+      - generic [ref=f5e126]:
+        - paragraph [ref=f5e127]: Reportes
+        - link "Reportes" [ref=f5e129] [cursor=pointer]:
+          - /url: https://barlamartina.com.mx/reportes
+      - generic [ref=f5e132]:
+        - paragraph [ref=f5e133]: Administración
+        - generic [ref=f5e134]:
+          - link "Usuarios" [ref=f5e135] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/usuarios
+          - link "Terminales" [ref=f5e141] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/terminales
+          - link "Cajas" [ref=f5e146] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/cajas
+          - link "Salones" [ref=f5e151] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/salones
+          - link "Mesas" [ref=f5e157] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/mesas
+          - link "Estaciones" [ref=f5e161] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/estaciones
+          - link "Cola de impresión" [ref=f5e164] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/impresion/cola
+          - link "Respaldos" [ref=f5e169] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/backups
+          - link "Configuración" [ref=f5e173] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/configuracion
+          - link "Auditoría" [ref=f5e177] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/auditoria
+          - link "Manuales" [ref=f5e181] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/manuales
+          - link "Asistencia" [ref=f5e185] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/asistencia
+  - generic [ref=f5e190]:
+    - banner [ref=f5e191]:
+      - generic:
+        - heading [level=1]
+      - button "M Manuel Soto super-admin" [ref=f5e193]:
+        - generic [ref=f5e194]: M
+        - generic [ref=f5e195]:
+          - generic [ref=f5e196]: Manuel Soto
+          - generic [ref=f5e197]: super-admin
+    - main [ref=f5e200]:
+      - generic [ref=f5e201]:
+        - generic [ref=f5e202]:
+          - generic [ref=f5e203]:
+            - generic [ref=f5e204]:
+              - link "← Mapa de mesas" [ref=f5e205] [cursor=pointer]:
+                - /url: https://barlamartina.com.mx/mesas
+              - generic [ref=f5e206]: Mesa 10
+            - generic [ref=f5e207]:
+              - button "Todas" [ref=f5e208]
+              - button "Entradas" [ref=f5e209]
+              - button "Platos fuertes" [ref=f5e210]
+              - button "Postres" [ref=f5e211]
+              - button "Bebidas" [ref=f5e212]
+              - button "Cervezas y cocteles" [ref=f5e213]
+              - button "Comida" [ref=f5e214]
+              - button "Cerveza" [ref=f5e215]
+              - button "Tragos" [ref=f5e216]
+              - button "Whiskey" [ref=f5e217]
+              - button "Tequila" [ref=f5e218]
+              - button "Licores" [ref=f5e219]
+              - button "Vodka" [ref=f5e220]
+              - button "Brandy" [ref=f5e221]
+              - button "Ron" [ref=f5e222]
+            - generic [ref=f5e223]:
+              - button "Solicitar cuenta" [ref=f5e224]
+              - button "Cancelar cuenta" [ref=f5e225]
+              - button "Vaciar mesa" [ref=f5e226]
+          - generic [ref=f5e227]:
+            - searchbox "Buscar producto…" [ref=f5e228]
+            - generic [ref=f5e229]:
+              - button "1800 Cristalino (1 litro) $200.00" [ref=f5e230]:
+                - generic: 1800 Cristalino (1 litro)
+                - generic: $200.00
+              - button "1800 Cristalino (1 onza) $110.00" [ref=f5e231]:
+                - generic: 1800 Cristalino (1 onza)
+                - generic: $110.00
+              - button "1800 Cristalino (botella) $2,100.00" [ref=f5e232]:
+                - generic: 1800 Cristalino (botella)
+                - generic: $2,100.00
+              - button "Absolut (1 litro) $110.00" [ref=f5e233]:
+                - generic: Absolut (1 litro)
+                - generic: $110.00
+              - button "Absolut (1 onza) $55.00" [ref=f5e234]:
+                - generic: Absolut (1 onza)
+                - generic: $55.00
+              - button "Absolut (botella) $1,050.00" [ref=f5e235]:
+                - generic: Absolut (botella)
+                - generic: $1,050.00
+              - button "Absolut Rasberry (1 litro) $110.00" [ref=f5e236]:
+                - generic: Absolut Rasberry (1 litro)
+                - generic: $110.00
+              - button "Absolut Rasberry (1 onza) $55.00" [ref=f5e237]:
+                - generic: Absolut Rasberry (1 onza)
+                - generic: $55.00
+              - button "Absolut Rasberry (botella) $1,050.00" [ref=f5e238]:
+                - generic: Absolut Rasberry (botella)
+                - generic: $1,050.00
+              - button "Agua $40.00" [ref=f5e239]:
+                - generic: Agua
+                - generic: $40.00
+              - button "Agua fresca de horchata $35.00" [ref=f5e240]:
+                - generic: Agua fresca de horchata
+                - generic: $35.00
+              - button "Alitas BBQ (12pz) $135.00" [ref=f5e241]:
+                - generic: Alitas BBQ (12pz)
+                - generic: $135.00
+              - button "Amarre de Amor $150.00" [ref=f5e242]:
+                - generic: Amarre de Amor
+                - generic: $150.00
+              - button "Arrachera a la parrilla $195.00" [ref=f5e243]:
+                - generic: Arrachera a la parrilla
+                - generic: $195.00
+              - button "Azteca de Oro (1 litro) $90.00" [ref=f5e244]:
+                - generic: Azteca de Oro (1 litro)
+                - generic: $90.00
+              - button "Azteca de Oro (1 onza) $40.00" [ref=f5e245]:
+                - generic: Azteca de Oro (1 onza)
+                - generic: $40.00
+              - button "Azteca de Oro (botella) $600.00" [ref=f5e246]:
+                - generic: Azteca de Oro (botella)
+                - generic: $600.00
+              - button "Azulito $130.00" [ref=f5e247]:
+                - generic: Azulito
+                - generic: $130.00
+              - button "Bacardi (1 litro) $100.00" [ref=f5e248]:
+                - generic: Bacardi (1 litro)
+                - generic: $100.00
+              - button "Bacardi (1 onza) $45.00" [ref=f5e249]:
+                - generic: Bacardi (1 onza)
+                - generic: $45.00
+              - button "Bacardi (botella) $900.00" [ref=f5e250]:
+                - generic: Bacardi (botella)
+                - generic: $900.00
+              - button "Bajio (1 litro) $70.00" [ref=f5e251]:
+                - generic: Bajio (1 litro)
+                - generic: $70.00
+              - button "Bajio (1 onza) $40.00" [ref=f5e252]:
+                - generic: Bajio (1 onza)
+                - generic: $40.00
+              - button "Barrilito $35.00" [ref=f5e253]:
+                - generic: Barrilito
+                - generic: $35.00
+              - button "Black Label (1 litro) $180.00" [ref=f5e254]:
+                - generic: Black Label (1 litro)
+                - generic: $180.00
+              - button "Black Label (1 onza) $90.00" [ref=f5e255]:
+                - generic: Black Label (1 onza)
+                - generic: $90.00
+              - button "Black Label (botella) $1,800.00" [ref=f5e256]:
+                - generic: Black Label (botella)
+                - generic: $1,800.00
+              - button "Boneless $190.00" [ref=f5e257]:
+                - generic: Boneless
+                - generic: $190.00
+              - button "Buchanan's (1 litro) $180.00" [ref=f5e258]:
+                - generic: Buchanan's (1 litro)
+                - generic: $180.00
+              - button "Buchanan's (1 onza) $90.00" [ref=f5e259]:
+                - generic: Buchanan's (1 onza)
+                - generic: $90.00
+              - button "Buchanan's (botella) $1,800.00" [ref=f5e260]:
+                - generic: Buchanan's (botella)
+                - generic: $1,800.00
+              - button "Bud Light $35.00" [ref=f5e261]:
+                - generic: Bud Light
+                - generic: $35.00
+              - button "Bud Light (Caguama) $85.00" [ref=f5e262]:
+                - generic: Bud Light (Caguama)
+                - generic: $85.00
+              - button "Café americano $28.00" [ref=f5e263]:
+                - generic: Café americano
+                - generic: $28.00
+              - button "Camarón Seco $100.00" [ref=f5e264]:
+                - generic: Camarón Seco
+                - generic: $100.00
+              - button "Cantarito Chico $65.00" [ref=f5e265]:
+                - generic: Cantarito Chico
+                - generic: $65.00
+              - button "Cantarito Litro $150.00" [ref=f5e266]:
+                - generic: Cantarito Litro
+                - generic: $150.00
+              - button "Capitán Morgan (1 litro) $110.00" [ref=f5e267]:
+                - generic: Capitán Morgan (1 litro)
+                - generic: $110.00
+              - button "Capitán Morgan (1 onza) $50.00" [ref=f5e268]:
+                - generic: Capitán Morgan (1 onza)
+                - generic: $50.00
+              - button "Capitán Morgan (botella) $900.00" [ref=f5e269]:
+                - generic: Capitán Morgan (botella)
+                - generic: $900.00
+              - button "Caribe $55.00" [ref=f5e270]:
+                - generic: Caribe
+                - generic: $55.00
+              - button "Carne Seca $120.00" [ref=f5e271]:
+                - generic: Carne Seca
+                - generic: $120.00
+              - button "Centenario (1 litro) $120.00" [ref=f5e272]:
+                - generic: Centenario (1 litro)
+                - generic: $120.00
+              - button "Centenario (1 onza) $50.00" [ref=f5e273]:
+                - generic: Centenario (1 onza)
+                - generic: $50.00
+              - button "Centenario (botella) $1,100.00" [ref=f5e274]:
+                - generic: Centenario (botella)
+                - generic: $1,100.00
+              - button "Cerveza Corona $45.00" [ref=f5e275]:
+                - generic: Cerveza Corona
+                - generic: $45.00
+              - button "Cerveza Victoria $45.00" [ref=f5e276]:
+                - generic: Cerveza Victoria
+                - generic: $45.00
+              - button "Charola Martina $0.00" [ref=f5e277]:
+                - generic: Charola Martina
+                - generic: $0.00
+              - button "Chicharrones $80.00" [ref=f5e278]:
+                - generic: Chicharrones
+                - generic: $80.00
+              - button "Clamato Preparado $60.00" [ref=f5e279]:
+                - generic: Clamato Preparado
+                - generic: $60.00
+              - button "Clamato Preparado Litro $120.00" [ref=f5e280]:
+                - generic: Clamato Preparado Litro
+                - generic: $120.00
+              - button "Colombia $130.00" [ref=f5e281]:
+                - generic: Colombia
+                - generic: $130.00
+              - button "Corona (Caguama) $85.00" [ref=f5e282]:
+                - generic: Corona (Caguama)
+                - generic: $85.00
+              - button "Corona Extra $40.00" [ref=f5e283]:
+                - generic: Corona Extra
+                - generic: $40.00
+              - button "Corona Mega (Caguama) $95.00" [ref=f5e284]:
+                - generic: Corona Mega (Caguama)
+                - generic: $95.00
+              - button "Cosmopolita $160.00" [ref=f5e285]:
+                - generic: Cosmopolita
+                - generic: $160.00
+              - button "Criollo $130.00" [ref=f5e286]:
+                - generic: Criollo
+                - generic: $130.00
+              - button "Don Julio (1 litro) $190.00" [ref=f5e287]:
+                - generic: Don Julio (1 litro)
+                - generic: $190.00
+              - button "Don Julio (1 onza) $100.00" [ref=f5e288]:
+                - generic: Don Julio (1 onza)
+                - generic: $100.00
+              - button "Don Julio (botella) $1,950.00" [ref=f5e289]:
+                - generic: Don Julio (botella)
+                - generic: $1,950.00
+              - button "Enchiladas verdes $110.00" [ref=f5e290]:
+                - generic: Enchiladas verdes
+                - generic: $110.00
+              - button "Flan napolitano $55.00" [ref=f5e291]:
+                - generic: Flan napolitano
+                - generic: $55.00
+              - button "Fuego $130.00" [ref=f5e292]:
+                - generic: Fuego
+                - generic: $130.00
+              - button "Gin Tonic Frutos Rojos $120.00" [ref=f5e293]:
+                - generic: Gin Tonic Frutos Rojos
+                - generic: $120.00
+              - button "Guacamole con totopos $95.00" [ref=f5e294]:
+                - generic: Guacamole con totopos
+                - generic: $95.00
+              - button "Hamburguesa Doble $150.00" [ref=f5e295]:
+                - generic: Hamburguesa Doble
+                - generic: $150.00
+              - button "Hamburguesa Hawaiana $130.00" [ref=f5e296]:
+                - generic: Hamburguesa Hawaiana
+                - generic: $130.00
+              - button "Hamburguesa Sencilla $120.00" [ref=f5e297]:
+                - generic: Hamburguesa Sencilla
+                - generic: $120.00
+              - button "Helado de vainilla $45.00" [ref=f5e298]:
+                - generic: Helado de vainilla
+                - generic: $45.00
+              - button "Hornitos Reposado (1 litro) $130.00" [ref=f5e299]:
+                - generic: Hornitos Reposado (1 litro)
+                - generic: $130.00
+              - button "Hornitos Reposado (1 onza) $65.00" [ref=f5e300]:
+                - generic: Hornitos Reposado (1 onza)
+                - generic: $65.00
+              - button "Hornitos Reposado (botella) $1,300.00" [ref=f5e301]:
+                - generic: Hornitos Reposado (botella)
+                - generic: $1,300.00
+              - button "Jack Daniel's (1 litro) $150.00" [ref=f5e302]:
+                - generic: Jack Daniel's (1 litro)
+                - generic: $150.00
+              - button "Jack Daniel's (1 onza) $65.00" [ref=f5e303]:
+                - generic: Jack Daniel's (1 onza)
+                - generic: $65.00
+              - button "Jack Daniel's (botella) $1,200.00" [ref=f5e304]:
+                - generic: Jack Daniel's (botella)
+                - generic: $1,200.00
+              - button "Jagger (1 litro) $140.00" [ref=f5e305]:
+                - generic: Jagger (1 litro)
+                - generic: $140.00
+              - button "Jagger (1 onza) $70.00" [ref=f5e306]:
+                - generic: Jagger (1 onza)
+                - generic: $70.00
+              - button "Licor 43 (1 litro) $140.00" [ref=f5e307]:
+                - generic: Licor 43 (1 litro)
+                - generic: $140.00
+              - button "Licor 43 (1 onza) $55.00" [ref=f5e308]:
+                - generic: Licor 43 (1 onza)
+                - generic: $55.00
+              - button "Limonada $32.00" [ref=f5e309]:
+                - generic: Limonada
+                - generic: $32.00
+              - button "Limonada Grande $70.00" [ref=f5e310]:
+                - generic: Limonada Grande
+                - generic: $70.00
+              - button "Maestro Dobel (1 litro) $180.00" [ref=f5e311]:
+                - generic: Maestro Dobel (1 litro)
+                - generic: $180.00
+              - button "Maestro Dobel (1 onza) $90.00" [ref=f5e312]:
+                - generic: Maestro Dobel (1 onza)
+                - generic: $90.00
+              - button "Maestro Dobel (botella) $1,800.00" [ref=f5e313]:
+                - generic: Maestro Dobel (botella)
+                - generic: $1,800.00
+              - button "Margarita $95.00" [ref=f5e314]:
+                - generic: Margarita
+                - generic: $95.00
+              - button "Margarita $100.00" [ref=f5e315]:
+                - generic: Margarita
+                - generic: $100.00
+              - button "Michelada $65.00" [ref=f5e316]:
+                - generic: Michelada
+                - generic: $65.00
+              - button "Michelado $35.00" [ref=f5e317]:
+                - generic: Michelado
+                - generic: $35.00
+              - button "Michelob (Caguama) $90.00" [ref=f5e318]:
+                - generic: Michelob (Caguama)
+                - generic: $90.00
+              - button "Michelob Ultra $40.00" [ref=f5e319]:
+                - generic: Michelob Ultra
+                - generic: $40.00
+              - button "Milanesa de pollo $125.00" [ref=f5e320]:
+                - generic: Milanesa de pollo
+                - generic: $125.00
+              - button "Modelo 0 $40.00" [ref=f5e321]:
+                - generic: Modelo 0
+                - generic: $40.00
+              - button "Modelo Especial $40.00" [ref=f5e322]:
+                - generic: Modelo Especial
+                - generic: $40.00
+              - button "Modelo Especial (Caguama) $95.00" [ref=f5e323]:
+                - generic: Modelo Especial (Caguama)
+                - generic: $95.00
+              - button "Modelo Malta $50.00" [ref=f5e324]:
+                - generic: Modelo Malta
+                - generic: $50.00
+              - button "Modelo Negra $45.00" [ref=f5e325]:
+                - generic: Modelo Negra
+                - generic: $45.00
+              - button "Mojito $105.00" [ref=f5e326]:
+                - generic: Mojito
+                - generic: $105.00
+              - button "Nachos con queso $75.00" [ref=f5e327]:
+                - generic: Nachos con queso
+                - generic: $75.00
+              - button "Nachos Especiales con Bistec $140.00" [ref=f5e328]:
+                - generic: Nachos Especiales con Bistec
+                - generic: $140.00
+              - button "Nachos Sencillos $110.00" [ref=f5e329]:
+                - generic: Nachos Sencillos
+                - generic: $110.00
+              - button "Oso Negro (1 litro) $90.00" [ref=f5e330]:
+                - generic: Oso Negro (1 litro)
+                - generic: $90.00
+              - button "Oso Negro (1 onza) $40.00" [ref=f5e331]:
+                - generic: Oso Negro (1 onza)
+                - generic: $40.00
+              - button "Oso Negro (botella) $550.00" [ref=f5e332]:
+                - generic: Oso Negro (botella)
+                - generic: $550.00
+              - button "Pacifico Clara $40.00" [ref=f5e333]:
+                - generic: Pacifico Clara
+                - generic: $40.00
+              - button "Pacífico Clara (Caguama) $90.00" [ref=f5e334]:
+                - generic: Pacífico Clara (Caguama)
+                - generic: $90.00
+              - button "Pacífico Suave $40.00" [ref=f5e335]:
+                - generic: Pacífico Suave
+                - generic: $40.00
+              - button "Papa Nachos Especiales con Bistec $160.00" [ref=f5e336]:
+                - generic: Papa Nachos Especiales con Bistec
+                - generic: $160.00
+              - button "Papa Nachos Sencillos $120.00" [ref=f5e337]:
+                - generic: Papa Nachos Sencillos
+                - generic: $120.00
+              - button "Papas Francesas $90.00" [ref=f5e338]:
+                - generic: Papas Francesas
+                - generic: $90.00
+              - button "Papas La Martina $280.00" [ref=f5e339]:
+                - generic: Papas La Martina
+                - generic: $280.00
+              - button "Papas Preparadas $110.00" [ref=f5e340]:
+                - generic: Papas Preparadas
+                - generic: $110.00
+              - button "Passport (1 litro) $110.00" [ref=f5e341]:
+                - generic: Passport (1 litro)
+                - generic: $110.00
+              - button "Passport (1 onza) $55.00" [ref=f5e342]:
+                - generic: Passport (1 onza)
+                - generic: $55.00
+              - button "Passport (botella) $750.00" [ref=f5e343]:
+                - generic: Passport (botella)
+                - generic: $750.00
+              - button "Pastel de tres leches $65.00" [ref=f5e344]:
+                - generic: Pastel de tres leches
+                - generic: $65.00
+              - button "Perla Negra $130.00" [ref=f5e345]:
+                - generic: Perla Negra
+                - generic: $130.00
+              - button "Piña Colada $150.00" [ref=f5e346]:
+                - generic: Piña Colada
+                - generic: $150.00
+              - button "Presidente (1 litro) $90.00" [ref=f5e347]:
+                - generic: Presidente (1 litro)
+                - generic: $90.00
+              - button "Presidente (1 onza) $40.00" [ref=f5e348]:
+                - generic: Presidente (1 onza)
+                - generic: $40.00
+              - button "Presidente (botella) $750.00" [ref=f5e349]:
+                - generic: Presidente (botella)
+                - generic: $750.00
+              - button "Queso fundido $85.00" [ref=f5e350]:
+                - generic: Queso fundido
+                - generic: $85.00
+              - button "Red Label (1 litro) $140.00" [ref=f5e351]:
+                - generic: Red Label (1 litro)
+                - generic: $140.00
+              - button "Red Label (1 onza) $65.00" [ref=f5e352]:
+                - generic: Red Label (1 onza)
+                - generic: $65.00
+              - button "Red Label (botella) $1,100.00" [ref=f5e353]:
+                - generic: Red Label (botella)
+                - generic: $1,100.00
+              - button "Refresco $30.00" [ref=f5e354]:
+                - generic: Refresco
+                - generic: $30.00
+              - button "Ron de la Casa (1 litro) $90.00" [ref=f5e355]:
+                - generic: Ron de la Casa (1 litro)
+                - generic: $90.00
+              - button "Ron de la Casa (1 onza) $40.00" [ref=f5e356]:
+                - generic: Ron de la Casa (1 onza)
+                - generic: $40.00
+              - button "Shots de Mango $15.00" [ref=f5e357]:
+                - generic: Shots de Mango
+                - generic: $15.00
+              - button "Skyy $55.00" [ref=f5e358]:
+                - generic: Skyy
+                - generic: $55.00
+              - button "Smirnoff (1 litro) $130.00" [ref=f5e359]:
+                - generic: Smirnoff (1 litro)
+                - generic: $130.00
+              - button "Smirnoff (1 onza) $55.00" [ref=f5e360]:
+                - generic: Smirnoff (1 onza)
+                - generic: $55.00
+              - button "Smirnoff (botella) $1,150.00" [ref=f5e361]:
+                - generic: Smirnoff (botella)
+                - generic: $1,150.00
+              - button "Stella $50.00" [ref=f5e362]:
+                - generic: Stella
+                - generic: $50.00
+              - button "Tacos al pastor (orden) $89.00" [ref=f5e363]:
+                - generic: Tacos al pastor (orden)
+                - generic: $89.00
+              - button "Tacos de Bistec $140.00" [ref=f5e364]:
+                - generic: Tacos de Bistec
+                - generic: $140.00
+              - button "Tacos de Pastor $100.00" [ref=f5e365]:
+                - generic: Tacos de Pastor
+                - generic: $100.00
+              - button "Tequila Sonrise $130.00" [ref=f5e366]:
+                - generic: Tequila Sonrise
+                - generic: $130.00
+              - button "Torres 10 (1 litro) $110.00" [ref=f5e367]:
+                - generic: Torres 10 (1 litro)
+                - generic: $110.00
+              - button "Torres 10 (1 onza) $50.00" [ref=f5e368]:
+                - generic: Torres 10 (1 onza)
+                - generic: $50.00
+              - button "Torres 10 (botella) $900.00" [ref=f5e369]:
+                - generic: Torres 10 (botella)
+                - generic: $900.00
+              - button "Torres 5 (1 litro) $100.00" [ref=f5e370]:
+                - generic: Torres 5 (1 litro)
+                - generic: $100.00
+              - button "Torres 5 (1 onza) $45.00" [ref=f5e371]:
+                - generic: Torres 5 (1 onza)
+                - generic: $45.00
+              - button "Torres 5 (botella) $750.00" [ref=f5e372]:
+                - generic: Torres 5 (botella)
+                - generic: $750.00
+              - button "Tradicional Plata (1 litro) $135.00" [ref=f5e373]:
+                - generic: Tradicional Plata (1 litro)
+                - generic: $135.00
+              - button "Tradicional Plata (1 onza) $70.00" [ref=f5e374]:
+                - generic: Tradicional Plata (1 onza)
+                - generic: $70.00
+              - button "Tradicional Plata (botella) $1,350.00" [ref=f5e375]:
+                - generic: Tradicional Plata (botella)
+                - generic: $1,350.00
+              - button "Tradicional Rep (1 litro) $125.00" [ref=f5e376]:
+                - generic: Tradicional Rep (1 litro)
+                - generic: $125.00
+              - button "Tradicional Rep (1 onza) $60.00" [ref=f5e377]:
+                - generic: Tradicional Rep (1 onza)
+                - generic: $60.00
+              - button "Tradicional Rep (botella) $1,250.00" [ref=f5e378]:
+                - generic: Tradicional Rep (botella)
+                - generic: $1,250.00
+              - button "Victoria $40.00" [ref=f5e379]:
+                - generic: Victoria
+                - generic: $40.00
+              - button "Victoria (Caguama) $85.00" [ref=f5e380]:
+                - generic: Victoria (Caguama)
+                - generic: $85.00
+              - button "Victoria Mega (Caguama) $95.00" [ref=f5e381]:
+                - generic: Victoria Mega (Caguama)
+                - generic: $95.00
+              - button "Zaverich (1 litro) $80.00" [ref=f5e382]:
+                - generic: Zaverich (1 litro)
+                - generic: $80.00
+              - button "Zaverich (1 onza) $30.00" [ref=f5e383]:
+                - generic: Zaverich (1 onza)
+                - generic: $30.00
+              - button "Zaverich (botella) $450.00" [ref=f5e384]:
+                - generic: Zaverich (botella)
+                - generic: $450.00
+          - generic [ref=f5e385]:
+            - heading "Comanda" [level=2] [ref=f5e386]
+            - generic [ref=f5e387]:
+              - generic [ref=f5e388]:
+                - generic [ref=f5e389]:
+                  - generic [ref=f5e390]:
+                    - generic [ref=f5e391]: 1.00 × 1800 Cristalino (1 onza)
+                    - generic [ref=f5e392]: Enviado
+                  - button "×" [ref=f5e393]
+                - generic [ref=f5e394]: $110.00
+              - generic [ref=f5e395]:
+                - generic [ref=f5e396]:
+                  - generic [ref=f5e397]:
+                    - generic [ref=f5e398]: 1.00 × Agua fresca de horchata
+                    - generic [ref=f5e399]: + Chico
+                    - generic [ref=f5e400]: Enviado
+                  - button "×" [ref=f5e401]
+                - generic [ref=f5e402]: $35.00
+              - generic [ref=f5e403]:
+                - generic [ref=f5e404]:
+                  - generic [ref=f5e405]:
+                    - generic [ref=f5e406]: 1.00 × Alitas BBQ (12pz)
+                    - generic [ref=f5e407]: Enviado
+                  - button "×" [ref=f5e408]
+                - generic [ref=f5e409]: $135.00
+              - generic [ref=f5e410]:
+                - generic [ref=f5e411]:
+                  - generic [ref=f5e412]:
+                    - generic [ref=f5e413]: 1.00 × Queso fundido
+                    - generic [ref=f5e414]: Enviado
+                  - button "×" [ref=f5e415]
+                - generic [ref=f5e416]: $85.00
+            - generic [ref=f5e417]:
+              - generic [ref=f5e418]:
+                - generic [ref=f5e419]: Subtotal
+                - generic [ref=f5e420]: $365.00
+              - generic [ref=f5e421]:
+                - generic [ref=f5e422]: IVA
+                - generic [ref=f5e423]: $58.40
+              - generic [ref=f5e424]:
+                - generic [ref=f5e425]: Total
+                - generic [ref=f5e426]: $423.40
+            - button "Cobrar mesa" [active] [ref=f5e427]
+        - generic [ref=f5e429]:
+          - heading "Cobrar Mesa 10" [level=3] [ref=f5e430]
+          - generic [ref=f5e431]:
+            - generic [ref=f5e432]: Cliente (opcional)
+            - combobox [ref=f5e433]:
+              - option "Sin cliente" [selected]
+              - option "Carlos Ramírez"
+              - option "Juan Pérez"
+              - option "María González"
+          - generic [ref=f5e434]:
+            - generic [ref=f5e435]: Cortesía / cupón
+            - generic [ref=f5e436]:
+              - textbox "CÓDIGO" [ref=f5e437]
+              - button "Aplicar" [ref=f5e438]
+          - generic [ref=f5e439]:
+            - combobox [ref=f5e440]:
+              - option "Sin descuento manual" [selected]
+              - option "%"
+              - option "$"
+            - spinbutton "Valor" [ref=f5e441]
+          - generic [ref=f5e442]:
+            - generic [ref=f5e443]: Propina
+            - combobox [ref=f5e444]:
+              - option "Sin propina" [selected]
+              - option "5% del total"
+              - option "10% del total"
+              - option "15% del total"
+              - option "20% del total"
+              - option "Otro monto…"
+          - generic [ref=f5e445]:
+            - generic [ref=f5e446]: Total a cobrar
+            - generic [ref=f5e447]: $423.40
+          - generic [ref=f5e448]:
+            - generic [ref=f5e449]:
+              - combobox [ref=f5e450]:
+                - option "Efectivo" [selected]
+                - option "Tarjeta"
+                - option "Transferencia"
+                - option "Crédito"
+              - spinbutton "Monto" [ref=f5e451]: "423.40"
+              - spinbutton "Recibido" [ref=f5e452]
+            - button "+ Agregar método de pago" [ref=f5e453]
+          - generic [ref=f5e454]:
+            - generic [ref=f5e455]: Pagado
+            - generic [ref=f5e456]: $423.40
+          - generic [ref=f5e457]:
+            - button "Confirmar cobro" [ref=f5e458]
+            - button "Cancelar" [ref=f5e459]

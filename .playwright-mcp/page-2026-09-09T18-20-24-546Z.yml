@@ -1,0 +1,112 @@
+- generic [active] [ref=f2e1]:
+  - complementary [ref=f2e2]:
+    - generic [ref=f2e3]: puntoYA
+    - navigation [ref=f2e11]:
+      - link "Dashboard" [ref=f2e13] [cursor=pointer]:
+        - /url: https://barlamartina.com.mx/dashboard
+      - generic [ref=f2e18]:
+        - paragraph [ref=f2e19]: Operación
+        - generic [ref=f2e20]:
+          - link "Punto de venta" [ref=f2e21] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/pos
+          - link "Mapa de mesas" [ref=f2e26] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/mesas
+          - link "Ventas" [ref=f2e30] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/ventas
+          - link "Tickets" [ref=f2e35] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/tickets
+          - link "Cortesías" [ref=f2e40] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/cortesias
+          - link "Cocina (KDS)" [ref=f2e44] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/kds
+          - link "Caja" [ref=f2e47] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/caja/movimientos
+          - link "Historial de caja" [ref=f2e52] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/caja/historial
+      - generic [ref=f2e55]:
+        - paragraph [ref=f2e56]: Catálogo
+        - generic [ref=f2e57]:
+          - link "Productos" [ref=f2e58] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/productos
+          - link "Categorías" [ref=f2e62] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/categorias
+          - link "Modificadores" [ref=f2e66] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/modificadores
+          - link "Clientes" [ref=f2e70] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/clientes
+          - link "Menús QR" [ref=f2e76] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/menus-qr
+      - generic [ref=f2e83]:
+        - paragraph [ref=f2e84]: Inventario
+        - generic [ref=f2e85]:
+          - link "Insumos" [ref=f2e86] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/insumos
+          - link "Conteo físico" [ref=f2e90] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/conteo
+          - link "Recetas" [ref=f2e94] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/recetas
+          - link "Movimientos" [ref=f2e99] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/movimientos
+          - link "Kardex" [ref=f2e102] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/kardex
+          - link "Reportes" [ref=f2e107] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/reportes
+      - generic [ref=f2e111]:
+        - paragraph [ref=f2e112]: Compras
+        - generic [ref=f2e113]:
+          - link "Compras" [ref=f2e114] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/compras
+          - link "Proveedores" [ref=f2e120] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/proveedores
+      - generic [ref=f2e126]:
+        - paragraph [ref=f2e127]: Reportes
+        - link "Reportes" [ref=f2e129] [cursor=pointer]:
+          - /url: https://barlamartina.com.mx/reportes
+      - generic [ref=f2e132]:
+        - paragraph [ref=f2e133]: Administración
+        - generic [ref=f2e134]:
+          - link "Usuarios" [ref=f2e135] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/usuarios
+          - link "Terminales" [ref=f2e141] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/terminales
+          - link "Cajas" [ref=f2e146] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/cajas
+          - link "Salones" [ref=f2e151] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/salones
+          - link "Mesas" [ref=f2e157] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/mesas
+          - link "Estaciones" [ref=f2e161] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/estaciones
+          - link "Cola de impresión" [ref=f2e164] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/impresion/cola
+          - link "Respaldos" [ref=f2e169] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/backups
+          - link "Configuración" [ref=f2e173] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/configuracion
+          - link "Auditoría" [ref=f2e177] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/auditoria
+          - link "Manuales" [ref=f2e181] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/manuales
+          - link "Asistencia" [ref=f2e185] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/asistencia
+  - generic [ref=f2e190]:
+    - banner [ref=f2e191]:
+      - generic:
+        - heading [level=1]
+      - button "M Manuel Soto super-admin" [ref=f2e193]:
+        - generic [ref=f2e194]: M
+        - generic [ref=f2e195]:
+          - generic [ref=f2e196]: Manuel Soto
+          - generic [ref=f2e197]: super-admin
+    - main [ref=f2e200]:
+      - generic [ref=f2e201]:
+        - heading "Selecciona tu terminal" [level=1] [ref=f2e202]
+        - generic [ref=f2e203]:
+          - button "BARRA BARRA" [ref=f2e204]:
+            - generic [ref=f2e205]: BARRA
+            - generic [ref=f2e206]: BARRA
+          - button "COCINA COC-1" [ref=f2e207]:
+            - generic [ref=f2e208]: COCINA
+            - generic [ref=f2e209]: COC-1
+        - link "← Volver al dashboard" [ref=f2e210] [cursor=pointer]:
+          - /url: https://barlamartina.com.mx/dashboard

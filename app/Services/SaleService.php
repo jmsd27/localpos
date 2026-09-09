@@ -12,6 +12,7 @@ use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderCancellation;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use InvalidArgumentException;
 
 class SaleService
@@ -224,7 +225,13 @@ class SaleService
                 }
             }
 
-            $order->update([
+            $tipPercent = array_key_exists('tip_percent', $data)
+                ? ($data['tip_percent'] !== null && (float) $data['tip_percent'] > 0 ? round((float) $data['tip_percent'], 2) : null)
+                : ($order->tip_percent !== null ? (float) $order->tip_percent : null);
+
+            $tipAmount = round($data['tip_amount'] ?? (float) $order->tip_amount, 2);
+
+            $update = [
                 'discount_type' => $coupon
                     ? $coupon->discount_type->value
                     : (array_key_exists('discount_type', $data) ? $data['discount_type'] : $order->discount_type),
@@ -232,14 +239,23 @@ class SaleService
                     ? (float) $coupon->discount_value
                     : (array_key_exists('discount_value', $data) ? $data['discount_value'] : $order->discount_value),
                 'coupon_id' => $coupon?->id ?? ($data['coupon_id'] ?? $order->coupon_id),
-                'tip_amount' => round($data['tip_amount'] ?? (float) $order->tip_amount, 2),
-                'tip_percent' => array_key_exists('tip_percent', $data)
-                    ? ($data['tip_percent'] !== null && (float) $data['tip_percent'] > 0 ? round((float) $data['tip_percent'], 2) : null)
-                    : $order->tip_percent,
+                'tip_amount' => $tipAmount,
                 'terminal_id' => $data['terminal_id'] ?? $order->terminal_id,
                 'cash_register_session_id' => $data['cash_register_session_id'] ?? $order->cash_register_session_id,
                 'customer_id' => $data['customer_id'] ?? $order->customer_id,
-            ]);
+            ];
+
+            if (self::ordersHaveTipPercentColumn()) {
+                $update['tip_percent'] = $tipPercent;
+            } elseif ($tipPercent !== null) {
+                // Producción quedó con el código nuevo pero sin la migración
+                // `add_tip_percent_to_orders_table`: en vez de tirar 500 al
+                // cobrar, plegamos el % a monto fijo sobre el total previo.
+                $base = (float) $order->subtotal - (float) $order->discount_amount + (float) $order->tax_amount;
+                $update['tip_amount'] = round($base * ($tipPercent / 100), 2);
+            }
+
+            $order->update($update);
 
             if ($coupon) {
                 $coupon->increment('used_count');
@@ -392,6 +408,22 @@ class SaleService
 
             return $order->fresh();
         });
+    }
+
+    /**
+     * ¿Existe `orders.tip_percent`? La migración `add_tip_percent_to_orders_table`
+     * puede no haber corrido si se subió el código nuevo sin migrar; en ese caso
+     * el cobro sigue funcionando (la propina en % se guarda como monto fijo).
+     * No se cachea a propósito: así se recupera solo apenas corran la migración,
+     * sin reiniciar PHP.
+     */
+    private static function ordersHaveTipPercentColumn(): bool
+    {
+        try {
+            return Schema::hasColumn('orders', 'tip_percent');
+        } catch (\Throwable) {
+            return false;
+        }
     }
 
     private function recalculateTotals(Order $order): void
