@@ -353,8 +353,8 @@ new #[Layout('layouts.app')] class extends Component
 };
 ?>
 
-<div x-data="offlineComanda({{ $table->id }}, {{ $order?->id ?? 'null' }})" wire:ignore.self class="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white text-gray-900 lg:h-[80vh] lg:flex-row">
-    <template x-if="$store.offline.online">
+<div x-data="offlineComanda({{ $table->id }}, {{ $order?->id ?? 'null' }})" class="flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white text-gray-900 lg:h-[80vh] lg:flex-row">
+    <div x-show="$store.offline.online">
     <div class="flex flex-1 flex-col lg:flex-row">
     <div class="flex flex-col gap-3 border-b border-gray-200 bg-white/50 p-4 lg:w-56 lg:shrink-0 lg:overflow-y-auto lg:border-b-0 lg:border-r">
         <div>
@@ -480,9 +480,9 @@ new #[Layout('layouts.app')] class extends Component
         @endif
     </div>
     </div>
-    </template>
+    </div>
 
-    <template x-if="!$store.offline.online">
+    <div x-show="!$store.offline.online">
         <div class="flex flex-1 flex-col p-4">
             <div class="mb-4 rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 text-sm text-slate-700">
                 Sin conexión — este pedido se manda solo cuando vuelva internet. Todavía no tiene folio ni se mandó a cocina/barra.
@@ -526,7 +526,7 @@ new #[Layout('layouts.app')] class extends Component
                 </button>
             </div>
         </div>
-    </template>
+    </div>
 
     {{-- Modal de modificadores --}}
     @if ($modifierProduct)
