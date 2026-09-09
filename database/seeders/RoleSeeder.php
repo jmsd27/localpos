@@ -13,7 +13,7 @@ class RoleSeeder extends Seeder
         $roles = [
             RoleName::SuperAdmin->value => ['*'],
             RoleName::Administrador->value => [
-                'ventas.crear', 'ventas.ver', 'ventas.editar', 'ventas.anular', 'ventas.aplicar_descuento',
+                'ventas.crear', 'ventas.ver', 'ventas.editar', 'ventas.anular', 'ventas.aplicar_descuento', 'ventas.cancelar_cuenta',
                 'cortesias.ver', 'cortesias.crear', 'cortesias.editar', 'cortesias.eliminar',
                 'caja.abrir', 'caja.cerrar', 'caja.ver_movimientos', 'caja.registrar_movimiento',
                 'inventario.ver', 'inventario.ajustar', 'inventario.ver_kardex',
@@ -26,19 +26,19 @@ class RoleSeeder extends Seeder
                 'configuracion.editar', 'configuracion.ver',
             ],
             RoleName::Encargado->value => [
-                'ventas.ver', 'ventas.editar', 'ventas.anular', 'ventas.aplicar_descuento',
+                'ventas.ver', 'ventas.editar', 'ventas.anular', 'ventas.aplicar_descuento', 'ventas.cancelar_cuenta',
                 'cortesias.ver', 'cortesias.crear', 'cortesias.editar',
                 'caja.ver_movimientos', 'inventario.ver', 'inventario.ajustar', 'inventario.ver_kardex',
                 'productos.ver', 'clientes.crear', 'clientes.editar', 'clientes.ver',
                 'compras.ver', 'cocina.ver', 'cocina.gestionar', 'reportes.ver',
             ],
             RoleName::Cajero->value => [
-                'ventas.crear', 'ventas.ver', 'ventas.aplicar_descuento',
+                'ventas.crear', 'ventas.ver', 'ventas.aplicar_descuento', 'ventas.cancelar_cuenta',
                 'caja.abrir', 'caja.cerrar', 'caja.registrar_movimiento',
                 'clientes.crear', 'clientes.ver',
             ],
             RoleName::Mesero->value => [
-                'ventas.crear', 'ventas.ver', 'clientes.crear', 'clientes.ver',
+                'ventas.crear', 'ventas.ver', 'ventas.cancelar_cuenta', 'clientes.crear', 'clientes.ver',
             ],
             RoleName::Cocina->value => [
                 'cocina.ver', 'cocina.gestionar',
@@ -61,7 +61,7 @@ class RoleSeeder extends Seeder
             ],
             // Director: dueño/gerente general, mismo alcance que Administrador.
             RoleName::Director->value => [
-                'ventas.crear', 'ventas.ver', 'ventas.editar', 'ventas.anular', 'ventas.aplicar_descuento',
+                'ventas.crear', 'ventas.ver', 'ventas.editar', 'ventas.anular', 'ventas.aplicar_descuento', 'ventas.cancelar_cuenta',
                 'cortesias.ver', 'cortesias.crear', 'cortesias.editar', 'cortesias.eliminar',
                 'caja.abrir', 'caja.cerrar', 'caja.ver_movimientos', 'caja.registrar_movimiento',
                 'inventario.ver', 'inventario.ajustar', 'inventario.ver_kardex',

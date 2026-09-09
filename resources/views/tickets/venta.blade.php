@@ -77,7 +77,7 @@
         @endif
         <tr><td>IVA</td><td class="right">${{ number_format((float) $order->tax_amount, 2) }}</td></tr>
         @if ((float) $order->tip_amount > 0)
-            <tr><td>Propina</td><td class="right">${{ number_format((float) $order->tip_amount, 2) }}</td></tr>
+            <tr><td>Propina{{ $order->tip_percent > 0 ? ' ('.rtrim(rtrim(number_format((float) $order->tip_percent, 2), '0'), '.').'%)' : '' }}</td><td class="right">${{ number_format((float) $order->tip_amount, 2) }}</td></tr>
         @endif
         <tr class="grand"><td>Total</td><td class="right">${{ number_format((float) $order->total, 2) }}</td></tr>
     </table>

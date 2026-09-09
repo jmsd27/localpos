@@ -14,7 +14,7 @@ class PermissionSeeder extends Seeder
      * @var list<string>
      */
     public const PERMISSIONS = [
-        'ventas.crear', 'ventas.ver', 'ventas.editar', 'ventas.anular', 'ventas.aplicar_descuento',
+        'ventas.crear', 'ventas.ver', 'ventas.editar', 'ventas.anular', 'ventas.aplicar_descuento', 'ventas.cancelar_cuenta',
         'cortesias.ver', 'cortesias.crear', 'cortesias.editar', 'cortesias.eliminar',
         'caja.abrir', 'caja.cerrar', 'caja.ver_movimientos', 'caja.registrar_movimiento',
         'inventario.ver', 'inventario.ajustar', 'inventario.ver_kardex',

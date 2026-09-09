@@ -9,6 +9,7 @@ use App\Models\ProductCategory;
 use App\Models\Table;
 use App\Models\Terminal;
 use App\Services\CashRegisterService;
+use App\Services\ManagerPinService;
 use App\Services\PrintService;
 use App\Services\SaleService;
 use Illuminate\Support\Facades\Auth;
@@ -49,6 +50,9 @@ new #[Layout('layouts.app')] class extends Component
 
     public string $tipAmount = '0';
 
+    /** '0' = sin propina, '5'/'10'/'15'/'20' = % del total, 'otro' = monto manual. */
+    public string $tipPercent = '0';
+
     public string $couponCode = '';
 
     public ?int $couponId = null;
@@ -60,6 +64,14 @@ new #[Layout('layouts.app')] class extends Component
     public array $paymentRows = [];
 
     public ?string $checkoutError = null;
+
+    public bool $showCancelAccount = false;
+
+    public string $cancelPin = '';
+
+    public string $cancelReason = '';
+
+    public ?string $cancelAccountError = null;
 
     public ?string $completedFolio = null;
 
@@ -285,7 +297,7 @@ new #[Layout('layouts.app')] class extends Component
 
         $this->checkoutError = null;
         $this->paymentRows = [
-            ['method' => 'efectivo', 'amount' => number_format((float) $order->total, 2, '.', ''), 'received_amount' => ''],
+            ['method' => 'efectivo', 'amount' => number_format($this->tipBase() + $this->tipValue(), 2, '.', ''), 'received_amount' => ''],
         ];
         $this->showCheckout = true;
     }
@@ -293,6 +305,123 @@ new #[Layout('layouts.app')] class extends Component
     public function closeCheckout(): void
     {
         $this->showCheckout = false;
+    }
+
+    public function updatedTipPercent(): void
+    {
+        $this->syncSinglePaymentAmount();
+    }
+
+    public function updatedTipAmount(): void
+    {
+        $this->syncSinglePaymentAmount();
+    }
+
+    private function syncSinglePaymentAmount(): void
+    {
+        if ($this->showCheckout && count($this->paymentRows) === 1) {
+            $this->paymentRows[0]['amount'] = number_format($this->tipBase() + $this->tipValue(), 2, '.', '');
+        }
+    }
+
+    private function currentOrder(): ?Order
+    {
+        return $this->orderId ? Order::find($this->orderId) : null;
+    }
+
+    /** Descuento (cortesía o manual) que se aplicará al cobrar, en pesos. */
+    public function previewDiscount(): float
+    {
+        $order = $this->currentOrder();
+
+        if (! $order || $this->discountType === '' || $this->discountValue === '' || ! is_numeric($this->discountValue)) {
+            return 0.0;
+        }
+
+        $subtotal = (float) $order->subtotal;
+        $value = (float) $this->discountValue;
+
+        return round($this->discountType === 'percentage' ? $subtotal * ($value / 100) : min($value, $subtotal), 2);
+    }
+
+    /** Base sobre la que se calcula la propina en %: total antes de propina. */
+    public function tipBase(): float
+    {
+        $order = $this->currentOrder();
+
+        if (! $order) {
+            return 0.0;
+        }
+
+        return round((float) $order->subtotal - $this->previewDiscount() + (float) $order->tax_amount, 2);
+    }
+
+    public function tipValue(): float
+    {
+        if ($this->tipPercent === 'otro') {
+            return round((float) ($this->tipAmount ?: 0), 2);
+        }
+
+        $pct = (float) $this->tipPercent;
+
+        return $pct > 0 ? round($this->tipBase() * ($pct / 100), 2) : 0.0;
+    }
+
+    public function openCancelAccount(): void
+    {
+        abort_unless(Auth::user()->can('ventas.cancelar_cuenta'), 403);
+
+        $this->cancelPin = '';
+        $this->cancelReason = '';
+        $this->cancelAccountError = null;
+        $this->showCancelAccount = true;
+    }
+
+    public function closeCancelAccount(): void
+    {
+        $this->showCancelAccount = false;
+    }
+
+    public function confirmCancelAccount(SaleService $sales, ManagerPinService $pins): void
+    {
+        abort_unless(Auth::user()->can('ventas.cancelar_cuenta'), 403);
+
+        $this->cancelAccountError = null;
+
+        if (! $this->orderId) {
+            $this->showCancelAccount = false;
+
+            return;
+        }
+
+        $reason = trim($this->cancelReason);
+
+        if ($reason === '') {
+            $this->cancelAccountError = 'Escribí el motivo de la cancelación.';
+
+            return;
+        }
+
+        $businessId = Auth::user()->businessId();
+        $manager = $pins->resolveAuthorizer($businessId, $this->cancelPin);
+
+        if (! $manager) {
+            $this->cancelAccountError = $pins->hasAuthorizer($businessId)
+                ? 'Clave de administrador incorrecta.'
+                : 'Ningún administrador tiene clave de autorización cargada. Cargala en Administración → Usuarios.';
+
+            return;
+        }
+
+        try {
+            $sales->cancelAccount(Order::findOrFail($this->orderId), Auth::id(), $manager->id, $reason);
+        } catch (InvalidArgumentException $e) {
+            $this->cancelAccountError = $e->getMessage();
+
+            return;
+        }
+
+        $this->redirectRoute('mesas.mapa', navigate: true);
     }
 
     public function aplicarCortesia(): void
@@ -374,11 +503,12 @@ new #[Layout('layouts.app')] class extends Component
                 'discount_type' => $this->discountType !== '' ? $this->discountType : null,
                 'discount_value' => $this->discountValue !== '' ? (float) $this->discountValue : null,
                 'coupon_id' => $this->couponId,
-                'tip_amount' => (float) ($this->tipAmount ?: 0),
+                'tip_amount' => $this->tipValue(),
+                'tip_percent' => ($this->tipPercent !== 'otro' && (float) $this->tipPercent > 0) ? (float) $this->tipPercent : null,
                 'user_id' => $user->id,
                 'customer_id' => $this->customerId,
             ]);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $this->checkoutError = $e->getMessage();
 
             return;
@@ -459,6 +589,9 @@ new #[Layout('layouts.app')] class extends Component
         <div class="space-y-2 lg:mt-auto lg:pt-4">
             @if ($order)
                 <button wire:click="requestBill" class="w-full rounded-lg border border-gray-300 py-2 text-xs text-gray-600 hover:bg-white">Solicitar cuenta</button>
+                @can('ventas.cancelar_cuenta')
+                    <button wire:click="openCancelAccount" class="w-full rounded-lg border border-red-300 bg-red-50 py-2 text-xs font-medium text-red-700 hover:bg-red-100">Cancelar cuenta</button>
+                @endcan
             @endif
             <button wire:click="voidTable" wire:confirm="¿Vaciar esta mesa? Se perderá la comanda si no se ha cobrado." class="w-full rounded-lg border border-red-200 py-2 text-xs text-red-600 hover:bg-red-50">Vaciar mesa</button>
         </div>
@@ -696,7 +829,24 @@ new #[Layout('layouts.app')] class extends Component
 
                 <div class="mb-3">
                     <label class="mb-1 block text-sm text-gray-600">Propina</label>
-                    <input type="number" step="0.01" min="0" wire:model="tipAmount" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+                    <select wire:model.live="tipPercent" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+                        <option value="0">Sin propina</option>
+                        <option value="5">5% del total</option>
+                        <option value="10">10% del total</option>
+                        <option value="15">15% del total</option>
+                        <option value="20">20% del total</option>
+                        <option value="otro">Otro monto…</option>
+                    </select>
+                    @if ($tipPercent === 'otro')
+                        <input type="number" step="0.01" min="0" wire:model.live="tipAmount" placeholder="Monto de propina" class="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+                    @elseif ((float) $tipPercent > 0)
+                        <p class="mt-1 text-xs text-gray-400">{{ $tipPercent }}% de ${{ number_format($this->tipBase(), 2) }} = ${{ number_format($this->tipValue(), 2) }}</p>
+                    @endif
+                </div>
+
+                <div class="mb-3 flex justify-between border-t border-gray-200 pt-2 text-sm font-semibold text-gray-900">
+                    <span>Total a cobrar</span>
+                    <span>${{ number_format($this->tipBase() + $this->tipValue(), 2) }}</span>
                 </div>
 
                 <div class="mb-3 space-y-2">
@@ -728,6 +878,35 @@ new #[Layout('layouts.app')] class extends Component
                 <div class="flex gap-2">
                     <button wire:click="checkout" class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold hover:bg-emerald-500 text-white">Confirmar cobro</button>
                     <button wire:click="closeCheckout" class="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-white">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- Modal: cancelar cuenta (requiere clave de administrador) --}}
+    @if ($showCancelAccount)
+        <div class="fixed inset-0 z-40 flex items-center justify-center bg-black/70 p-4">
+            <div class="w-full max-w-md rounded-xl border border-red-200 bg-white p-6">
+                <h3 class="mb-1 text-lg font-semibold text-red-700">Cancelar la cuenta de {{ $table->name }}</h3>
+                <p class="mb-4 text-xs text-gray-500">Se anula la comanda completa. Necesita la clave de un administrador.</p>
+
+                @if ($cancelAccountError)
+                    <p class="mb-3 text-sm text-red-600">{{ $cancelAccountError }}</p>
+                @endif
+
+                <div class="mb-3">
+                    <label class="mb-1 block text-sm text-gray-600">Motivo</label>
+                    <input type="text" wire:model="cancelReason" placeholder="Ej.: el cliente se retiró" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+                </div>
+
+                <div class="mb-4">
+                    <label class="mb-1 block text-sm text-gray-600">Clave de administrador</label>
+                    <input type="password" wire:model="cancelPin" autocomplete="off" inputmode="numeric" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+                </div>
+
+                <div class="flex gap-2">
+                    <button wire:click="confirmCancelAccount" class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700">Cancelar cuenta</button>
+                    <button wire:click="closeCancelAccount" class="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-white">Volver</button>
                 </div>
             </div>
         </div>

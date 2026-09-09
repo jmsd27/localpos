@@ -35,6 +35,7 @@ class Order extends Model
         'discount_amount',
         'tax_amount',
         'tip_amount',
+        'tip_percent',
         'total',
         'notes',
         'completed_at',
@@ -51,6 +52,7 @@ class Order extends Model
             'discount_amount' => 'decimal:2',
             'tax_amount' => 'decimal:2',
             'tip_amount' => 'decimal:2',
+            'tip_percent' => 'decimal:2',
             'total' => 'decimal:2',
             'completed_at' => 'datetime',
         ];

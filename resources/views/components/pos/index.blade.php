@@ -44,6 +44,9 @@ new #[Layout('layouts.app')] class extends Component
 
     public string $tipAmount = '0';
 
+    /** '0' = sin propina, '5'/'10'/'15'/'20' = % del total, 'otro' = monto manual. */
+    public string $tipPercent = '0';
+
     public string $couponCode = '';
 
     public ?int $couponId = null;
@@ -216,6 +219,7 @@ new #[Layout('layouts.app')] class extends Component
         $this->discountType = '';
         $this->discountValue = '';
         $this->tipAmount = '0';
+        $this->tipPercent = '0';
         $this->couponCode = '';
         $this->couponId = null;
         $this->couponName = null;
@@ -306,9 +310,26 @@ new #[Layout('layouts.app')] class extends Component
         return round($this->discountType === 'percentage' ? $subtotal * ($value / 100) : min($value, $subtotal), 2);
     }
 
+    /** Base sobre la que se calcula la propina en %: total antes de propina. */
+    public function tipBase(): float
+    {
+        return round($this->subtotal() - $this->discountAmount() + $this->taxAmount(), 2);
+    }
+
+    public function tipValue(): float
+    {
+        if ($this->tipPercent === 'otro') {
+            return round((float) ($this->tipAmount ?: 0), 2);
+        }
+
+        $pct = (float) $this->tipPercent;
+
+        return $pct > 0 ? round($this->tipBase() * ($pct / 100), 2) : 0.0;
+    }
+
     public function total(): float
     {
-        return round($this->subtotal() - $this->discountAmount() + $this->taxAmount() + (float) ($this->tipAmount ?: 0), 2);
+        return round($this->tipBase() + $this->tipValue(), 2);
     }
 
     public function openCheckout(): void
@@ -327,6 +348,27 @@ new #[Layout('layouts.app')] class extends Component
     public function closeCheckout(): void
     {
         $this->showCheckout = false;
+    }
+
+    /**
+     * Al cambiar la propina, si hay un solo renglón de pago lo re-cuadra al
+     * nuevo total (igual que al abrir el cobro). Con varios pagos no se toca.
+     */
+    public function updatedTipPercent(): void
+    {
+        $this->syncSinglePaymentAmount();
+    }
+
+    public function updatedTipAmount(): void
+    {
+        $this->syncSinglePaymentAmount();
+    }
+
+    private function syncSinglePaymentAmount(): void
+    {
+        if ($this->showCheckout && count($this->paymentRows) === 1) {
+            $this->paymentRows[0]['amount'] = number_format($this->total(), 2, '.', '');
+        }
     }
 
     public function addPaymentRow(): void
@@ -393,10 +435,11 @@ new #[Layout('layouts.app')] class extends Component
                 'discount_type' => $this->discountType !== '' ? $this->discountType : null,
                 'discount_value' => $this->discountValue !== '' ? (float) $this->discountValue : null,
                 'coupon_id' => $this->couponId,
-                'tip_amount' => (float) ($this->tipAmount ?: 0),
+                'tip_amount' => $this->tipValue(),
+                'tip_percent' => ($this->tipPercent !== 'otro' && (float) $this->tipPercent > 0) ? (float) $this->tipPercent : null,
                 'payments' => $payments,
             ]);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $this->checkoutError = $e->getMessage();
 
             return;
@@ -532,8 +575,8 @@ new #[Layout('layouts.app')] class extends Component
                 <div class="flex justify-between text-emerald-600"><span>{{ $couponId ? 'Cortesía' : 'Descuento' }}</span><span>-${{ number_format($this->discountAmount(), 2) }}</span></div>
             @endif
             <div class="flex justify-between text-gray-500"><span>IVA</span><span>${{ number_format($this->taxAmount(), 2) }}</span></div>
-            @if ((float) ($tipAmount ?: 0) > 0)
-                <div class="flex justify-between text-gray-500"><span>Propina</span><span>${{ number_format((float) $tipAmount, 2) }}</span></div>
+            @if ($this->tipValue() > 0)
+                <div class="flex justify-between text-gray-500"><span>Propina{{ $tipPercent !== 'otro' && (float) $tipPercent > 0 ? ' ('.$tipPercent.'%)' : '' }}</span><span>${{ number_format($this->tipValue(), 2) }}</span></div>
             @endif
             <div class="flex justify-between text-base font-semibold text-gray-900"><span>Total</span><span>${{ number_format($this->total(), 2) }}</span></div>
         </div>
@@ -641,8 +684,20 @@ new #[Layout('layouts.app')] class extends Component
                 @endcan
 
                 <div class="mb-3">
-                    <label class="mb-1 block text-sm text-gray-600">Propina (opcional)</label>
-                    <input type="number" step="0.01" min="0" wire:model.live="tipAmount" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+                    <label class="mb-1 block text-sm text-gray-600">Propina</label>
+                    <select wire:model.live="tipPercent" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+                        <option value="0">Sin propina</option>
+                        <option value="5">5% del total</option>
+                        <option value="10">10% del total</option>
+                        <option value="15">15% del total</option>
+                        <option value="20">20% del total</option>
+                        <option value="otro">Otro monto…</option>
+                    </select>
+                    @if ($tipPercent === 'otro')
+                        <input type="number" step="0.01" min="0" wire:model.live="tipAmount" placeholder="Monto de propina" class="mt-2 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+                    @elseif ((float) $tipPercent > 0)
+                        <p class="mt-1 text-xs text-gray-400">{{ $tipPercent }}% de ${{ number_format($this->tipBase(), 2) }} = ${{ number_format($this->tipValue(), 2) }}</p>
+                    @endif
                 </div>
 
                 <div class="mb-3 space-y-1 border-t border-gray-200 pt-3 text-sm">

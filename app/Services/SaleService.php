@@ -32,7 +32,7 @@ class SaleService
      *     order_type: string,
      *     items: list<array{product_id: int, name: string, quantity: float, unit_price: float, tax_rate: float, notes: ?string, modifiers: list<array{modifier_option_id: ?int, name: string, price_delta: float}>}>,
      *     discount_type: ?string, discount_value: ?float,
-     *     tip_amount: float,
+     *     tip_amount: float, tip_percent: ?float,
      *     payments: list<array{method: string, amount: float, received_amount: ?float}>,
      * }  $data
      */
@@ -52,6 +52,7 @@ class SaleService
                 'discount_value' => $data['discount_value'] ?? null,
                 'coupon_id' => $data['coupon_id'] ?? null,
                 'tip_amount' => $data['tip_amount'] ?? 0,
+                'tip_percent' => $data['tip_percent'] ?? null,
                 'user_id' => $data['user_id'],
             ]);
         });
@@ -195,7 +196,7 @@ class SaleService
      * Finaliza el cobro de una orden pendiente (directa o de mesa): aplica
      * descuento/propina finales, valida los pagos, genera folio y libera la mesa.
      *
-     * @param  array{payments: list<array{method: string, amount: float, received_amount: ?float}>, discount_type?: ?string, discount_value?: ?float, tip_amount?: float, user_id: int, terminal_id?: ?int, cash_register_session_id?: ?int, customer_id?: ?int}  $data
+     * @param  array{payments: list<array{method: string, amount: float, received_amount: ?float}>, discount_type?: ?string, discount_value?: ?float, tip_amount?: float, tip_percent?: ?float, user_id: int, terminal_id?: ?int, cash_register_session_id?: ?int, customer_id?: ?int}  $data
      */
     public function payOrder(Order $order, array $data): Order
     {
@@ -232,6 +233,9 @@ class SaleService
                     : (array_key_exists('discount_value', $data) ? $data['discount_value'] : $order->discount_value),
                 'coupon_id' => $coupon?->id ?? ($data['coupon_id'] ?? $order->coupon_id),
                 'tip_amount' => round($data['tip_amount'] ?? (float) $order->tip_amount, 2),
+                'tip_percent' => array_key_exists('tip_percent', $data)
+                    ? ($data['tip_percent'] !== null && (float) $data['tip_percent'] > 0 ? round((float) $data['tip_percent'], 2) : null)
+                    : $order->tip_percent,
                 'terminal_id' => $data['terminal_id'] ?? $order->terminal_id,
                 'cash_register_session_id' => $data['cash_register_session_id'] ?? $order->cash_register_session_id,
                 'customer_id' => $data['customer_id'] ?? $order->customer_id,
@@ -291,7 +295,7 @@ class SaleService
             $this->inventory->consumeForOrder($order, $movementUserId);
 
             $this->auditLogger->log('venta.crear', $order, null, $order->only([
-                'folio', 'subtotal', 'discount_amount', 'tax_amount', 'tip_amount', 'total',
+                'folio', 'subtotal', 'discount_amount', 'tax_amount', 'tip_amount', 'tip_percent', 'total',
             ]));
 
             $this->printer->enqueueSaleTicket($order->fresh(['items.modifiers', 'payments']));
@@ -344,6 +348,52 @@ class SaleService
         });
     }
 
+    /**
+     * Cancela la cuenta de una mesa (comanda). Requiere que un administrador
+     * haya autorizado con su clave — la verificación del PIN la hace el
+     * componente vía ManagerPinService; acá solo se registra quién autorizó.
+     *
+     * Comanda pendiente: se marca cancelada y se libera la mesa (todavía no
+     * consumió inventario ni movió caja). Cuenta ya cobrada: se delega en
+     * cancel() para el reverso completo (restock + movimientos compensatorios).
+     */
+    public function cancelAccount(Order $order, int $operatorId, int $authorizedByUserId, string $reason): Order
+    {
+        if (! in_array($order->status, [OrderStatus::Pending, OrderStatus::Completed], true)) {
+            throw new InvalidArgumentException('Esta cuenta ya no se puede cancelar.');
+        }
+
+        return DB::transaction(function () use ($order, $operatorId, $authorizedByUserId, $reason) {
+            if ($order->status === OrderStatus::Completed) {
+                $this->cancel($order, $operatorId, $reason);
+            } else {
+                $before = $order->only(['status']);
+                $order->update(['status' => OrderStatus::Cancelled]);
+
+                if ($order->table_id) {
+                    $order->table->update(['status' => TableStatus::Available]);
+                }
+
+                if ($order->coupon_id) {
+                    Coupon::where('id', $order->coupon_id)->where('used_count', '>', 0)->decrement('used_count');
+                }
+
+                $this->auditLogger->log('venta.anular', $order, $before, [
+                    'status' => OrderStatus::Cancelled->value,
+                    'reason' => $reason,
+                ]);
+            }
+
+            $this->auditLogger->log('venta.cancelar_cuenta', $order->fresh(), null, [
+                'reason' => $reason,
+                'operator_id' => $operatorId,
+                'authorized_by' => $authorizedByUserId,
+            ]);
+
+            return $order->fresh();
+        });
+    }
+
     private function recalculateTotals(Order $order): void
     {
         $items = $order->items()->get();
@@ -357,7 +407,13 @@ class SaleService
             $order->discount_value !== null ? (float) $order->discount_value : null,
         );
 
-        $tipAmount = round((float) $order->tip_amount, 2);
+        // La propina puede fijarse como porcentaje (se calcula sobre el total
+        // antes de propina: subtotal - descuento + IVA) o como monto fijo.
+        $tipPercent = $order->tip_percent !== null ? (float) $order->tip_percent : null;
+
+        $tipAmount = $tipPercent !== null && $tipPercent > 0
+            ? round(($subtotal - $discountAmount + $taxAmount) * ($tipPercent / 100), 2)
+            : round((float) $order->tip_amount, 2);
 
         $total = round($subtotal - $discountAmount + $taxAmount + $tipAmount, 2);
 
@@ -365,6 +421,7 @@ class SaleService
             'subtotal' => $subtotal,
             'discount_amount' => $discountAmount,
             'tax_amount' => $taxAmount,
+            'tip_amount' => $tipAmount,
             'total' => $total,
         ]);
     }

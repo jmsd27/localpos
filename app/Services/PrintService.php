@@ -178,7 +178,10 @@ class PrintService
         $lines[] = $this->row('IVA', '$'.number_format((float) $order->tax_amount, 2));
 
         if ((float) $order->tip_amount > 0) {
-            $lines[] = $this->row('Propina', '$'.number_format((float) $order->tip_amount, 2));
+            $tipLabel = $order->tip_percent > 0
+                ? 'Propina ('.rtrim(rtrim(number_format((float) $order->tip_percent, 2), '0'), '.').'%)'
+                : 'Propina';
+            $lines[] = $this->row($tipLabel, '$'.number_format((float) $order->tip_amount, 2));
         }
 
         $lines[] = $this->row('TOTAL', '$'.number_format((float) $order->total, 2));

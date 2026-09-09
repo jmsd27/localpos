@@ -21,11 +21,16 @@ new #[Layout('layouts.app')] class extends Component
 
     public string $password_confirmation = '';
 
+    /** Clave para autorizar cancelaciones de cuenta (se guarda en pin_hash). */
+    public string $cancel_pin = '';
+
     public ?int $branch_id = null;
 
     public string $role = '';
 
     public bool $is_active = true;
+
+    public bool $hasCancelPin = false;
 
     public function create(): void
     {
@@ -42,9 +47,11 @@ new #[Layout('layouts.app')] class extends Component
         $this->email = $user->email;
         $this->password = '';
         $this->password_confirmation = '';
+        $this->cancel_pin = '';
         $this->branch_id = $user->branch_id;
         $this->role = $user->getRoleNames()->first() ?? '';
         $this->is_active = $user->is_active;
+        $this->hasCancelPin = $user->pin_hash !== null;
         $this->showForm = true;
     }
 
@@ -61,6 +68,7 @@ new #[Layout('layouts.app')] class extends Component
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,'.$this->editingId,
             'password' => ($this->editingId ? 'nullable' : 'required').'|string|min:8|confirmed',
+            'cancel_pin' => 'nullable|string|min:4|max:12',
             'branch_id' => 'required|exists:branches,id',
             'role' => 'required|in:'.$assignableRoles,
             'is_active' => 'boolean',
@@ -77,6 +85,10 @@ new #[Layout('layouts.app')] class extends Component
 
         if ($data['password'] !== '' && $data['password'] !== null) {
             $payload['password'] = $data['password'];
+        }
+
+        if (($data['cancel_pin'] ?? '') !== '') {
+            $payload['pin_hash'] = $data['cancel_pin'];
         }
 
         if ($this->editingId) {
@@ -114,7 +126,7 @@ new #[Layout('layouts.app')] class extends Component
 
     private function resetForm(): void
     {
-        $this->reset(['editingId', 'name', 'email', 'password', 'password_confirmation', 'branch_id', 'role']);
+        $this->reset(['editingId', 'name', 'email', 'password', 'password_confirmation', 'cancel_pin', 'branch_id', 'role', 'hasCancelPin']);
         $this->is_active = true;
     }
 
@@ -185,6 +197,17 @@ new #[Layout('layouts.app')] class extends Component
                         <div>
                             <label class="mb-1 block text-sm text-gray-600">Confirmar contraseña</label>
                             <input type="password" wire:model="password_confirmation" autocomplete="new-password" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="mb-1 block text-sm text-gray-600">
+                                Clave para autorizar cancelaciones (PIN)
+                                @if ($editingId)
+                                    <span class="text-xs text-gray-400">{{ $hasCancelPin ? '— ya tiene una; escribí para cambiarla' : '— sin clave; dejar vacío para no asignar' }}</span>
+                                @endif
+                            </label>
+                            <input type="password" wire:model="cancel_pin" autocomplete="off" inputmode="numeric" placeholder="4 a 12 caracteres" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-violet-500 focus:outline-none">
+                            @error('cancel_pin') <span class="mt-1 block text-sm text-red-600">{{ $message }}</span> @enderror
+                            <p class="mt-1 text-xs text-gray-400">Solo la usan los roles que pueden cancelar cuentas (Administrador, Director, Encargado). El mesero/cajero la pide al cancelar.</p>
                         </div>
                     </div>
 
