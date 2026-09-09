@@ -87,6 +87,19 @@ source), `sync:make-viewer` (solo mirror), `localpos:housekeeping`, `localpos:ba
   referido no llegó, el id local se deja intacto (no se difiere la entrada).
 - El motor de sync tiene cobertura en `tests/Feature/Cloud/SyncEngineTest.php` — corre esos
   tests si tocas `Sync*Service`, `SyncOutboxObserver`, `config/sync.php` o el `Gate::before`.
+- **No envolver contenido que renderiza Livewire en `<template x-if>` de Alpine.** Alpine
+  expande el `x-if` en un nodo del DOM aparte del `<template>` original, fuera del árbol que
+  reconcilia el morph de Livewire — al re-renderizar, el servidor calcula bien el HTML nuevo
+  pero el navegador nunca lo aplica (bug real en `mesas/comanda` el 2026-09-09: tocar un
+  producto no actualizaba la pantalla). Para alternar bloques grandes de UID según estado de
+  Alpine, usar `x-show` (mismo nodo siempre, solo togglea `display`). `x-if` solo para
+  fragmentos 100% Alpine que Livewire nunca vuelve a renderizar. `Livewire::test()` NO detecta
+  esto porque no ejercita el morph del DOM en un navegador real.
+- **`php artisan serve` en Windows es de un solo hilo** (no hace `fork`), así que bajo carga
+  concurrente —heartbeat de `/up`, polling de catálogo offline, assets— resetea la conexión de
+  los XHR de Livewire (`ERR_CONNECTION_RESET` / `Failed to fetch`) aunque el request llegue a
+  procesarse en el servidor. Para probar flujos Livewire en el navegador usar el vhost de
+  Apache de Laragon (`*.test`), no `artisan serve`.
 - Íconos PWA (`public/icons/*.png`) son la marca de la app (violeta + storefront), no un logo
   del negocio.
 - Documentación operativa del espejo en la nube en `docs/` (`01-arquitectura` … `06-checklist-lanzamiento`).
