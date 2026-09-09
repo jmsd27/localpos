@@ -83,6 +83,11 @@
                                     <x-icon name="clipboard-document-list" class="h-5 w-5" />
                                     Ventas
                                 </a>
+                                <a href="{{ route('tickets.index') }}" wire:navigate
+                                    class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('tickets.index') ? 'border-l-2 border-orange-400 bg-blue-900/70 text-orange-400 font-semibold' : 'text-blue-100 hover:bg-blue-900/50 hover:text-white' }}">
+                                    <x-icon name="printer" class="h-5 w-5" />
+                                    Tickets
+                                </a>
                             @endcan
                             @can('cocina.ver')
                                 <a href="{{ route('kds') }}" wire:navigate

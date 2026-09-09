@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Terminal;
 use App\Services\CashRegisterService;
+use App\Services\PrintService;
 use App\Services\SaleService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
@@ -350,6 +351,15 @@ new #[Layout('layouts.app')] class extends Component
         $this->completedOrderId = null;
     }
 
+    public function reimprimirTicket(PrintService $printer): void
+    {
+        if (! $this->completedOrderId) {
+            return;
+        }
+
+        $printer->enqueueSaleTicket(Order::findOrFail($this->completedOrderId));
+    }
+
     public function with(): array
     {
         $businessId = Auth::user()->businessId();
@@ -588,10 +598,14 @@ new #[Layout('layouts.app')] class extends Component
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
             <div class="w-full max-w-sm rounded-xl border border-emerald-200 bg-white p-6 text-center">
                 <h3 class="mb-2 text-xl font-semibold text-emerald-600">Venta completada</h3>
-                <p class="mb-4 text-gray-600">Folio {{ $completedFolio }}</p>
+                <p class="mb-1 text-gray-600">Folio {{ $completedFolio }}</p>
+                <p class="mb-4 text-xs text-gray-400">El ticket ya se mandó a la impresora al cobrar.</p>
                 <div class="flex flex-col gap-2">
-                    <a href="{{ route('ventas.ticket', $completedOrderId) }}" target="_blank" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700">
-                        Ver / imprimir ticket
+                    <button wire:click="reimprimirTicket" class="rounded-lg bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700">
+                        Reimprimir ticket
+                    </button>
+                    <a href="{{ route('ventas.ticket', $completedOrderId) }}" target="_blank" class="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-white">
+                        Ver ticket
                     </a>
                     <button wire:click="startNewSale" class="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600 hover:bg-white">
                         Nueva venta

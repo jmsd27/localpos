@@ -27,6 +27,10 @@ Route::livewire('/ventas', 'ventas.index')
     ->middleware(['auth', 'permission:ventas.ver'])
     ->name('ventas.index');
 
+Route::livewire('/tickets', 'tickets.index')
+    ->middleware(['auth', 'permission:ventas.ver'])
+    ->name('tickets.index');
+
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::livewire('/categorias', 'admin.categorias.index')
         ->middleware('permission:productos.ver')
