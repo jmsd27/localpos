@@ -1,0 +1,126 @@
+- generic [active] [ref=f6e1]:
+  - complementary [ref=f6e2]:
+    - generic [ref=f6e3]: puntoYA
+    - navigation [ref=f6e11]:
+      - link "Dashboard" [ref=f6e13] [cursor=pointer]:
+        - /url: https://barlamartina.com.mx/dashboard
+      - generic [ref=f6e18]:
+        - paragraph [ref=f6e19]: Operación
+        - generic [ref=f6e20]:
+          - link "Punto de venta" [ref=f6e21] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/pos
+          - link "Mapa de mesas" [ref=f6e26] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/mesas
+          - link "Ventas" [ref=f6e30] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/ventas
+          - link "Tickets" [ref=f6e35] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/tickets
+          - link "Cortesías" [ref=f6e40] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/cortesias
+          - link "Cocina (KDS)" [ref=f6e44] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/kds
+          - link "Caja" [ref=f6e47] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/caja/movimientos
+          - link "Historial de caja" [ref=f6e52] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/caja/historial
+      - generic [ref=f6e55]:
+        - paragraph [ref=f6e56]: Catálogo
+        - generic [ref=f6e57]:
+          - link "Productos" [ref=f6e58] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/productos
+          - link "Categorías" [ref=f6e62] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/categorias
+          - link "Modificadores" [ref=f6e66] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/modificadores
+          - link "Clientes" [ref=f6e70] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/clientes
+          - link "Menús QR" [ref=f6e76] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/menus-qr
+      - generic [ref=f6e83]:
+        - paragraph [ref=f6e84]: Inventario
+        - generic [ref=f6e85]:
+          - link "Insumos" [ref=f6e86] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/insumos
+          - link "Conteo físico" [ref=f6e90] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/conteo
+          - link "Recetas" [ref=f6e94] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/recetas
+          - link "Movimientos" [ref=f6e99] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/movimientos
+          - link "Kardex" [ref=f6e102] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/kardex
+          - link "Reportes" [ref=f6e107] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/reportes
+      - generic [ref=f6e111]:
+        - paragraph [ref=f6e112]: Compras
+        - generic [ref=f6e113]:
+          - link "Compras" [ref=f6e114] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/compras
+          - link "Proveedores" [ref=f6e120] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/proveedores
+      - generic [ref=f6e126]:
+        - paragraph [ref=f6e127]: Reportes
+        - link "Reportes" [ref=f6e129] [cursor=pointer]:
+          - /url: https://barlamartina.com.mx/reportes
+      - generic [ref=f6e132]:
+        - paragraph [ref=f6e133]: Administración
+        - generic [ref=f6e134]:
+          - link "Usuarios" [ref=f6e135] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/usuarios
+          - link "Terminales" [ref=f6e141] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/terminales
+          - link "Cajas" [ref=f6e146] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/cajas
+          - link "Salones" [ref=f6e151] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/salones
+          - link "Mesas" [ref=f6e157] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/mesas
+          - link "Estaciones" [ref=f6e161] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/estaciones
+          - link "Cola de impresión" [ref=f6e164] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/impresion/cola
+          - link "Respaldos" [ref=f6e169] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/backups
+          - link "Configuración" [ref=f6e173] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/configuracion
+          - link "Auditoría" [ref=f6e177] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/auditoria
+          - link "Manuales" [ref=f6e181] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/manuales
+          - link "Asistencia" [ref=f6e185] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/asistencia
+  - generic [ref=f6e190]:
+    - banner [ref=f6e191]:
+      - generic:
+        - heading [level=1]
+      - button "M Manuel Soto super-admin" [ref=f6e193]:
+        - generic [ref=f6e194]: M
+        - generic [ref=f6e195]:
+          - generic [ref=f6e196]: Manuel Soto
+          - generic [ref=f6e197]: super-admin
+    - main [ref=f6e200]:
+      - generic [ref=f6e202]:
+        - generic [ref=f6e203]:
+          - generic [ref=f6e204]:
+            - link "← Dashboard" [ref=f6e205] [cursor=pointer]:
+              - /url: https://barlamartina.com.mx/dashboard
+            - heading "Respaldos" [level=1] [ref=f6e206]
+            - paragraph [ref=f6e207]: Genera un respaldo completo de la base de datos (.sql). También corre automáticamente cada noche.
+          - button "Generar respaldo ahora" [ref=f6e208]
+        - paragraph [ref=f6e220]: "Respaldo generado: localpos_2026-09-09_192223.sql."
+        - table [ref=f6e210]:
+          - rowgroup [ref=f6e211]:
+            - row [ref=f6e212]:
+              - columnheader "Archivo" [ref=f6e213]
+              - columnheader "Tamaño" [ref=f6e214]
+              - columnheader "Fecha" [ref=f6e215]
+              - columnheader [ref=f6e216]
+          - rowgroup [ref=f6e217]:
+            - row [ref=f6e221]:
+              - cell "localpos_2026-09-09_192223.sql" [ref=f6e222]
+              - cell "842.6 KB" [ref=f6e223]
+              - cell "09/09/2026 19:22" [ref=f6e224]
+              - cell [ref=f6e225]:
+                - link "Descargar" [ref=f6e226] [cursor=pointer]:
+                  - /url: https://barlamartina.com.mx/admin/backups/localpos_2026-09-09_192223.sql/descargar
+                - button "Eliminar" [ref=f6e227]

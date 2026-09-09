@@ -1,0 +1,43 @@
+- generic [active] [ref=f4e1]:
+  - heading "Mi Negocio" [level=1] [ref=f4e2]
+  - separator [ref=f4e3]
+  - paragraph [ref=f4e4]:
+    - text: "Folio:"
+    - strong [ref=f4e5]: VENTA-000009
+    - text: "Fecha: 09/09/2026 16:29 Cajero: Super Admin Tipo: Mesa"
+  - separator [ref=f4e6]
+  - table [ref=f4e7]:
+    - rowgroup [ref=f4e8]:
+      - row [ref=f4e9]:
+        - cell "1.00 x 1800 Cristalino (1 litro)" [ref=f4e10]
+        - cell "$200.00" [ref=f4e11]
+      - row [ref=f4e12]:
+        - cell "1.00 x Enchiladas verdes" [ref=f4e13]
+        - cell "$110.00" [ref=f4e14]
+      - row [ref=f4e15]:
+        - cell "1.00 x Pacifico Clara" [ref=f4e16]
+        - cell "$40.00" [ref=f4e17]
+      - row [ref=f4e18]:
+        - cell "1.00 x Michelob (Caguama)" [ref=f4e19]
+        - cell "$90.00" [ref=f4e20]
+  - separator [ref=f4e21]
+  - table [ref=f4e22]:
+    - rowgroup [ref=f4e23]:
+      - row [ref=f4e24]:
+        - cell "Subtotal" [ref=f4e25]
+        - cell "$440.00" [ref=f4e26]
+      - row [ref=f4e27]:
+        - cell "IVA" [ref=f4e28]
+        - cell "$70.40" [ref=f4e29]
+      - row [ref=f4e30]:
+        - cell "Total" [ref=f4e31]
+        - cell "$510.40" [ref=f4e32]
+  - separator [ref=f4e33]
+  - table [ref=f4e34]:
+    - rowgroup [ref=f4e35]:
+      - row [ref=f4e36]:
+        - cell "Tarjeta" [ref=f4e37]
+        - cell "$510.40" [ref=f4e38]
+  - separator [ref=f4e39]
+  - paragraph [ref=f4e40]: ¡Gracias por su compra!
+  - button "Imprimir" [ref=f4e41]

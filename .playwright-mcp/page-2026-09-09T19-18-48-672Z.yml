@@ -1,0 +1,132 @@
+- generic [active] [ref=f3e1]:
+  - complementary [ref=f3e2]:
+    - generic [ref=f3e3]: puntoYA
+    - navigation [ref=f3e11]:
+      - link "Dashboard" [ref=f3e13] [cursor=pointer]:
+        - /url: https://barlamartina.com.mx/dashboard
+      - generic [ref=f3e18]:
+        - paragraph [ref=f3e19]: Operación
+        - generic [ref=f3e20]:
+          - link "Punto de venta" [ref=f3e21] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/pos
+          - link "Mapa de mesas" [ref=f3e26] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/mesas
+          - link "Ventas" [ref=f3e30] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/ventas
+          - link "Tickets" [ref=f3e35] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/tickets
+          - link "Cortesías" [ref=f3e40] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/cortesias
+          - link "Cocina (KDS)" [ref=f3e44] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/kds
+          - link "Caja" [ref=f3e47] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/caja/movimientos
+          - link "Historial de caja" [ref=f3e52] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/caja/historial
+      - generic [ref=f3e55]:
+        - paragraph [ref=f3e56]: Catálogo
+        - generic [ref=f3e57]:
+          - link "Productos" [ref=f3e58] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/productos
+          - link "Categorías" [ref=f3e62] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/categorias
+          - link "Modificadores" [ref=f3e66] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/modificadores
+          - link "Clientes" [ref=f3e70] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/clientes
+          - link "Menús QR" [ref=f3e76] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/menus-qr
+      - generic [ref=f3e83]:
+        - paragraph [ref=f3e84]: Inventario
+        - generic [ref=f3e85]:
+          - link "Insumos" [ref=f3e86] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/insumos
+          - link "Conteo físico" [ref=f3e90] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/conteo
+          - link "Recetas" [ref=f3e94] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/recetas
+          - link "Movimientos" [ref=f3e99] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/movimientos
+          - link "Kardex" [ref=f3e102] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/kardex
+          - link "Reportes" [ref=f3e107] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/reportes
+      - generic [ref=f3e111]:
+        - paragraph [ref=f3e112]: Compras
+        - generic [ref=f3e113]:
+          - link "Compras" [ref=f3e114] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/compras
+          - link "Proveedores" [ref=f3e120] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/proveedores
+      - generic [ref=f3e126]:
+        - paragraph [ref=f3e127]: Reportes
+        - link "Reportes" [ref=f3e129] [cursor=pointer]:
+          - /url: https://barlamartina.com.mx/reportes
+      - generic [ref=f3e132]:
+        - paragraph [ref=f3e133]: Administración
+        - generic [ref=f3e134]:
+          - link "Usuarios" [ref=f3e135] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/usuarios
+          - link "Terminales" [ref=f3e141] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/terminales
+          - link "Cajas" [ref=f3e146] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/cajas
+          - link "Salones" [ref=f3e151] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/salones
+          - link "Mesas" [ref=f3e157] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/mesas
+          - link "Estaciones" [ref=f3e161] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/estaciones
+          - link "Cola de impresión" [ref=f3e164] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/impresion/cola
+          - link "Respaldos" [ref=f3e169] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/backups
+          - link "Configuración" [ref=f3e173] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/configuracion
+          - link "Auditoría" [ref=f3e177] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/auditoria
+          - link "Manuales" [ref=f3e181] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/manuales
+          - link "Asistencia" [ref=f3e185] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/asistencia
+  - generic [ref=f3e190]:
+    - banner [ref=f3e191]:
+      - generic:
+        - heading [level=1]
+      - button "M Manuel Soto super-admin" [ref=f3e193]:
+        - generic [ref=f3e194]: M
+        - generic [ref=f3e195]:
+          - generic [ref=f3e196]: Manuel Soto
+          - generic [ref=f3e197]: super-admin
+    - main [ref=f3e200]:
+      - generic [ref=f3e202]:
+        - generic [ref=f3e203]:
+          - link "← Dashboard" [ref=f3e204] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/dashboard
+          - heading "Ventas" [level=1] [ref=f3e205]
+        - generic [ref=f3e206]:
+          - textbox "Buscar por folio..." [ref=f3e207]
+          - textbox [ref=f3e208]: 2026-09-09
+          - textbox [ref=f3e209]: 2026-09-09
+        - table [ref=f3e211]:
+          - rowgroup [ref=f3e212]:
+            - row [ref=f3e213]:
+              - columnheader "Folio" [ref=f3e214]
+              - columnheader "Fecha" [ref=f3e215]
+              - columnheader "Cajero" [ref=f3e216]
+              - columnheader "Cliente" [ref=f3e217]
+              - columnheader "Total" [ref=f3e218]
+              - columnheader "Estado" [ref=f3e219]
+              - columnheader [ref=f3e220]
+          - rowgroup [ref=f3e221]:
+            - row [ref=f3e222]:
+              - cell "VENTA-000009" [ref=f3e223]
+              - cell "09/09/2026 16:29" [ref=f3e224]
+              - cell "Super Admin" [ref=f3e225]
+              - cell "—" [ref=f3e226]
+              - cell "$510.40" [ref=f3e227]
+              - cell "Completada" [ref=f3e228]
+              - cell [ref=f3e229]:
+                - link "Ticket" [ref=f3e230] [cursor=pointer]:
+                  - /url: https://barlamartina.com.mx/ventas/8/ticket
+                - button "Anular" [ref=f3e231]

@@ -1,0 +1,226 @@
+- generic [active] [ref=e1]:
+  - complementary [ref=e2]:
+    - generic [ref=e3]: puntoYA
+    - navigation [ref=e11]:
+      - link "Dashboard" [ref=e13] [cursor=pointer]:
+        - /url: https://barlamartina.com.mx/dashboard
+      - generic [ref=e18]:
+        - paragraph [ref=e19]: Operación
+        - generic [ref=e20]:
+          - link "Punto de venta" [ref=e21] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/pos
+          - link "Mapa de mesas" [ref=e26] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/mesas
+          - link "Ventas" [ref=e30] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/ventas
+          - link "Tickets" [ref=e35] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/tickets
+          - link "Cortesías" [ref=e40] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/cortesias
+          - link "Cocina (KDS)" [ref=e44] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/kds
+          - link "Caja" [ref=e47] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/caja/movimientos
+          - link "Historial de caja" [ref=e52] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/caja/historial
+      - generic [ref=e55]:
+        - paragraph [ref=e56]: Catálogo
+        - generic [ref=e57]:
+          - link "Productos" [ref=e58] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/productos
+          - link "Categorías" [ref=e62] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/categorias
+          - link "Modificadores" [ref=e66] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/modificadores
+          - link "Clientes" [ref=e70] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/clientes
+          - link "Menús QR" [ref=e76] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/menus-qr
+      - generic [ref=e83]:
+        - paragraph [ref=e84]: Inventario
+        - generic [ref=e85]:
+          - link "Insumos" [ref=e86] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/insumos
+          - link "Conteo físico" [ref=e90] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/conteo
+          - link "Recetas" [ref=e94] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/recetas
+          - link "Movimientos" [ref=e99] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/movimientos
+          - link "Kardex" [ref=e102] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/kardex
+          - link "Reportes" [ref=e107] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/inventario/reportes
+      - generic [ref=e111]:
+        - paragraph [ref=e112]: Compras
+        - generic [ref=e113]:
+          - link "Compras" [ref=e114] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/compras
+          - link "Proveedores" [ref=e120] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/proveedores
+      - generic [ref=e126]:
+        - paragraph [ref=e127]: Reportes
+        - link "Reportes" [ref=e129] [cursor=pointer]:
+          - /url: https://barlamartina.com.mx/reportes
+      - generic [ref=e132]:
+        - paragraph [ref=e133]: Administración
+        - generic [ref=e134]:
+          - link "Usuarios" [ref=e135] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/usuarios
+          - link "Terminales" [ref=e141] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/terminales
+          - link "Cajas" [ref=e146] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/cajas
+          - link "Salones" [ref=e151] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/salones
+          - link "Mesas" [ref=e157] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/mesas
+          - link "Estaciones" [ref=e161] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/estaciones
+          - link "Cola de impresión" [ref=e164] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/impresion/cola
+          - link "Respaldos" [ref=e169] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/backups
+          - link "Configuración" [ref=e173] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/configuracion
+          - link "Auditoría" [ref=e177] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/auditoria
+          - link "Manuales" [ref=e181] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/manuales
+          - link "Asistencia" [ref=e185] [cursor=pointer]:
+            - /url: https://barlamartina.com.mx/admin/asistencia
+  - generic [ref=e190]:
+    - banner [ref=e191]:
+      - generic:
+        - heading [level=1]
+      - button "M Manuel Soto super-admin" [ref=e193]:
+        - generic [ref=e194]: M
+        - generic [ref=e195]:
+          - generic [ref=e196]: Manuel Soto
+          - generic [ref=e197]: super-admin
+    - main [ref=e200]:
+      - generic [ref=e202]:
+        - generic [ref=e203]:
+          - generic [ref=e204]:
+            - link "← Dashboard" [ref=e205] [cursor=pointer]:
+              - /url: https://barlamartina.com.mx/dashboard
+            - heading "Diagnóstico y asistencia" [level=1] [ref=e206]
+            - paragraph [ref=e207]: Estado de la instalación y ayuda para resolver errores. Solo visible para el super administrador.
+          - button "Actualizar" [ref=e208]
+        - generic [ref=e212]:
+          - generic [ref=e213]:
+            - paragraph [ref=e214]: Aplicación
+            - generic [ref=e215]:
+              - generic [ref=e216]:
+                - term [ref=e217]: Entorno
+                - definition [ref=e218]: production
+              - generic [ref=e219]:
+                - term [ref=e220]: Debug
+                - definition [ref=e221]: desactivado
+              - generic [ref=e222]:
+                - term [ref=e223]: Rol de sync
+                - definition [ref=e224]: source
+              - generic [ref=e225]:
+                - term [ref=e226]: PHP
+                - definition [ref=e227]: 8.4.25
+              - generic [ref=e228]:
+                - term [ref=e229]: Laravel
+                - definition [ref=e230]: 12.67.0
+              - generic [ref=e231]:
+                - term [ref=e232]: Config cacheada
+                - definition [ref=e233]: "no"
+          - generic [ref=e234]:
+            - paragraph [ref=e235]: Base de datos
+            - generic [ref=e236]:
+              - generic [ref=e237]:
+                - term [ref=e238]: Conexión
+                - definition [ref=e239]: ok
+              - generic [ref=e240]:
+                - term [ref=e241]: Driver
+                - definition [ref=e242]: mysql
+              - generic [ref=e243]:
+                - term [ref=e244]: Esquema
+                - definition [ref=e245]: barlamar_pruebas
+              - generic [ref=e246]:
+                - term [ref=e247]: Migraciones pendientes
+                - definition [ref=e248]: "0"
+          - generic [ref=e249]:
+            - paragraph [ref=e250]: Colas
+            - generic [ref=e251]:
+              - generic [ref=e252]:
+                - term [ref=e253]: Pendientes
+                - definition [ref=e254]: "721"
+              - generic [ref=e255]:
+                - term [ref=e256]: Fallidos
+                - definition [ref=e257]: "0"
+          - generic [ref=e258]:
+            - paragraph [ref=e259]: Almacenamiento
+            - generic [ref=e260]:
+              - generic [ref=e261]:
+                - term [ref=e262]: Log de Laravel
+                - definition [ref=e263]: 12.1 KB
+              - generic [ref=e264]:
+                - term [ref=e265]: Disco libre
+                - definition [ref=e266]: 163.6 GB
+              - generic [ref=e267]:
+                - term [ref=e268]: Disco total
+                - definition [ref=e269]: 1 TB
+          - generic [ref=e270]:
+            - paragraph [ref=e271]: Sincronización
+            - generic [ref=e272]:
+              - generic [ref=e273]:
+                - term [ref=e274]: Rol
+                - definition [ref=e275]: source
+              - generic [ref=e276]:
+                - term [ref=e277]: Outbox pendiente
+                - definition [ref=e278]: "697"
+              - generic [ref=e279]:
+                - term [ref=e280]: Con errores
+                - definition [ref=e281]: "0"
+              - generic [ref=e282]:
+                - term [ref=e283]: Último enviado
+                - definition [ref=e284]: nunca
+              - generic [ref=e285]:
+                - term [ref=e286]: Más antiguo sin enviar
+                - definition [ref=e287]: 2026-08-27 21:55:11
+        - generic [ref=e288]:
+          - generic [ref=e289]:
+            - heading "Errores recientes del log" [level=2] [ref=e290]
+            - generic [ref=e291]: 12.1 KB
+          - list [ref=e292]:
+            - listitem [ref=e293]:
+              - generic [ref=e294]:
+                - generic [ref=e295]:
+                  - generic [ref=e296]:
+                    - generic [ref=e297]: ERROR
+                    - generic [ref=e298]: 2026-09-09 02:52:36
+                  - paragraph [ref=e299]: "require(C:\\Users\\Manuel Soto\\AppData\\Local\\Temp\\claude\\c--laragon-www-localpos\\b8585f75-944d-4891-ba3b-6ae7aaaae59a\\scratchpad\\prod-build\\vendor\\composer/installed.php): Failed to open stream: No such file or directory {\"exception\":\"[object] (ErrorException(code: 0): require(C:\\\\Users\\\\Manuel Soto\\\\..."
+                - button "Ver contexto" [ref=e301]
+              - group [ref=e302]:
+                - generic "Entrada completa" [ref=e303] [cursor=pointer]
+            - listitem [ref=e304]:
+              - generic [ref=e305]:
+                - generic [ref=e306]:
+                  - generic [ref=e307]:
+                    - generic [ref=e308]: ERROR
+                    - generic [ref=e309]: 2026-09-09 02:51:20
+                  - paragraph [ref=e310]: "Class \"Laravel\\Pail\\PailServiceProvider\" not found {\"exception\":\"[object] (Error(code: 0): Class \\\"Laravel\\\\Pail\\\\PailServiceProvider\\\" not found at C:/Users/Manuel Soto/AppData/Local/Temp/claude/c--laragon-www-localpos/b8585f75-944d-4891-ba3b-6ae7aaaae59a/scratchpad/prod-build/vendor/laravel/framew..."
+                - button "Ver contexto" [ref=e312]
+              - group [ref=e313]:
+                - generic "Entrada completa" [ref=e314] [cursor=pointer]
+            - listitem [ref=e315]:
+              - generic [ref=e316]:
+                - generic [ref=e317]:
+                  - generic [ref=e318]:
+                    - generic [ref=e319]: ERROR
+                    - generic [ref=e320]: 2026-09-09 02:50:53
+                  - paragraph [ref=e321]: "Class \"Laravel\\Pail\\PailServiceProvider\" not found {\"exception\":\"[object] (Error(code: 0): Class \\\"Laravel\\\\Pail\\\\PailServiceProvider\\\" not found at C:/Users/Manuel Soto/AppData/Local/Temp/claude/c--laragon-www-localpos/b8585f75-944d-4891-ba3b-6ae7aaaae59a/scratchpad/prod-build/vendor/laravel/framew..."
+                - button "Ver contexto" [ref=e323]
+              - group [ref=e324]:
+                - generic "Entrada completa" [ref=e325] [cursor=pointer]
+        - paragraph [ref=e326]:
+          - text: El diagnóstico con IA se activa al configurar
+          - code [ref=e327]: ANTHROPIC_API_KEY
+          - text: en el
+          - code [ref=e328]: .env
+          - text: . Mientras tanto, «Ver contexto» arma el texto para pegar en Claude Code en tu equipo.
