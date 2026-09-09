@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Branch;
 use App\Models\Business;
 use App\Models\CashRegister;
+use App\Models\Coupon;
 use App\Models\Ingredient;
 use App\Models\KitchenStation;
 use App\Models\ModifierGroup;
@@ -17,6 +18,7 @@ use App\Models\Table;
 use App\Models\TableArea;
 use App\Models\Terminal;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 /**
  * Carga el catálogo real de Bar La Martina (menú, insumos, recetas, mesas,
@@ -54,6 +56,23 @@ class BarLaMartinaCatalogSeeder extends Seeder
         $this->seedTableAreasAndTables($business->id, $branch->id);
         $this->seedCashRegisterAndTerminal($business->id, $branch->id);
         $this->seedSuppliers($business->id);
+        $this->seedCoupons($business->id);
+    }
+
+    private function seedCoupons(int $businessId): void
+    {
+        $coupons = [
+            ['code' => 'CASA', 'name' => 'Cortesía de la casa', 'discount_type' => 'percentage', 'discount_value' => 100, 'max_uses' => null],
+            ['code' => 'AMIGO15', 'name' => 'Descuento amigo 15%', 'discount_type' => 'percentage', 'discount_value' => 15, 'max_uses' => null],
+            ['code' => 'CUMPLE', 'name' => 'Cumpleañero (postre gratis $80)', 'discount_type' => 'amount', 'discount_value' => 80, 'max_uses' => null],
+        ];
+
+        foreach ($coupons as $data) {
+            Coupon::firstOrCreate(
+                ['business_id' => $businessId, 'code' => $data['code']],
+                $data + ['is_active' => true],
+            );
+        }
     }
 
     private function findOrCreateByName(string $model, array $data, int $businessId): object
@@ -463,7 +482,7 @@ class BarLaMartinaCatalogSeeder extends Seeder
                     'connection_type' => 'red',
                     'printer_port' => 9100,
                     'paper_width_chars' => 48,
-                    'api_token' => \Illuminate\Support\Str::random(48),
+                    'api_token' => Str::random(48),
                 ]);
 
             $terminalIds[$key] = $terminal->id;

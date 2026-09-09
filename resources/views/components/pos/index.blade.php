@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\PaymentMethod;
+use App\Models\Coupon;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
@@ -42,6 +43,14 @@ new #[Layout('layouts.app')] class extends Component
     public string $discountValue = '';
 
     public string $tipAmount = '0';
+
+    public string $couponCode = '';
+
+    public ?int $couponId = null;
+
+    public ?string $couponName = null;
+
+    public ?string $couponError = null;
 
     public array $paymentRows = [];
 
@@ -207,6 +216,59 @@ new #[Layout('layouts.app')] class extends Component
         $this->discountType = '';
         $this->discountValue = '';
         $this->tipAmount = '0';
+        $this->couponCode = '';
+        $this->couponId = null;
+        $this->couponName = null;
+        $this->couponError = null;
+    }
+
+    /**
+     * Aplica una cortesía por código: valida vigencia/usos y fija el descuento
+     * con el tipo y valor del cupón (bloquea el descuento manual mientras esté
+     * puesta). El uso se cuenta recién al cobrar.
+     */
+    public function aplicarCortesia(): void
+    {
+        $this->couponError = null;
+        $code = strtoupper(trim($this->couponCode));
+
+        if ($code === '') {
+            $this->couponError = 'Escribí el código de la cortesía.';
+
+            return;
+        }
+
+        $coupon = Coupon::query()
+            ->where('business_id', Auth::user()->businessId())
+            ->where('code', $code)
+            ->first();
+
+        if (! $coupon) {
+            $this->couponError = 'No existe una cortesía con ese código.';
+
+            return;
+        }
+
+        if ($reason = $coupon->redeemBlockReason()) {
+            $this->couponError = $reason;
+
+            return;
+        }
+
+        $this->couponId = $coupon->id;
+        $this->couponName = $coupon->name;
+        $this->discountType = $coupon->discount_type->value;
+        $this->discountValue = (string) $coupon->discount_value;
+    }
+
+    public function quitarCortesia(): void
+    {
+        $this->couponId = null;
+        $this->couponName = null;
+        $this->couponCode = '';
+        $this->couponError = null;
+        $this->discountType = '';
+        $this->discountValue = '';
     }
 
     private function lineTotal(array $line): float
@@ -330,6 +392,7 @@ new #[Layout('layouts.app')] class extends Component
                 'items' => $items,
                 'discount_type' => $this->discountType !== '' ? $this->discountType : null,
                 'discount_value' => $this->discountValue !== '' ? (float) $this->discountValue : null,
+                'coupon_id' => $this->couponId,
                 'tip_amount' => (float) ($this->tipAmount ?: 0),
                 'payments' => $payments,
             ]);
@@ -466,7 +529,7 @@ new #[Layout('layouts.app')] class extends Component
         <div class="mt-4 space-y-1 border-t border-gray-200 pt-3 text-sm">
             <div class="flex justify-between text-gray-500"><span>Subtotal</span><span>${{ number_format($this->subtotal(), 2) }}</span></div>
             @if ($this->discountAmount() > 0)
-                <div class="flex justify-between text-gray-500"><span>Descuento</span><span>-${{ number_format($this->discountAmount(), 2) }}</span></div>
+                <div class="flex justify-between text-emerald-600"><span>{{ $couponId ? 'Cortesía' : 'Descuento' }}</span><span>-${{ number_format($this->discountAmount(), 2) }}</span></div>
             @endif
             <div class="flex justify-between text-gray-500"><span>IVA</span><span>${{ number_format($this->taxAmount(), 2) }}</span></div>
             @if ((float) ($tipAmount ?: 0) > 0)
@@ -474,17 +537,6 @@ new #[Layout('layouts.app')] class extends Component
             @endif
             <div class="flex justify-between text-base font-semibold text-gray-900"><span>Total</span><span>${{ number_format($this->total(), 2) }}</span></div>
         </div>
-
-        @can('ventas.aplicar_descuento')
-            <div class="mt-3 grid grid-cols-2 gap-2">
-                <select wire:model="discountType" class="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-xs text-gray-900">
-                    <option value="">Sin descuento</option>
-                    <option value="percentage">%</option>
-                    <option value="amount">$</option>
-                </select>
-                <input type="number" step="0.01" wire:model="discountValue" placeholder="Valor" class="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-xs text-gray-900">
-            </div>
-        @endcan
 
         <button
             wire:click="openCheckout"
@@ -557,6 +609,52 @@ new #[Layout('layouts.app')] class extends Component
                             <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                         @endforeach
                     </select>
+                </div>
+
+                @can('ventas.aplicar_descuento')
+                    <div class="mb-3">
+                        <label class="mb-1 block text-sm text-gray-600">Cortesía / cupón</label>
+                        @if ($couponId)
+                            <div class="flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                                <span>{{ $couponName }} <span class="font-mono text-emerald-600">({{ strtoupper($couponCode) }})</span></span>
+                                <button type="button" wire:click="quitarCortesia" class="text-emerald-700 hover:text-emerald-900">Quitar</button>
+                            </div>
+                        @else
+                            <div class="flex gap-2">
+                                <input type="text" wire:model="couponCode" placeholder="CÓDIGO" class="flex-1 rounded-lg border border-gray-300 bg-white px-3 py-2 font-mono text-sm uppercase text-gray-900">
+                                <button type="button" wire:click="aplicarCortesia" class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-600 hover:bg-white">Aplicar</button>
+                            </div>
+                        @endif
+                        @if ($couponError) <span class="mt-1 block text-sm text-red-600">{{ $couponError }}</span> @endif
+                    </div>
+
+                    @unless ($couponId)
+                        <div class="mb-3 grid grid-cols-2 gap-2">
+                            <select wire:model="discountType" class="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-xs text-gray-900">
+                                <option value="">Sin descuento manual</option>
+                                <option value="percentage">%</option>
+                                <option value="amount">$</option>
+                            </select>
+                            <input type="number" step="0.01" wire:model="discountValue" placeholder="Valor" class="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-xs text-gray-900">
+                        </div>
+                    @endunless
+                @endcan
+
+                <div class="mb-3">
+                    <label class="mb-1 block text-sm text-gray-600">Propina (opcional)</label>
+                    <input type="number" step="0.01" min="0" wire:model.live="tipAmount" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900">
+                </div>
+
+                <div class="mb-3 space-y-1 border-t border-gray-200 pt-3 text-sm">
+                    <div class="flex justify-between text-gray-500"><span>Subtotal</span><span>${{ number_format($this->subtotal(), 2) }}</span></div>
+                    @if ($this->discountAmount() > 0)
+                        <div class="flex justify-between text-emerald-600"><span>{{ $couponId ? 'Cortesía' : 'Descuento' }}</span><span>-${{ number_format($this->discountAmount(), 2) }}</span></div>
+                    @endif
+                    <div class="flex justify-between text-gray-500"><span>IVA</span><span>${{ number_format($this->taxAmount(), 2) }}</span></div>
+                    @if ((float) ($tipAmount ?: 0) > 0)
+                        <div class="flex justify-between text-gray-500"><span>Propina</span><span>${{ number_format((float) $tipAmount, 2) }}</span></div>
+                    @endif
+                    <div class="flex justify-between text-base font-semibold text-gray-900"><span>Total</span><span>${{ number_format($this->total(), 2) }}</span></div>
                 </div>
 
                 <div class="mb-3 space-y-2">

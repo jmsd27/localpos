@@ -14,6 +14,7 @@ class RoleSeeder extends Seeder
             RoleName::SuperAdmin->value => ['*'],
             RoleName::Administrador->value => [
                 'ventas.crear', 'ventas.ver', 'ventas.editar', 'ventas.anular', 'ventas.aplicar_descuento',
+                'cortesias.ver', 'cortesias.crear', 'cortesias.editar', 'cortesias.eliminar',
                 'caja.abrir', 'caja.cerrar', 'caja.ver_movimientos', 'caja.registrar_movimiento',
                 'inventario.ver', 'inventario.ajustar', 'inventario.ver_kardex',
                 'productos.crear', 'productos.editar', 'productos.eliminar', 'productos.ver',
@@ -26,6 +27,7 @@ class RoleSeeder extends Seeder
             ],
             RoleName::Encargado->value => [
                 'ventas.ver', 'ventas.editar', 'ventas.anular', 'ventas.aplicar_descuento',
+                'cortesias.ver', 'cortesias.crear', 'cortesias.editar',
                 'caja.ver_movimientos', 'inventario.ver', 'inventario.ajustar', 'inventario.ver_kardex',
                 'productos.ver', 'clientes.crear', 'clientes.editar', 'clientes.ver',
                 'compras.ver', 'cocina.ver', 'cocina.gestionar', 'reportes.ver',
@@ -53,13 +55,14 @@ class RoleSeeder extends Seeder
             ],
             // Auditor: ve todo para revisar, no opera ni escribe nada.
             RoleName::Auditor->value => [
-                'ventas.ver', 'caja.ver_movimientos', 'inventario.ver', 'inventario.ver_kardex',
+                'ventas.ver', 'cortesias.ver', 'caja.ver_movimientos', 'inventario.ver', 'inventario.ver_kardex',
                 'productos.ver', 'clientes.ver', 'compras.ver', 'reportes.ver', 'reportes.exportar',
                 'configuracion.ver',
             ],
             // Director: dueño/gerente general, mismo alcance que Administrador.
             RoleName::Director->value => [
                 'ventas.crear', 'ventas.ver', 'ventas.editar', 'ventas.anular', 'ventas.aplicar_descuento',
+                'cortesias.ver', 'cortesias.crear', 'cortesias.editar', 'cortesias.eliminar',
                 'caja.abrir', 'caja.cerrar', 'caja.ver_movimientos', 'caja.registrar_movimiento',
                 'inventario.ver', 'inventario.ajustar', 'inventario.ver_kardex',
                 'productos.crear', 'productos.editar', 'productos.eliminar', 'productos.ver',

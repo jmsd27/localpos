@@ -72,6 +72,9 @@ return [
         'setting' => [
             'model' => \App\Models\Setting::class,
         ],
+        'coupon' => [
+            'model' => \App\Models\Coupon::class,
+        ],
         'table_area' => [
             'model' => \App\Models\TableArea::class,
         ],
@@ -168,7 +171,7 @@ return [
         'terminal' => ['business_id' => 'business', 'branch_id' => 'branch', 'cash_register_id' => 'cash_register'],
         'cash_register' => ['business_id' => 'business', 'branch_id' => 'branch'],
         'cash_register_session' => ['cash_register_id' => 'cash_register', 'terminal_id' => 'terminal', 'opened_by_user_id' => 'user', 'closed_by_user_id' => 'user'],
-        'order' => ['business_id' => 'business', 'branch_id' => 'branch', 'terminal_id' => 'terminal', 'cash_register_session_id' => 'cash_register_session', 'user_id' => 'user', 'customer_id' => 'customer', 'table_id' => 'table'],
+        'order' => ['business_id' => 'business', 'branch_id' => 'branch', 'terminal_id' => 'terminal', 'cash_register_session_id' => 'cash_register_session', 'user_id' => 'user', 'customer_id' => 'customer', 'table_id' => 'table', 'coupon_id' => 'coupon'],
         'order_item' => ['order_id' => 'order', 'product_id' => 'product', 'kitchen_station_id' => 'kitchen_station'],
         'order_item_modifier' => ['order_item_id' => 'order_item', 'modifier_option_id' => 'modifier_option'],
         'payment' => ['order_id' => 'order'],

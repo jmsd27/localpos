@@ -31,6 +31,7 @@ class Order extends Model
         'subtotal',
         'discount_type',
         'discount_value',
+        'coupon_id',
         'discount_amount',
         'tax_amount',
         'tip_amount',
@@ -88,6 +89,11 @@ class Order extends Model
     public function table(): BelongsTo
     {
         return $this->belongsTo(Table::class);
+    }
+
+    public function coupon(): BelongsTo
+    {
+        return $this->belongsTo(Coupon::class);
     }
 
     public function items(): HasMany

@@ -48,6 +48,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         ->middleware('permission:clientes.ver')
         ->name('clientes');
 
+    Route::livewire('/cortesias', 'admin.cortesias.index')
+        ->middleware('permission:cortesias.ver')
+        ->name('cortesias');
+
     Route::livewire('/configuracion', 'admin.configuracion.index')
         ->middleware('permission:configuracion.editar')
         ->name('configuracion');

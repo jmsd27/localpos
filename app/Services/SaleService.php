@@ -8,6 +8,7 @@ use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\TableStatus;
 use App\Models\CashRegisterSession;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderCancellation;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +50,7 @@ class SaleService
                 'payments' => $data['payments'],
                 'discount_type' => $data['discount_type'] ?? null,
                 'discount_value' => $data['discount_value'] ?? null,
+                'coupon_id' => $data['coupon_id'] ?? null,
                 'tip_amount' => $data['tip_amount'] ?? 0,
                 'user_id' => $data['user_id'],
             ]);
@@ -206,14 +208,38 @@ class SaleService
                 throw new InvalidArgumentException('La venta no tiene productos.');
             }
 
+            $coupon = null;
+
+            if (array_key_exists('coupon_id', $data) && $data['coupon_id']) {
+                $coupon = Coupon::query()
+                    ->where('business_id', $order->business_id)
+                    ->lockForUpdate()
+                    ->find($data['coupon_id']);
+
+                if (! $coupon || ! $coupon->isRedeemable()) {
+                    throw new InvalidArgumentException(
+                        $coupon?->redeemBlockReason() ?? 'La cortesía ya no es válida.'
+                    );
+                }
+            }
+
             $order->update([
-                'discount_type' => array_key_exists('discount_type', $data) ? $data['discount_type'] : $order->discount_type,
-                'discount_value' => array_key_exists('discount_value', $data) ? $data['discount_value'] : $order->discount_value,
+                'discount_type' => $coupon
+                    ? $coupon->discount_type->value
+                    : (array_key_exists('discount_type', $data) ? $data['discount_type'] : $order->discount_type),
+                'discount_value' => $coupon
+                    ? (float) $coupon->discount_value
+                    : (array_key_exists('discount_value', $data) ? $data['discount_value'] : $order->discount_value),
+                'coupon_id' => $coupon?->id ?? ($data['coupon_id'] ?? $order->coupon_id),
                 'tip_amount' => round($data['tip_amount'] ?? (float) $order->tip_amount, 2),
                 'terminal_id' => $data['terminal_id'] ?? $order->terminal_id,
                 'cash_register_session_id' => $data['cash_register_session_id'] ?? $order->cash_register_session_id,
                 'customer_id' => $data['customer_id'] ?? $order->customer_id,
             ]);
+
+            if ($coupon) {
+                $coupon->increment('used_count');
+            }
 
             $this->recalculateTotals($order);
             $order->refresh();
@@ -288,6 +314,11 @@ class SaleService
                 'amount' => $order->total,
                 'created_at' => now(),
             ]);
+
+            // Devolver el uso de la cortesía: la venta anulada no cuenta.
+            if ($order->coupon_id) {
+                Coupon::where('id', $order->coupon_id)->where('used_count', '>', 0)->decrement('used_count');
+            }
 
             $this->inventory->restockForOrder($order, $userId);
 

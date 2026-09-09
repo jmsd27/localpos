@@ -89,6 +89,13 @@
                                     Tickets
                                 </a>
                             @endcan
+                            @can('cortesias.ver')
+                                <a href="{{ route('admin.cortesias') }}" wire:navigate
+                                    class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('admin.cortesias') ? 'border-l-2 border-orange-400 bg-blue-900/70 text-orange-400 font-semibold' : 'text-blue-100 hover:bg-blue-900/50 hover:text-white' }}">
+                                    <x-icon name="tag" class="h-5 w-5" />
+                                    Cortesías
+                                </a>
+                            @endcan
                             @can('cocina.ver')
                                 <a href="{{ route('kds') }}" wire:navigate
                                     class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('kds') ? 'border-l-2 border-orange-400 bg-blue-900/70 text-orange-400 font-semibold' : 'text-blue-100 hover:bg-blue-900/50 hover:text-white' }}">
