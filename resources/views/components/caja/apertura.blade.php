@@ -1,7 +1,5 @@
 <?php
 
-use App\Enums\CashRegisterSessionStatus;
-use App\Models\CashRegisterSession;
 use App\Models\Terminal;
 use App\Services\CashRegisterService;
 use Illuminate\Support\Facades\Auth;
@@ -32,10 +30,7 @@ new #[Layout('layouts.app')] class extends Component
             return;
         }
 
-        $openSession = CashRegisterSession::query()
-            ->where('cash_register_id', $this->terminal->cash_register_id)
-            ->where('status', CashRegisterSessionStatus::Open)
-            ->first();
+        $openSession = app(CashRegisterService::class)->findOpenSession($this->terminal->cash_register_id);
 
         if ($openSession) {
             session(['cash_register_session_id' => $openSession->id]);

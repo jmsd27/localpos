@@ -14,6 +14,19 @@ class CashRegisterService
 {
     public function __construct(private readonly AuditLogger $auditLogger) {}
 
+    /**
+     * Sesión abierta de una caja, si hay una. Se usa para enganchar el
+     * navegador de un usuario (p. ej. un mesero en su propio celular) a una
+     * caja que otra persona ya abrió, sin necesitar el permiso de abrir caja.
+     */
+    public function findOpenSession(int $cashRegisterId): ?CashRegisterSession
+    {
+        return CashRegisterSession::query()
+            ->where('cash_register_id', $cashRegisterId)
+            ->where('status', CashRegisterSessionStatus::Open)
+            ->first();
+    }
+
     public function open(int $cashRegisterId, ?int $terminalId, int $userId, float $openingAmount): CashRegisterSession
     {
         $existing = CashRegisterSession::query()

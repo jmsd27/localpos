@@ -3,13 +3,15 @@
 use App\Enums\TableStatus;
 use App\Models\Table;
 use App\Models\TableArea;
+use App\Models\Terminal;
+use App\Services\CashRegisterService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 new #[Layout('layouts.app')] class extends Component
 {
-    public function mount(): void
+    public function mount(CashRegisterService $cashRegisters): void
     {
         if (! session('terminal_id')) {
             $this->redirectRoute('pos.terminal', navigate: true);
@@ -18,7 +20,20 @@ new #[Layout('layouts.app')] class extends Component
         }
 
         if (! session('cash_register_session_id')) {
-            $this->redirectRoute('caja.apertura', navigate: true);
+            // Si otra persona (cajero/admin) ya abrió esta caja desde otro
+            // dispositivo, solo enganchamos la sesión de este navegador a
+            // ella — no hace falta el permiso caja.abrir para eso, que es
+            // justo lo que exige la ruta /caja/apertura.
+            $terminal = Terminal::find(session('terminal_id'));
+            $openSession = $terminal?->cash_register_id ? $cashRegisters->findOpenSession($terminal->cash_register_id) : null;
+
+            if (! $openSession) {
+                $this->redirectRoute('caja.apertura', navigate: true);
+
+                return;
+            }
+
+            session(['cash_register_session_id' => $openSession->id]);
         }
     }
 
