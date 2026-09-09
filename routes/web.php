@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BackupDownloadController;
 use App\Http\Controllers\InsumoTemplateController;
+use App\Http\Controllers\InventoryReportExportController;
 use App\Http\Controllers\OfflineComandaController;
 use App\Http\Controllers\PublicMenuController;
 use App\Http\Controllers\ReportExportController;
@@ -128,6 +129,10 @@ Route::middleware(['auth'])->prefix('inventario')->name('inventario.')->group(fu
     Route::livewire('/kardex', 'inventario.kardex')
         ->middleware('permission:inventario.ver_kardex')
         ->name('kardex');
+
+    Route::livewire('/reportes', 'inventario.reportes')
+        ->middleware('permission:inventario.ver')
+        ->name('reportes');
 });
 
 Route::livewire('/kds', 'kds.tablero')
@@ -186,6 +191,14 @@ Route::livewire('/reportes', 'reportes.index')
 Route::get('/reportes/exportar', ReportExportController::class)
     ->middleware(['auth', 'permission:reportes.exportar'])
     ->name('reportes.exportar');
+
+Route::get('/inventario/reportes/existencias.csv', [InventoryReportExportController::class, 'stock'])
+    ->middleware(['auth', 'permission:inventario.ver'])
+    ->name('inventario.reportes.existencias');
+
+Route::get('/inventario/reportes/movimientos.csv', [InventoryReportExportController::class, 'movements'])
+    ->middleware(['auth', 'permission:inventario.ver'])
+    ->name('inventario.reportes.movimientos');
 
 Route::get('/menu', PublicMenuController::class)->name('menu.show');
 

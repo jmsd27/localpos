@@ -205,6 +205,7 @@ new #[Layout('layouts.app')] class extends Component
             in_array($normalized, ['l', 'lt', 'litro', 'litros'], true) => ProductUnit::Litro->value,
             in_array($normalized, ['ml', 'mililitro', 'mililitros'], true) => ProductUnit::Mililitro->value,
             in_array($normalized, ['botella', 'botellas', 'bote'], true) => ProductUnit::Botella->value,
+            in_array($normalized, ['onza', 'onzas', 'oz'], true) => ProductUnit::Onza->value,
             in_array($normalized, ['caja', 'cajas', 'paquete', 'paquetes', 'lata', 'latas', 'bolsa', 'bolsas'], true) => ProductUnit::Caja->value,
             in_array($normalized, ['pieza', 'piezas', 'pza', 'unidad'], true) => ProductUnit::Pieza->value,
             default => null,

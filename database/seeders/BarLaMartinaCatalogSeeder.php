@@ -243,60 +243,67 @@ class BarLaMartinaCatalogSeeder extends Seeder
             64 => ['Caribe', 'botella'], 65 => ['Barrilito', 'botella'], 66 => ['Skyy', 'botella'],
             67 => ['Pacífico Clara (Caguama)', 'botella'], 68 => ['Michelob', 'botella'],
             69 => ['Victoria Mega', 'botella'], 70 => ['Corona', 'botella'], 71 => ['Corona Mega', 'botella'],
-            72 => ['Passport', 'botella'], 73 => ['Red Label', 'botella'], 74 => ["Jack Daniel's", 'botella'],
-            75 => ['Black Label', 'botella'], 76 => ["Buchanan's", 'botella'], 77 => ['Centenario', 'botella'],
-            78 => ['Tradicional Rep', 'botella'], 79 => ['Tradicional Plata', 'botella'],
-            80 => ['Hornitos Reposado', 'botella'], 81 => ['1800 Cristalino', 'botella'], 82 => ['Don Julio', 'botella'],
-            83 => ['Maestro Dobel', 'botella'], 84 => ['Zaverich', 'botella'], 85 => ['Oso Negro', 'botella'],
-            86 => ['Absolut', 'botella'], 87 => ['Absolut Rasberry', 'botella'], 88 => ['Smirnoff', 'botella'],
-            89 => ['Azteca de Oro', 'botella'], 90 => ['Torres 5', 'botella'], 91 => ['Torres 10', 'botella'],
-            92 => ['Presidente', 'botella'], 93 => ['Bacardi', 'botella'], 94 => ['Capitán Morgan', 'botella'],
-            95 => ['Bajio', 'botella'], 96 => ['Jagger', 'botella'], 97 => ['Licor 43', 'botella'],
-            98 => ['Ron de la Casa', 'botella'],
+            72 => ['Passport', 'onza'], 73 => ['Red Label', 'onza'], 74 => ["Jack Daniel's", 'onza'],
+            75 => ['Black Label', 'onza'], 76 => ["Buchanan's", 'onza'], 77 => ['Centenario', 'onza'],
+            78 => ['Tradicional Rep', 'onza'], 79 => ['Tradicional Plata', 'onza'],
+            80 => ['Hornitos Reposado', 'onza'], 81 => ['1800 Cristalino', 'onza'], 82 => ['Don Julio', 'onza'],
+            83 => ['Maestro Dobel', 'onza'], 84 => ['Zaverich', 'onza'], 85 => ['Oso Negro', 'onza'],
+            86 => ['Absolut', 'onza'], 87 => ['Absolut Rasberry', 'onza'], 88 => ['Smirnoff', 'onza'],
+            89 => ['Azteca de Oro', 'onza'], 90 => ['Torres 5', 'onza'], 91 => ['Torres 10', 'onza'],
+            92 => ['Presidente', 'onza'], 93 => ['Bacardi', 'onza'], 94 => ['Capitán Morgan', 'onza'],
+            95 => ['Bajio', 'onza'], 96 => ['Jagger', 'onza'], 97 => ['Licor 43', 'onza'],
+            98 => ['Ron de la Casa', 'onza'],
             // Del conteo físico por fotos del 2026-09-08 (licores/cervezas que
-            // no tenían insumo todavía).
-            99 => ['Don Julio 70', 'botella'], 100 => ['Jose Cuervo Margarita', 'botella'],
-            101 => ['Etiqueta Negra', 'botella'], 102 => ['Ginebra', 'botella'],
-            103 => ['Bacardi Sabores', 'botella'], 104 => ['Baileys', 'botella'],
-            105 => ['Don Pedro', 'botella'], 106 => ['Hpnotiq', 'botella'],
-            107 => ['Chivas 12', 'botella'], 108 => ['Gran Malo Horchata', 'botella'],
-            109 => ['Gran Malo Tamarindo', 'botella'], 110 => ['Gran Malo Jamaica', 'botella'],
-            111 => ['Don Julio Cristalino', 'botella'], 112 => ['7 Leguas', 'botella'],
-            113 => ['Jose Cuervo Cristalino', 'botella'], 114 => ['Centenario Reposado', 'botella'],
-            115 => ['Hornitos Cristalino', 'botella'], 116 => ["Jack Daniel's Piña", 'botella'],
-            117 => ['Black & White', 'botella'], 118 => ['1800 Añejo', 'botella'],
-            119 => ['Conti', 'botella'], 120 => ['100 Conejos', 'botella'],
-            121 => ['Campari', 'botella'], 122 => ['Ampevol', 'botella'],
-            123 => ['Cinzano', 'botella'], 124 => ['Kahlúa', 'botella'],
-            125 => ['Absolut Azul', 'botella'], 126 => ['Cointreau', 'botella'],
-            127 => ['Martell', 'botella'], 128 => ["Buchanan's Piña", 'botella'],
-            129 => ['Appleton', 'botella'], 130 => ['Anís', 'botella'],
-            131 => ['Chichón', 'botella'], 132 => ['Jefe', 'botella'],
-            133 => ['Flamingo', 'botella'], 134 => ['VOH', 'botella'],
+            // no tenían insumo todavía). Todos en onzas como en la hoja de
+            // conteo, salvo "VOH": su "28" quedó igual sin convertir (ver nota
+            // en database/data-real/conteo-2026-09-08.md — es dudoso si esa
+            // cifra era en onzas o ya en botellas/"medias").
+            99 => ['Don Julio 70', 'onza'], 100 => ['Jose Cuervo Margarita', 'onza'],
+            101 => ['Etiqueta Negra', 'onza'], 102 => ['Ginebra', 'onza'],
+            103 => ['Bacardi Sabores', 'onza'], 104 => ['Baileys', 'onza'],
+            105 => ['Don Pedro', 'onza'], 106 => ['Hpnotiq', 'onza'],
+            107 => ['Chivas 12', 'onza'], 108 => ['Gran Malo Horchata', 'onza'],
+            109 => ['Gran Malo Tamarindo', 'onza'], 110 => ['Gran Malo Jamaica', 'onza'],
+            111 => ['Don Julio Cristalino', 'onza'], 112 => ['7 Leguas', 'onza'],
+            113 => ['Jose Cuervo Cristalino', 'onza'], 114 => ['Centenario Reposado', 'onza'],
+            115 => ['Hornitos Cristalino', 'onza'], 116 => ["Jack Daniel's Piña", 'onza'],
+            117 => ['Black & White', 'onza'], 118 => ['1800 Añejo', 'onza'],
+            119 => ['Conti', 'onza'], 120 => ['100 Conejos', 'onza'],
+            121 => ['Campari', 'onza'], 122 => ['Ampevol', 'onza'],
+            123 => ['Cinzano', 'onza'], 124 => ['Kahlúa', 'onza'],
+            125 => ['Absolut Azul', 'onza'], 126 => ['Cointreau', 'onza'],
+            127 => ['Martell', 'onza'], 128 => ["Buchanan's Piña", 'onza'],
+            129 => ['Appleton', 'onza'], 130 => ['Anís', 'onza'],
+            131 => ['Chichón', 'onza'], 132 => ['Jefe', 'onza'],
+            133 => ['Flamingo', 'onza'], 134 => ['VOH', 'botella'],
         ];
 
-        // Existencia real del conteo físico por fotos del 2026-09-08 (licores
-        // en onzas convertidas a botella de 750 ml, cervezas/caguamas por
-        // unidad). Los insumos que no aparecen acá (comida, limpieza, etc.)
-        // quedan en 0 — se cargan con Conteo físico cuando el negocio los
-        // cuente. Ver database/data-real/conteo-2026-09-08.md para el detalle.
+        // Existencia real del conteo físico por fotos del 2026-09-08: licores
+        // en onzas (tal cual la hoja de conteo, sin convertir a botella —
+        // el personal cuenta el sobrante en onzas, no en fracciones de
+        // botella), cervezas/caguamas por unidad. Los insumos que no
+        // aparecen acá (comida, limpieza, etc.) quedan en 0 — se cargan con
+        // Conteo físico cuando el negocio los cuente. Ver
+        // database/data-real/conteo-2026-09-08.md para el detalle. "VOH" es
+        // la excepción: quedó en botellas (ver nota junto a su unidad más
+        // arriba).
         $stockCounts = [
-            'Don Julio 70' => 1.534, 'Jose Cuervo Margarita' => 2.399, "Jack Daniel's" => 3.776,
-            'Red Label' => 5.861, 'Tradicional Plata' => 6.254, 'Tradicional Rep' => 1.809,
-            'Capitán Morgan' => 2.832, 'Etiqueta Negra' => 0.826, 'Ginebra' => 2.753,
-            'Hornitos Reposado' => 1.298, 'Smirnoff' => 2.242, 'Bacardi Sabores' => 0.157,
-            'Presidente' => 1.219, 'Baileys' => 1.337, 'Don Pedro' => 0.983, 'Hpnotiq' => 1.337,
-            "Buchanan's" => 3.737, 'Chivas 12' => 3.068, 'Gran Malo Horchata' => 1.416,
-            'Gran Malo Tamarindo' => 1.809, 'Gran Malo Jamaica' => 0.983, 'Don Julio Cristalino' => 1.495,
-            '7 Leguas' => 1.731, 'Jose Cuervo Cristalino' => 0.983, 'Maestro Dobel' => 1.573,
-            'Centenario Reposado' => 0.669, 'Hornitos Cristalino' => 0.157, 'Jagger' => 1.062,
-            "Jack Daniel's Piña" => 0.787, 'Azteca de Oro' => 1.731, 'Passport' => 0.590,
-            '1800 Cristalino' => 0.079, 'Black & White' => 2.714, '1800 Añejo' => 3.343,
-            'Conti' => 1.731, '100 Conejos' => 3.619, 'Campari' => 2.950, 'Ampevol' => 2.714,
-            'Cinzano' => 0.983, 'Kahlúa' => 0.747, 'Zaverich' => 1.180, 'Absolut Rasberry' => 0.944,
-            'Absolut Azul' => 2.045, 'Cointreau' => 1.180, 'Martell' => 0.826, "Buchanan's Piña" => 0.669,
-            'Appleton' => 0.708, 'Anís' => 0.983, 'Torres 10' => 1.495, 'Bacardi' => 0.393,
-            'Torres 5' => 0.787, 'Chichón' => 0.905, 'Jefe' => 11.682, 'Flamingo' => 8.024,
+            'Don Julio 70' => 39, 'Jose Cuervo Margarita' => 61, "Jack Daniel's" => 96,
+            'Red Label' => 149, 'Tradicional Plata' => 159, 'Tradicional Rep' => 46,
+            'Capitán Morgan' => 72, 'Etiqueta Negra' => 21, 'Ginebra' => 70,
+            'Hornitos Reposado' => 33, 'Smirnoff' => 57, 'Bacardi Sabores' => 4,
+            'Presidente' => 31, 'Baileys' => 34, 'Don Pedro' => 25, 'Hpnotiq' => 34,
+            "Buchanan's" => 95, 'Chivas 12' => 78, 'Gran Malo Horchata' => 36,
+            'Gran Malo Tamarindo' => 46, 'Gran Malo Jamaica' => 25, 'Don Julio Cristalino' => 38,
+            '7 Leguas' => 44, 'Jose Cuervo Cristalino' => 25, 'Maestro Dobel' => 40,
+            'Centenario Reposado' => 17, 'Hornitos Cristalino' => 4, 'Jagger' => 27,
+            "Jack Daniel's Piña" => 20, 'Azteca de Oro' => 44, 'Passport' => 15,
+            '1800 Cristalino' => 2, 'Black & White' => 69, '1800 Añejo' => 85,
+            'Conti' => 44, '100 Conejos' => 92, 'Campari' => 75, 'Ampevol' => 69,
+            'Cinzano' => 25, 'Kahlúa' => 19, 'Zaverich' => 30, 'Absolut Rasberry' => 24,
+            'Absolut Azul' => 52, 'Cointreau' => 30, 'Martell' => 21, "Buchanan's Piña" => 17,
+            'Appleton' => 18, 'Anís' => 25, 'Torres 10' => 38, 'Bacardi' => 10,
+            'Torres 5' => 20, 'Chichón' => 23, 'Jefe' => 297, 'Flamingo' => 204,
             'VOH' => 28, 'Corona' => 39, 'Victoria' => 94, 'Pacífico Suave' => 154,
             'Modelo Especial' => 102, 'Victoria Mega' => 123, 'Corona Mega' => 69,
             'Michelob Ultra' => 220, 'Bud Light' => 190, 'Modelo 0' => 26, 'Corona Extra' => 83,
@@ -332,19 +339,23 @@ class BarLaMartinaCatalogSeeder extends Seeder
             [44, 59, 1], [45, 60, 1], [46, 61, 1], [47, 62, 1], [48, 63, 1], [49, 64, 1], [50, 65, 1],
             [51, 66, 1], [52, 67, 1], [53, 54, 1], [54, 55, 1], [55, 68, 1], [56, 63, 1], [57, 69, 1],
             [58, 70, 1], [59, 71, 1],
-            [81, 72, 1], [84, 73, 1], [87, 74, 1], [90, 75, 1], [93, 76, 1], [98, 77, 1], [101, 78, 1],
-            [104, 79, 1], [107, 80, 1], [110, 81, 1], [113, 82, 1], [116, 83, 1], [123, 84, 1], [126, 85, 1],
-            [129, 86, 1], [132, 87, 1], [135, 88, 1], [138, 89, 1], [141, 90, 1], [144, 91, 1], [147, 92, 1],
-            [152, 93, 1], [155, 94, 1],
-            [79, 72, 0.039], [80, 72, 1.333], [82, 73, 0.039], [83, 73, 1.333], [85, 74, 0.039], [86, 74, 1.333],
-            [88, 75, 0.039], [89, 75, 1.333], [91, 76, 0.039], [92, 76, 1.333], [94, 95, 0.039], [95, 95, 1.333],
-            [96, 77, 0.039], [97, 77, 1.333], [99, 78, 0.039], [100, 78, 1.333], [102, 79, 0.039], [103, 79, 1.333],
-            [105, 80, 0.039], [106, 80, 1.333], [108, 81, 0.039], [109, 81, 1.333], [111, 82, 0.039], [112, 82, 1.333],
-            [114, 83, 0.039], [115, 83, 1.333], [117, 96, 0.039], [118, 96, 1.333], [119, 97, 0.039], [120, 97, 1.333],
-            [121, 84, 0.039], [122, 84, 1.333], [124, 85, 0.039], [125, 85, 1.333], [127, 86, 0.039], [128, 86, 1.333],
-            [130, 87, 0.039], [131, 87, 1.333], [133, 88, 0.039], [134, 88, 1.333], [136, 89, 0.039], [137, 89, 1.333],
-            [139, 90, 0.039], [140, 90, 1.333], [142, 91, 0.039], [143, 91, 1.333], [145, 92, 0.039], [146, 92, 1.333],
-            [148, 98, 0.039], [149, 98, 1.333], [150, 93, 0.039], [151, 93, 1.333], [153, 94, 0.039], [154, 94, 1.333],
+            // Cantidades en onzas: el insumo ahora se mide en onzas (no en
+            // botella de 750 ml), así que "vender la botella completa"
+            // consume 750/29.5 = 25.424 onzas del insumo.
+            [81, 72, 25.424], [84, 73, 25.424], [87, 74, 25.424], [90, 75, 25.424], [93, 76, 25.424], [98, 77, 25.424], [101, 78, 25.424],
+            [104, 79, 25.424], [107, 80, 25.424], [110, 81, 25.424], [113, 82, 25.424], [116, 83, 25.424], [123, 84, 25.424], [126, 85, 25.424],
+            [129, 86, 25.424], [132, 87, 25.424], [135, 88, 25.424], [138, 89, 25.424], [141, 90, 25.424], [144, 91, 25.424], [147, 92, 25.424],
+            [152, 93, 25.424], [155, 94, 25.424],
+            // "1 onza" consume 1 onza; "1 litro" consume 1000/29.5 = 33.898 onzas.
+            [79, 72, 1], [80, 72, 33.898], [82, 73, 1], [83, 73, 33.898], [85, 74, 1], [86, 74, 33.898],
+            [88, 75, 1], [89, 75, 33.898], [91, 76, 1], [92, 76, 33.898], [94, 95, 1], [95, 95, 33.898],
+            [96, 77, 1], [97, 77, 33.898], [99, 78, 1], [100, 78, 33.898], [102, 79, 1], [103, 79, 33.898],
+            [105, 80, 1], [106, 80, 33.898], [108, 81, 1], [109, 81, 33.898], [111, 82, 1], [112, 82, 33.898],
+            [114, 83, 1], [115, 83, 33.898], [117, 96, 1], [118, 96, 33.898], [119, 97, 1], [120, 97, 33.898],
+            [121, 84, 1], [122, 84, 33.898], [124, 85, 1], [125, 85, 33.898], [127, 86, 1], [128, 86, 33.898],
+            [130, 87, 1], [131, 87, 33.898], [133, 88, 1], [134, 88, 33.898], [136, 89, 1], [137, 89, 33.898],
+            [139, 90, 1], [140, 90, 33.898], [142, 91, 1], [143, 91, 33.898], [145, 92, 1], [146, 92, 33.898],
+            [148, 98, 1], [149, 98, 33.898], [150, 93, 1], [151, 93, 33.898], [153, 94, 1], [154, 94, 33.898],
         ];
 
         foreach ($recipeItems as [$productRef, $ingredientRef, $quantity]) {

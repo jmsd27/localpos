@@ -148,7 +148,7 @@
                     </div>
                 @endcanany
 
-                @canany(['inventario.ajustar', 'inventario.ver_kardex'])
+                @canany(['inventario.ajustar', 'inventario.ver_kardex', 'inventario.ver'])
                     <div>
                         <p class="px-3 text-xs font-semibold uppercase tracking-wider text-blue-300/70">Inventario</p>
                         <div class="mt-1 space-y-1">
@@ -179,6 +179,13 @@
                                     class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('inventario.kardex') ? 'border-l-2 border-orange-400 bg-blue-900/70 text-orange-400 font-semibold' : 'text-blue-100 hover:bg-blue-900/50 hover:text-white' }}">
                                     <x-icon name="clipboard-document-list" class="h-5 w-5" />
                                     Kardex
+                                </a>
+                            @endcan
+                            @can('inventario.ver')
+                                <a href="{{ route('inventario.reportes') }}" wire:navigate
+                                    class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium {{ request()->routeIs('inventario.reportes') ? 'border-l-2 border-orange-400 bg-blue-900/70 text-orange-400 font-semibold' : 'text-blue-100 hover:bg-blue-900/50 hover:text-white' }}">
+                                    <x-icon name="chart-pie" class="h-5 w-5" />
+                                    Reportes
                                 </a>
                             @endcan
                         </div>

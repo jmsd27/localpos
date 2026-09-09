@@ -203,3 +203,77 @@ test('la plantilla de insumos se puede descargar', function () {
         ->assertHeader('Content-Type', 'text/csv; charset=UTF-8')
         ->assertSee('Nombre,Unidad,Cantidad', false);
 });
+
+test('el reporte de inventario marca bajo stock y calcula el valor total', function () {
+    $user = loginAsRole(RoleName::Administrador->value);
+
+    Ingredient::factory()->create([
+        'business_id' => $user->businessId(), 'branch_id' => $user->branch_id,
+        'name' => 'Tequila Bajo', 'stock' => 2, 'min_stock' => 5, 'cost_per_unit' => 10,
+    ]);
+    Ingredient::factory()->create([
+        'business_id' => $user->businessId(), 'branch_id' => $user->branch_id,
+        'name' => 'Tequila Normal', 'stock' => 20, 'min_stock' => 5, 'cost_per_unit' => 3,
+    ]);
+
+    Livewire::test('inventario.reportes')
+        ->assertViewHas('snapshot', fn ($snapshot) => $snapshot['total_ingredients'] === 2
+            && $snapshot['low_stock_count'] === 1
+            && $snapshot['total_value'] === 80.0)
+        ->set('onlyLow', true)
+        ->assertViewHas('ingredients', fn ($ingredients) => $ingredients->pluck('name')->all() === ['Tequila Bajo']);
+});
+
+test('el reporte de inventario resume entradas y salidas por insumo en el rango', function () {
+    $user = loginAsRole(RoleName::Administrador->value);
+    $ingredient = Ingredient::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'stock' => 20]);
+
+    InventoryMovement::create([
+        'business_id' => $user->businessId(), 'ingredient_id' => $ingredient->id,
+        'type' => 'entrada', 'quantity' => 10, 'resulting_stock' => 30,
+        'user_id' => $user->id, 'created_at' => now(),
+    ]);
+    InventoryMovement::create([
+        'business_id' => $user->businessId(), 'ingredient_id' => $ingredient->id,
+        'type' => 'consumo', 'quantity' => -4, 'resulting_stock' => 26,
+        'user_id' => $user->id, 'created_at' => now(),
+    ]);
+
+    Livewire::test('inventario.reportes')
+        ->assertViewHas('movements', fn ($movements) => $movements['total_entradas'] === 10.0
+            && $movements['total_salidas'] === 4.0);
+});
+
+test('un usuario sin permiso de inventario no puede ver los reportes', function () {
+    loginAsRole(RoleName::Mesero->value);
+
+    $this->get(route('inventario.reportes'))->assertForbidden();
+});
+
+test('el csv de existencias de inventario se puede descargar', function () {
+    $user = loginAsRole(RoleName::Administrador->value);
+    Ingredient::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'name' => 'Ron de prueba', 'stock' => 5]);
+
+    $response = $this->get(route('inventario.reportes.existencias'))
+        ->assertOk()
+        ->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
+
+    expect($response->streamedContent())->toContain('Ron de prueba');
+});
+
+test('el csv de movimientos de inventario se puede descargar', function () {
+    $user = loginAsRole(RoleName::Administrador->value);
+    $ingredient = Ingredient::factory()->create(['business_id' => $user->businessId(), 'branch_id' => $user->branch_id, 'name' => 'Vodka de prueba', 'stock' => 5]);
+
+    InventoryMovement::create([
+        'business_id' => $user->businessId(), 'ingredient_id' => $ingredient->id,
+        'type' => 'entrada', 'quantity' => 5, 'resulting_stock' => 10,
+        'user_id' => $user->id, 'created_at' => now(),
+    ]);
+
+    $response = $this->get(route('inventario.reportes.movimientos', ['from' => now()->startOfMonth()->toDateString(), 'to' => now()->toDateString()]))
+        ->assertOk()
+        ->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
+
+    expect($response->streamedContent())->toContain('Vodka de prueba');
+});

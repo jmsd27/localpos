@@ -39,6 +39,10 @@
         @case('chart-bar')
             <path d="M4 20V10M10 20V4M16 20v-7M20 20H4" />
             @break
+        @case('chart-pie')
+            <path d="M12 3.5a8.5 8.5 0 1 0 8.5 8.5H12V3.5Z" />
+            <path d="M15.5 4.2A8.5 8.5 0 0 1 19.8 8.5H15.5V4.2Z" />
+            @break
         @case('users')
             <circle cx="8.5" cy="8" r="3" /><path d="M2.5 19c.5-3.5 3-5.5 6-5.5s5.5 2 6 5.5" />
             <circle cx="17" cy="9" r="2.3" /><path d="M15.5 13.2c2.3.2 4 1.9 4.5 5" />

@@ -11,6 +11,7 @@ enum ProductUnit: string
     case Mililitro = 'mililitro';
     case Caja = 'caja';
     case Botella = 'botella';
+    case Onza = 'onza';
 
     public function label(): string
     {
@@ -22,6 +23,7 @@ enum ProductUnit: string
             self::Mililitro => 'Mililitro',
             self::Caja => 'Caja',
             self::Botella => 'Botella',
+            self::Onza => 'Onza',
         };
     }
 }
